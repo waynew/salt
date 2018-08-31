@@ -478,7 +478,6 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
                         'ipv6ipaddr': 'fc00::1',
                         'ipv6netmask': '128',
                         'ipv6_autoconf': False,
-                        'enable_ipv6': True,
                         'noifupdown': True,
                         },
                     'return': [
@@ -499,7 +498,6 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
                         'ipv6ipaddr': 'fc00::1',
                         'ipv6netmask': '128',
                         'ipv6_autoconf': False,
-                        'enable_ipv6': True,
                         'noifupdown': True,
                         },
                     'return': [

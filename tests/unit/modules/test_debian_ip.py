@@ -5,7 +5,7 @@
 
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
-
+from collections import OrderedDict as odict
 import tempfile
 
 # Import third party libs
@@ -13,7 +13,7 @@ import jinja2.exceptions
 
 # Import Salt Libs
 import salt.modules.debian_ip as debian_ip
-import salt.utils.platform
+import salt.utils
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -29,7 +29,7 @@ test_interfaces = [
         #{'iface_name': 'ethX', 'iface_type': 'eth', 'enabled': True,
         #    'skip_test': bool(),        # True to disable this test
         #    'build_interface': dict(),  # data read from sls
-        #    'get_interface(): dict(),   # data read from interfaces file
+        #    'get_interface(): OrderedDict(),   # data read from interfaces file
         #    'return': list()},          # jinja-rendered data
 
         # IPv4-only interface; single address
@@ -42,15 +42,16 @@ test_interfaces = [
                 'enable_ipv6': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth1': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    },
-                }}},
+            'get_interface': odict([('eth1', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth1\n',
                 'iface eth1 inet static\n',
@@ -69,15 +70,16 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth2': {'enabled': True, 'data': {
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:beef::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:beef::1',
-                    },
-                }}},
+            'get_interface': odict([('eth2', odict([('enabled', True), ('data', odict([
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:beef::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:beef::1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth2\n',
                 'iface eth2 inet6 static\n',
@@ -98,17 +100,19 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth3': {'enabled': True, 'data': {
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:beef::5/64',
-                    'addresses': [
+            'get_interface': odict([('eth3', odict([('enabled', True), ('data', odict([
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:beef::5/64'),
+                    ('addresses', [
                         '2001:db8:dead:beef::7/64',
                         '2001:db8:dead:beef::8/64',
-                        '2001:db8:dead:beef::9/64'],
-                    },
-                }}},
+                        '2001:db8:dead:beef::9/64',
+                        ]),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth3\n',
                 'iface eth3 inet6 static\n',
@@ -131,18 +135,20 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth4': {'enabled': True, 'data': {
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'addresses': [
-                        '2001:db8:dead:beef::5/64',
+            'get_interface': odict([('eth4', odict([('enabled', True), ('data', odict([
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:beef::5/64'),
+                    ('addresses', [
                         '2001:db8:dead:beef::7/64',
                         '2001:db8:dead:beef::8/64',
-                        '2001:db8:dead:beef::9/64'],
-                    'gateway': '2001:db8:dead:beef::1',
-                    },
-                }}},
+                        '2001:db8:dead:beef::9/64',
+                        ]),
+                    ('gateway', '2001:db8:dead:beef::1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth4\n',
                 'iface eth4 inet6 static\n',
@@ -167,15 +173,16 @@ test_interfaces = [
                 'enable_ipv4': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth5': {'enabled': True, 'data': {
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:beef::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:beef::1',
-                    },
-                }}},
+            'get_interface': odict([('eth5', odict([('enabled', True), ('data', odict([
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:beef::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:beef::1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth5\n',
                 'iface eth5 inet6 static\n',
@@ -198,15 +205,16 @@ test_interfaces = [
                 'enable_ipv6': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth6': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    },
-                }}},
+            'get_interface': odict([('eth6', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth6\n',
                 'iface eth6 inet static\n',
@@ -232,26 +240,28 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth7': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    'mtu': '1480',
-                    'ttl': '18',
-                    },
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:beef::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:beef::1',
-                    'mtu': '1480',
-                    'ttl': '15',
-                    },
-                }}},
+            'get_interface': odict([('eth7', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ('ttl', 18),
+                    ('mtu', 1480),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:beef::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:beef::1'),
+                    ('ttl', 15),
+                    ('mtu', 1480),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth7\n',
                 'iface eth7 inet static\n',
@@ -274,14 +284,17 @@ test_interfaces = [
                 'master': 'bond0',
                 'noifupdown': True,
                 },
-            'get_interface': {'eth8': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'type': 'eth',
-                    'proto': 'manual',
-                    'master': 'bond0',
-                    },
-                }}},
+            'get_interface': odict([('eth8', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'manual'),
+                    ('filename', None),
+                    ('bonding', odict([
+                        ('master', 'bond0'),
+                        ])),
+                    ('bonding_keys', ['master']),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth8\n',
                 'iface eth8 inet manual\n',
@@ -305,24 +318,25 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'bond9': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '10.1.0.14',
-                    'netmask': '255.255.255.0',
-                    'gateway': '10.1.0.1',
-                    'bonding': {
-                        'ad_select': '0',
-                        'downdelay': '200',
-                        'lacp_rate': '0',
-                        'miimon': '100',
-                        'mode': '4',
-                        'slaves': 'eth4 eth5',
-                        'updelay': '0',
-                        'use_carrier': 'on',
-                        },
-                    'bonding_keys': [
+            'get_interface': odict([('bond9', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '10.1.0.14'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '10.1.0.1'),
+                    ('bonding', odict([
+                        ('ad_select', '0'),
+                        ('downdelay', '200'),
+                        ('lacp_rate', '0'),
+                        ('miimon', '100'),
+                        ('mode', '4'),
+                        ('slaves', 'eth4 eth5'),
+                        ('updelay', '0'),
+                        ('use_carrier', 'on'),
+                        ])),
+                    ('bonding_keys', [
                         'ad_select',
                         'downdelay',
                         'lacp_rate',
@@ -331,26 +345,37 @@ test_interfaces = [
                         'slaves',
                         'updelay',
                         'use_carrier',
-                        ],
-                    },  
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:c0::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:c0::1',
-                    'bonding': {
-                        'ad_select': '0',
-                        'downdelay': '200',
-                        'lacp_rate': '0',
-                        'miimon': '100',
-                        'mode': '4',
-                        'slaves': 'eth4 eth5',
-                        'updelay': '0',
-                        'use_carrier': 'on',
-                        },
-                    },
-                }}},
+                        ]),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:c0::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:c0::1'),
+                    ('bonding', odict([
+                        ('ad_select', '0'),
+                        ('downdelay', '200'),
+                        ('lacp_rate', '0'),
+                        ('miimon', '100'),
+                        ('mode', '4'),
+                        ('slaves', 'eth4 eth5'),
+                        ('updelay', '0'),
+                        ('use_carrier', 'on'),
+                        ])),
+                    ('bonding_keys', [
+                        'ad_select',
+                        'downdelay',
+                        'lacp_rate',
+                        'miimon',
+                        'mode',
+                        'slaves',
+                        'updelay',
+                        'use_carrier',
+                        ]),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto bond9\n',
                 'iface bond9 inet static\n',
@@ -398,24 +423,25 @@ test_interfaces = [
                 'enable_ipv6': True,
                 'noifupdown': True,
                 },
-            'get_interface': {'eth10': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '10.1.0.14',
-                    'netmask': '255.255.255.0',
-                    'gateway': '10.1.0.1',
-                    'bonding': {
-                        'ad_select': '0',
-                        'downdelay': '200',
-                        'lacp_rate': '0',
-                        'miimon': '100',
-                        'mode': '4',
-                        'slaves': 'eth4 eth5',
-                        'updelay': '0',
-                        'use_carrier': 'on',
-                        },
-                    'bonding_keys': [
+            'get_interface': odict([('bond9', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '10.1.0.14'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '10.1.0.1'),
+                    ('bonding', odict([
+                        ('ad_select', '0'),
+                        ('downdelay', '200'),
+                        ('lacp_rate', '0'),
+                        ('miimon', '100'),
+                        ('mode', '4'),
+                        ('slaves', 'eth4 eth5'),
+                        ('updelay', '0'),
+                        ('use_carrier', 'on'),
+                        ])),
+                    ('bonding_keys', [
                         'ad_select',
                         'downdelay',
                         'lacp_rate',
@@ -424,26 +450,37 @@ test_interfaces = [
                         'slaves',
                         'updelay',
                         'use_carrier',
-                        ],
-                    },  
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:c0::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:c0::1',
-                    'bonding': {
-                        'ad_select': '0',
-                        'downdelay': '200',
-                        'lacp_rate': '0',
-                        'miimon': '100',
-                        'mode': '4',
-                        'slaves': 'eth4 eth5',
-                        'updelay': '0',
-                        'use_carrier': 'on',
-                        },
-                    },  
-                }}},
+                        ]),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:c0::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:c0::1'),
+                    ('bonding', odict([
+                        ('ad_select', '0'),
+                        ('downdelay', '200'),
+                        ('lacp_rate', '0'),
+                        ('miimon', '100'),
+                        ('mode', '4'),
+                        ('slaves', 'eth4 eth5'),
+                        ('updelay', '0'),
+                        ('use_carrier', 'on'),
+                        ])),
+                    ('bonding_keys', [
+                        'ad_select',
+                        'downdelay',
+                        'lacp_rate',
+                        'miimon',
+                        'mode',
+                        'slaves',
+                        'updelay',
+                        'use_carrier',
+                        ]),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto bond10\n',
                 'iface bond10 inet static\n',
@@ -484,17 +521,18 @@ test_interfaces = [
                 'enable_ipv6': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'bond0.11': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'vlan_raw_device': 'bond1',
-                    'address': '10.7.0.8',
-                    'netmask': '255.255.255.0',
-                    'gateway': '10.7.0.1',
-                    'mode': '802.3ad',
-                    },
-                }}},
+            'get_interface': odict([('bond0.11', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('vlan_raw_device', 'bond1'),
+                    ('address', '10.7.0.8'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '10.7.0.1'),
+                    ('mode', '802.3ad'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto bond0.11\n',
                 'iface bond0.11 inet static\n',
@@ -514,14 +552,15 @@ test_interfaces = [
                 'enable_ipv6': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'bond0.12': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'vlan_raw_device': 'bond1',
-                    'mode': '802.3ad',
-                    },  
-                }}},
+            'get_interface': odict([('bond0.12', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('vlan_raw_device', 'bond1'),
+                    ('mode', '802.3ad'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto bond0.12\n',
                 'iface bond0.12 inet static\n',
@@ -540,16 +579,17 @@ test_interfaces = [
                 'noifupdown': True,
                 'dns': ['8.8.8.8', '8.8.4.4'],
                 },
-            'get_interface': {'eth13': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    'dns_nameservers': ['8.8.8.8', '8.8.4.4'],
-                    },  
-                }}},
+            'get_interface': odict([('eth13', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ('dns_nameservers', ['8.8.8.8', '8.8.4.4']),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth13\n',
                 'iface eth13 inet static\n',
@@ -570,16 +610,17 @@ test_interfaces = [
                 'noifupdown': True,
                 'dns': '8.8.8.8 8.8.4.4',
                 },
-            'get_interface': {'eth14': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'static',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    'dns_nameservers': ['8.8.8.8', '8.8.4.4'],
-                    },  
-                }}},
+            'get_interface': odict([('eth14', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ('dns_nameservers', ['8.8.8.8', '8.8.4.4']),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth14\n',
                 'iface eth14 inet static\n',
@@ -603,21 +644,23 @@ test_interfaces = [
                 'ipv6_autoconf': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'lo15': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'loopback',
-                    'address': '192.168.4.9',
-                    'netmask': '255.255.255.0',
-                    'gateway': '192.168.4.1',
-                    },  
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'loopback',
-                    'address': 'fc00::1',
-                    'netmask': '128',
-                    },  
-                }}},
+            'get_interface': odict([('lo15', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'loopback'),
+                    ('filename', None),
+                    ('address', '192.168.4.9'),
+                    ('netmask', '255.255.255.0'),
+                    ('gateway', '192.168.4.1'),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'loopback'),
+                    ('filename', None),
+                    ('address', 'fc00::1'),
+                    ('netmask', 128),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto lo15\n',
                 'iface lo15 inet loopback\n',
@@ -639,14 +682,15 @@ test_interfaces = [
                 'ipv6_autoconf': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'lo16': {'enabled': False, 'data': {
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'loopback',
-                    'address': 'fc00::1',
-                    'netmask': '128',
-                    },  
-                }}},
+            'get_interface': odict([('lo16', odict([('data', odict([
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'loopback'),
+                    ('filename', None),
+                    ('address', 'fc00::1'),
+                    ('netmask', 128),
+                    ])),
+                ]))]))]),
             'return': [
                 'iface lo16 inet6 loopback\n',
                 '    address fc00::1\n',
@@ -660,12 +704,13 @@ test_interfaces = [
                 'enable_ipv6': False,
                 'noifupdown': True,
                 },
-            'get_interface': {'lo17': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'loopback',
-                    },  
-                }}},
+            'get_interface': odict([('lo17', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'loopback'),
+                    ('filename', None),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto lo17\n',
                 'iface lo17 inet loopback\n',
@@ -682,19 +727,21 @@ test_interfaces = [
                 'ipv6gateway': '2001:db8:dead:c0::1',
                 'noifupdown': True,
                 },
-            'get_interface': {'eth18': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'dhcp',
-                    },  
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:c0::3',
-                    'netmask': '64',
-                    'gateway': '2001:db8:dead:c0::1',
-                    },  
-                }}},
+            'get_interface': odict([('eth18', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'dhcp'),
+                    ('filename', None),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:c0::3'),
+                    ('netmask', 64),
+                    ('gateway', '2001:db8:dead:c0::1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth18\n',
                 'iface eth18 inet dhcp\n',
@@ -714,18 +761,20 @@ test_interfaces = [
                 'ipv6gateway': '2001:db8:dead:c0::1',
                 'noifupdown': True,
                 },
-            'get_interface': {'eth19': {'enabled': True, 'data': {
-                'inet': {
-                    'addrfam': 'inet',
-                    'proto': 'dhcp',
-                    },  
-                'inet6': {
-                    'addrfam': 'inet6',
-                    'proto': 'static',
-                    'address': '2001:db8:dead:c0::3/64',
-                    'gateway': '2001:db8:dead:c0::1',
-                    },  
-                }}},
+            'get_interface': odict([('eth19', odict([('enabled', True), ('data', odict([
+                ('inet', odict([
+                    ('addrfam', 'inet'),
+                    ('proto', 'dhcp'),
+                    ('filename', None),
+                    ])),
+                ('inet6', odict([
+                    ('addrfam', 'inet6'),
+                    ('proto', 'static'),
+                    ('filename', None),
+                    ('address', '2001:db8:dead:c0::3/64'),
+                    ('gateway', '2001:db8:dead:c0::1'),
+                    ])),
+                ]))]))]),
             'return': [
                 'auto eth19\n',
                 'iface eth19 inet dhcp\n',
@@ -734,6 +783,7 @@ test_interfaces = [
                 '    gateway 2001:db8:dead:c0::1\n',
                 '\n']},
         ]
+
 
 @skipIf(NO_MOCK, NO_MOCK_REASON)
 class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
@@ -852,13 +902,32 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertEqual(debian_ip.get_bond("bond0"), "")
 
+    # '_parse_interfaces' function tests: 1
+
+    def test_parse_interfaces(self):
+        '''
+        Test if it returns the correct data for parsed configuration file
+        '''
+        with tempfile.NamedTemporaryFile(mode='r', delete=True) as tfile:
+            for iface in test_interfaces:
+                iname = iface['iface_name']
+                if iface.get('skip_test', False):
+                    continue
+                with salt.utils.files.fopen(str(tfile.name), 'w') as fh:
+                    fh.writelines(iface['return'])
+                for inet in ['inet', 'inet6']:
+                    if inet in iface['get_interface'][iname]['data']:
+                        iface['get_interface'][iname]['data'][inet]['filename'] = str(tfile.name)
+                self.assertDictEqual(
+                        debian_ip._parse_interfaces([str(tfile.name)]),
+                        iface['get_interface'])
+
     # 'get_interface' function tests: 1
 
     def test_get_interface(self):
         """
         Test if it return the contents of an interface script
         '''
-
         for iface in test_interfaces:
             if iface.get('skip_test', False):
                 continue

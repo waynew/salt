@@ -165,9 +165,9 @@ def _error_msg_iface(iface, option, expected):
     """
     Build an appropriate error message from a given option and
     a list of expected values.
-    """
-    msg = "Invalid option -- Interface: {0}, Option: {1}, Expected: [{2}]"
-    return msg.format(iface, option, "|".join(str(e) for e in expected))
+    '''
+    msg = 'Invalid option -- Interface: {0}, Option: {1}, Expected: [{2}]'
+    return msg.format(iface, option, '|'.join(expected))
 
 
 def _error_msg_routes(iface, option, expected):
@@ -188,9 +188,9 @@ def _error_msg_network(option, expected):
     """
     Build an appropriate error message from a given option and
     a list of expected values.
-    """
-    msg = "Invalid network setting -- Setting: {0}, Expected: [{1}]"
-    return msg.format(option, "|".join(str(e) for e in expected))
+    '''
+    msg = 'Invalid network setting -- Setting: {0}, Expected: [{1}]'
+    return msg.format(option, '|'.join(expected))
 
 
 def _log_default_network(opt, value):
@@ -1772,9 +1772,8 @@ def down(iface, iface_type):
     """
     # Slave devices are controlled by the master.
     # Source 'interfaces' aren't brought down.
-    if iface_type not in ["slave", "source"]:
-        cmd = ["ip", "link", "set", iface, "down"]
-        return __salt__["cmd.run"](cmd, python_shell=False)
+    if iface_type not in ['slave', 'source']:
+        return __salt__['cmd.run'](['ifdown', iface])
     return None
 
 
@@ -1834,9 +1833,8 @@ def up(iface, iface_type):  # pylint: disable=C0103
     """
     # Slave devices are controlled by the master.
     # Source 'interfaces' aren't brought up.
-    if iface_type not in ("slave", "source"):
-        cmd = ["ip", "link", "set", iface, "up"]
-        return __salt__["cmd.run"](cmd, python_shell=False)
+    if iface_type not in ('slave', 'source'):
+        return __salt__['cmd.run'](['ifup', iface])
     return None
 
 
@@ -1867,11 +1865,9 @@ def get_network_settings():
 
         hostname = _parse_hostname()
         domainname = _parse_domainname()
-        searchdomain = _parse_searchdomain()
 
-        settings["hostname"] = hostname
-        settings["domainname"] = domainname
-        settings["searchdomain"] = searchdomain
+        settings['hostname'] = hostname
+        settings['domainname'] = domainname
 
     else:
         settings = _parse_current_network_settings()

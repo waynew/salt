@@ -8,8 +8,15 @@ from __future__ import absolute_import, print_function, unicode_literals
 from collections import OrderedDict as odict
 import tempfile
 
-# Import third party libs
-import jinja2.exceptions
+# Import Salt Testing Libs
+from tests.support.mixins import LoaderModuleMockMixin
+from tests.support.unit import TestCase, skipIf
+from tests.support.mock import (
+    MagicMock,
+    patch,
+    NO_MOCK,
+    NO_MOCK_REASON
+)
 
 # Import Salt Libs
 import salt.modules.debian_ip as debian_ip
@@ -21,7 +28,6 @@ from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase, skipIf
 
 
-@skipIf(salt.utils.platform.is_windows(), 'Do not run these tests on Windows')
 # Big pile of interface data for unit tests
 #   To skip, search for 'DebianIpTestCase'
 test_interfaces = [
@@ -807,18 +813,6 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
                 ):
                     self.assertEqual(debian_ip.build_bond("bond0"), "")
 
-    def test_error_message_iface_should_process_non_str_expected(self):
-        values = [1, True, False, "no-kaboom"]
-        iface = "ethtest"
-        option = "test"
-        msg = debian_ip._error_msg_iface(iface, option, values)
-        self.assertTrue(msg.endswith("[1|True|False|no-kaboom]"), msg)
-
-    def test_error_message_network_should_process_non_str_expected(self):
-        values = [1, True, False, "no-kaboom"]
-        msg = debian_ip._error_msg_network("fnord", values)
-        self.assertTrue(msg.endswith("[1|True|False|no-kaboom]"), msg)
-
     def test_build_bond_exception(self):
         """
         Test if it create a bond script in /etc/modprobe.d with the passed
@@ -986,39 +980,25 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
     def test_get_network_settings(self):
         """
         Test if it return the contents of the global network script.
-        """
-        with patch.dict(
-            debian_ip.__grains__, {"osfullname": "Ubuntu", "osrelease": "14"}
-        ), patch(
-            "salt.modules.debian_ip._parse_hostname",
-            MagicMock(return_value="SaltStack"),
-        ), patch(
-            "salt.modules.debian_ip._parse_domainname",
-            MagicMock(return_value="saltstack.com"),
-        ), patch(
-            "salt.modules.debian_ip._parse_searchdomain",
-            MagicMock(return_value="test.saltstack.com"),
-        ):
+        '''
+        with patch.dict(debian_ip.__grains__, {'osfullname': 'Ubuntu',
+                                               'osrelease': '14'}), \
+                patch('salt.modules.debian_ip._parse_hostname',
+                      MagicMock(return_value='SaltStack')), \
+                        patch('salt.modules.debian_ip._parse_domainname',
+                              MagicMock(return_value='saltstack.com')):
             mock_avai = MagicMock(return_value=True)
-            with patch.dict(
-                debian_ip.__salt__,
-                {"service.available": mock_avai, "service.status": mock_avai},
-            ):
-                self.assertEqual(
-                    debian_ip.get_network_settings(),
-                    [
-                        "NETWORKING=yes\n",
-                        "HOSTNAME=SaltStack\n",
-                        "DOMAIN=saltstack.com\n",
-                        "SEARCH=test.saltstack.com\n",
-                    ],
-                )
+            with patch.dict(debian_ip.__salt__, {'service.available': mock_avai,
+                                                 'service.status': mock_avai}):
+                self.assertEqual(debian_ip.get_network_settings(),
+                                 ['NETWORKING=yes\n',
+                                  'HOSTNAME=SaltStack\n',
+                                  'DOMAIN=saltstack.com\n'])
 
-                mock = MagicMock(
-                    side_effect=jinja2.exceptions.TemplateNotFound("error")
-                )
-                with patch.object(jinja2.Environment, "get_template", mock):
-                    self.assertEqual(debian_ip.get_network_settings(), "")
+                mock = MagicMock(side_effect=jinja2.exceptions.TemplateNotFound
+                                 ('error'))
+                with patch.object(jinja2.Environment, 'get_template', mock):
+                    self.assertEqual(debian_ip.get_network_settings(), '')
 
     # 'get_routes' function tests: 1
 

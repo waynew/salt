@@ -703,11 +703,12 @@ def _parse_interfaces(interface_files=None):
             log.error(msg)
             adapters.pop(iface_name)
             continue
-        for opt in ["ethtool", "bonding", "bridging"]:
-            if "inet" in adapters[iface_name]["data"]:
-                if opt in adapters[iface_name]["data"]["inet"]:
-                    opt_keys = sorted(adapters[iface_name]["data"]["inet"][opt].keys())
-                    adapters[iface_name]["data"]["inet"][opt + "_keys"] = opt_keys
+        for opt in ['ethtool', 'bonding', 'bridging']:
+            for inet in ['inet', 'inet6']:
+                if inet in adapters[iface_name]['data']:
+                    if opt in adapters[iface_name]['data'][inet]:
+                        opt_keys = sorted(adapters[iface_name]['data'][inet][opt].keys())
+                        adapters[iface_name]['data'][inet][opt + '_keys'] = opt_keys
 
     return adapters
 

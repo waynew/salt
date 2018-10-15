@@ -60,8 +60,9 @@ def __virtual__():
 def ext_pillar(minion_id,
                pillar,  # pylint: disable=W0613
                url,
-               with_grains=False,
-               **kwargs):
+               username=None,
+               password=None,
+               with_grains=False):
     '''
     Read pillar data from HTTP response.
 
@@ -94,11 +95,7 @@ def ext_pillar(minion_id,
 
     log.debug('Getting url: %s', url)
 
-    if 'username' in kwargs and 'password' in kwargs:
-        data = __salt__['http.query'](url=url, decode=True, decode_type='yaml',
-                                      username=kwargs['username'], password=kwargs['password'])
-    else:
-        data = __salt__['http.query'](url=url, decode=True, decode_type='yaml')
+    data = __salt__['http.query'](url=url, username=username, password=password, decode=True, decode_type='yaml')
 
     if 'dict' in data:
         return data['dict']

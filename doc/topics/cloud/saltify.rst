@@ -245,6 +245,47 @@ example map file using DNS names instead of IP addresses:
       - my-instance-0
       - my-instance-1
 
+Bulk Deployments
+----------------
+
+When deploying large numbers of Salt Minions using Saltify, it may be
+preferable to organize the configuration in a way that duplicates data
+as little as possible. For example, if a group of target systems have 
+the same credentials, they can be specified in the profile, rather than
+in a map file.
+
+.. code-block:: yaml
+
+    # /etc/salt/cloud.profiles.d/saltify.conf
+
+    make_salty:
+      provider: my-saltify-config
+      ssh_username: root
+      password: very-bad-password
+
+.. code-block:: yaml
+
+    # /etc/salt/saltify-map
+
+    make_salty:
+      - my-instance-0:
+          ssh_host: 12.34.56.78
+      - my-instance-1:
+          ssh_host: 44.33.22.11
+
+If ``ssh_host`` is not provided, its default value will be the Minion identifier
+(``my-instance-0`` and ``my-instance-1``, in the example above). For deployments with
+working DNS resolution, this can save a lot of redundant data in the map. Here is an
+example map file using DNS names instead of IP addresses:
+
+.. code-block:: yaml
+
+    # /etc/salt/saltify-map
+
+    make_salty:
+      - my-instance-0
+      - my-instance-1
+
 Credential Verification
 =======================
 

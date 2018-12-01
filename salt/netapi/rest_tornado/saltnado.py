@@ -1061,7 +1061,7 @@ class SaltAPIHandler(BaseSaltAPIHandler):  # pylint: disable=W0223
                         raise tornado.gen.Return(chunk_ret)
 
             except TimeoutException:
-                pass
+                break
 
     @tornado.gen.coroutine
     def job_not_running(self, jid, tgt, tgt_type, minions, is_finished):

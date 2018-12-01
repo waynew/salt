@@ -237,6 +237,10 @@ def pytest_configure(config):
 
     # Expose the markers we use to pytest CLI
     config.addinivalue_line(
+        'filterwarnings',
+        r'once:encoding is deprecated, Use raw=False instead\.:DeprecationWarning'
+    )
+    config.addinivalue_line(
         'markers',
         'destructive_test: Run destructive tests. These tests can include adding '
         'or removing users from your system for example.'

@@ -2872,6 +2872,7 @@ class SaltSSHOptionParser(six.with_metaclass(OptionParserMeta,
                                              OutputOptionsMixIn,
                                              SaltfileMixIn,
                                              HardCrashMixin,
+                                             CacheDirMixIn,
                                              NoParseMixin)):
 
     usage = '%prog [options] \'<target>\' <function> [arguments]'

@@ -601,6 +601,15 @@ VALID_OPTS = immutabletypes.freeze({
     # Refs https://github.com/saltstack/salt/issues/34215
     'ipc_write_buffer': int,
 
+    # IPC tcp socket max send buffer
+    'ipc_so_sndbuf': int,
+
+    # IPC tcp socket max receive buffer
+    'ipc_so_rcvbuf': int,
+
+    # IPC tcp socket backlog size
+    'ipc_so_backlog': int,
+
     # The number of MWorker processes for a master to startup. This number needs to scale up as
     # the number of connected minions increases.
     'worker_threads': int,
@@ -1353,6 +1362,9 @@ DEFAULT_MINION_OPTS = immutabletypes.freeze({
     'mine_interval': 60,
     'ipc_mode': _DFLT_IPC_MODE,
     'ipc_write_buffer': _DFLT_IPC_WBUFFER,
+    'ipc_so_rcvbuf': None,
+    'ipc_so_sndbuf': None,
+    'ipc_so_backlog': 128,
     'ipv6': None,
     'file_buffer_size': 262144,
     'tcp_pub_port': 4510,
@@ -1662,6 +1674,9 @@ DEFAULT_MASTER_OPTS = immutabletypes.freeze({
     'enforce_mine_cache': False,
     'ipc_mode': _DFLT_IPC_MODE,
     'ipc_write_buffer': _DFLT_IPC_WBUFFER,
+    'ipc_so_rcvbuf': None,
+    'ipc_so_sndbuf': None,
+    'ipc_so_backlog': 128,
     'ipv6': None,
     'tcp_master_pub_port': 4512,
     'tcp_master_pull_port': 4513,

@@ -457,6 +457,14 @@ def managed(name, ppa=None, **kwargs):
             elif kwarg == 'architectures' and sanitizedkwargs[kwarg]:
                 if set(sanitizedkwargs[kwarg]) != set(pre[kwarg]):
                     break
+            elif kwarg in ('keyserver', 'key_url', 'key_text'):
+                if kwarg == 'keyserver':
+                    pass # TODO: pull key from keyserver and get the fingerprint, then compare it to the fingerprints found in the existing apt-key -W. Werner, 2019-02-21
+                elif kwarg == 'key_url':
+                    pass # TODO: import the key from this URL with a temp gnupg home. Then compare it to the existing fingerprints
+                elif kwarg == 'key_text':
+                    pass # TODO: Import the key from this text and compare its fingerprints against those that exist -W. Werner, 2019-02-21
+                # TODO: Actually do the comparison stuff here. If the fingerprint is not in the know n prints, breeeeaaaaak! -W. Werner, 2019-02-21
             else:
                 if __grains__['os_family'] in ('RedHat', 'Suse') \
                         and any(isinstance(x, bool) for x in

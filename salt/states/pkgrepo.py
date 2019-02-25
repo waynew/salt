@@ -465,6 +465,13 @@ def managed(name, ppa=None, **kwargs):
                 elif kwarg == 'key_text':
                     pass # TODO: Import the key from this text and compare its fingerprints against those that exist -W. Werner, 2019-02-21
                 # TODO: Actually do the comparison stuff here. If the fingerprint is not in the know n prints, breeeeaaaaak! -W. Werner, 2019-02-21
+                # We can use the gpg state for a lot of this stuff. Where we can't
+                # We might need something like:
+                # gpg --keyserver keyserver.ubuntu.com --recv <key id>
+                #
+                # or
+                #
+                # apt-key adv --list-public-keys --with-fingerprint --with-colons
             else:
                 if __grains__['os_family'] in ('RedHat', 'Suse') \
                         and any(isinstance(x, bool) for x in

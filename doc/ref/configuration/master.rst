@@ -3955,6 +3955,42 @@ Default: ``[]``
       - reclass:
           inventory_base_uri: /etc/reclass
 
+You can also provide your own external pillar functions. Add these lines to
+your master config:
+
+.. code-block:: yaml
+
+    pillar_dirs:
+      - /srv/pillar_mods
+
+    ext_pillar:
+      - my_first_pillar:
+        - these
+        - will
+        - be
+        - arguments
+      - my_second_pillar:
+          these: will
+          be: passed
+          as kwargs: to the pillar
+
+In ``/srv/pillar_mods`` place two files - ``my_first_pillar.py`` and
+``my_second_pillar.py``. Salt looks for an ``ext_pillar`` function in these
+modules, which will be called with the specified arguments.
+
+Salt checks the sorted ``pillar_dirs`` for a file matching each ``ext_pillar``
+name and uses the first matching file it finds. Your pillar file might look
+like this:
+
+.. code-block:: python
+
+    def ext_pillar(minion_id, pillar, *args, **kwargs):
+        return {'args': args, 'kwargs': kwargs}
+
+Then call ``salt \* pillar.items`` and you'll see the ``args`` and ``kwargs``
+in the returned pillar. Because these modules are Python, anything that you can
+do with Python you can do to generate pillars.
+
 There are additional details at :ref:`salt-pillars`
 
 .. conf_master:: ext_pillar_first

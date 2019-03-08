@@ -441,6 +441,7 @@ def install(pkgs=None,  # pylint: disable=R0912,R0913,R0914
             no_cache_dir=False,
             cache_dir=None,
             no_binary=None,
+            user_install=False,
             **kwargs):
     '''
     Install packages with pip
@@ -612,6 +613,10 @@ def install(pkgs=None,  # pylint: disable=R0912,R0913,R0914
     no_cache_dir
         Disable the cache.
 
+    user_install
+        Enable install to occur inside the user base's (site.USER_BASE) binary directory,
+        typically ~/.local/, or %APPDATA%\Python on Windows.
+
     CLI Example:
 
     .. code-block:: bash
@@ -780,6 +785,9 @@ def install(pkgs=None,  # pylint: disable=R0912,R0913,R0914
 
     if source:
         cmd.extend(['--source', source])
+
+    if user_install:
+        cmd.append('--user')
 
     if upgrade:
         cmd.append('--upgrade')

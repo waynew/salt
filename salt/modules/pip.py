@@ -1224,12 +1224,12 @@ def list_json(prefix=None,
     cmd = _get_pip_bin(bin_env)
     cmd.append('list')
     cmd.extend(['--verbose', '--format', 'json'])
-    result = __salt__['cmd.run_all'](cmd, **cmd_kwargs)
+    result = __salt__['cmd.run_all'](cmd)
 
     if result['retcode']:
         raise CommandExecutionError(result['stderr'], info=result)
 
-    return salt.utils.json.loads(result['stdout'], strict=False
+    return salt.utils.json.loads(result['stdout'], strict=False)
 
 
 def version(bin_env=None):

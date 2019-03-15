@@ -51,16 +51,17 @@ from salt.ext import six
 
 
 class VirtualEnv(object):
-    def __init__(self, test, venv_dir):
+    def __init__(self, test, venv_dir, cleanup=True):
         self.venv_dir = venv_dir
         self.test = test
+        self.cleanup = cleanup
 
     def __enter__(self):
         ret = self.test.run_function('virtualenv.create', [self.venv_dir])
         self.test.assertEqual(ret['retcode'], 0)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if os.path.isdir(self.venv_dir):
+        if self.cleanup and os.path.isdir(self.venv_dir):
             shutil.rmtree(self.venv_dir, ignore_errors=True)
 
 
@@ -92,18 +93,14 @@ class PipStateTest(ModuleCase, SaltReturnAssertsMixin):
             self.assertSaltTrueReturn(ret)
 
     def test_pip_installed_user_install_true(self):
-        venv_dir = os.path.join(
-            RUNTIME_VARS.TMP, 'pip_install_user_install'
-        )
-        with VirtualEnv(self, venv_dir):
-            pkg = 'pycurl'
-            self.run_state('pip.installed', user_install=True, name=pkg)
-            user_packages = self.run_function('pip.list', user_install=True)
-            system_packages = self.run_function('pip.list', user_install=False)
+        pkg = 'shibboleth'
+        env = {'PYTHONUSERBASE': '/tmp/blarg'}
+        self.run_state('pip.installed', user_install=True, name=pkg, env_vars=env )
+        user_packages = self.run_function('pip.list_json', user_install=True, env_vars=env, verbose=True, format='json')
+        system_packages = self.run_function('pip.list_json', user_install=False, env_vars=env, verbose=True, format='json')
 
-            print(user_packages, system_packages)
-
-            self.assertTrue(pkg in user_packages and pkg not in system_packages)
+        print(user_packages)
+        self.assertTrue(pkg in user_packages)
 
 
 

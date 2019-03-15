@@ -93,14 +93,18 @@ class PipStateTest(ModuleCase, SaltReturnAssertsMixin):
             self.assertSaltTrueReturn(ret)
 
     def test_pip_installed_user_install_true(self):
+        # TODO: Do we have a salt simple test package? If not, let's make one! -W. Werner, 2019-03-15
         pkg = 'shibboleth'
         env = {'PYTHONUSERBASE': '/tmp/blarg'}
         self.run_state('pip.installed', user_install=True, name=pkg, env_vars=env )
+        # TODO: We don't need seperate user/system packages since list with verbose + json has the actual location so we know it's in the USERBASE or in the /usr/lib.... location -W. Werner, 2019-03-15
         user_packages = self.run_function('pip.list_json', user_install=True, env_vars=env, verbose=True, format='json')
         system_packages = self.run_function('pip.list_json', user_install=False, env_vars=env, verbose=True, format='json')
 
+        # TODO: Flesh this out a bit too, it's kind of rubbish -W. Werner, 2019-03-15
         pkgs = {p['name']: p for p in user_packages}
         print(user_packages)
+        # TODO: The falsey version of this should install with user_install=False and then this should*not* be the userbase -W. Werner, 2019-03-15
         self.assertEqual(pkgs[pkg]['location'], env['PYTHONUSERBASE'])
 
 

@@ -1219,6 +1219,7 @@ def list_json(prefix=None,
               **kwargs):
     '''
     New in Sodium
+    TODO flesh this out. - Some docs, some checking and usage of arguments, etc.
     ...
     '''
     cmd = _get_pip_bin(bin_env)

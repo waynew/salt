@@ -1224,6 +1224,8 @@ def list_json(prefix=None,
     cmd = _get_pip_bin(bin_env)
     cmd.append('list')
     cmd.extend(['--verbose', '--format', 'json'])
+    if user_install:
+        cmd.append('--user')
     result = __salt__['cmd.run_all'](cmd)
 
     if result['retcode']:

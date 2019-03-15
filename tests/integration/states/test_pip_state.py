@@ -99,8 +99,9 @@ class PipStateTest(ModuleCase, SaltReturnAssertsMixin):
         user_packages = self.run_function('pip.list_json', user_install=True, env_vars=env, verbose=True, format='json')
         system_packages = self.run_function('pip.list_json', user_install=False, env_vars=env, verbose=True, format='json')
 
+        pkgs = {p['name']: p for p in user_packages}
         print(user_packages)
-        self.assertTrue(pkg in user_packages)
+        self.assertEqual(pkgs[pkg]['location'], env['PYTHONUSERBASE'])
 
 
 

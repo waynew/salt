@@ -105,6 +105,7 @@ class PipStateTest(ModuleCase, SaltReturnAssertsMixin):
         pkgs = {p['name']: p for p in user_packages}
         print(user_packages)
         # TODO: The falsey version of this should install with user_install=False and then this should*not* be the userbase -W. Werner, 2019-03-15
+        # TODO: The non-user one should install into a virtualenv. This one should not install using virtualenv because pip --user behaves badly in a virtualenv. The non-user assertion should assert that it was installed to the virtualenv instead -W. Werner, 2019-03-15
         self.assertEqual(pkgs[pkg]['location'], env['PYTHONUSERBASE'])
 
 

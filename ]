@@ -91,10 +91,6 @@ MAX_OPEN_FILES = {
         'soft_limit': 3072,
         'hard_limit': 4096,
     },
-    'functional': {
-        'soft_limit': 3072,
-        'hard_limit': 4096,
-    },
     'unit': {
         'soft_limit': 1024,
         'hard_limit': 2048,
@@ -107,9 +103,6 @@ TEST_SUITES_UNORDERED = {
     'unit':
        {'display_name': 'Unit',
         'path': 'unit'},
-    'functional':
-       {'display_name': 'Functional',
-        'path': 'functional'},
     'kitchen':
        {'display_name': 'Kitchen',
         'path': 'kitchen'},
@@ -199,14 +192,9 @@ class SaltTestsuiteParser(SaltCoverageTestingParser):
     support_destructive_tests_selection = True
     source_code_basedir = SALT_ROOT
 
-    def _get_suites(
-        self,
-        include_unit=False,
-        include_cloud_provider=False,
-        include_functional=False,
-        include_proxy=False,
-        include_kitchen=False,
-    ):
+    def _get_suites(self, include_unit=False, include_cloud_provider=False,
+                    include_functional=False,
+                    include_proxy=False, include_kitchen=False):
         '''
         Return a set of all test suites except unit and cloud provider tests
         unless requested
@@ -225,46 +213,34 @@ class SaltTestsuiteParser(SaltCoverageTestingParser):
 
         return suites
 
-    def _check_enabled_suites(
-        self,
-        include_unit=False,
-        include_cloud_provider=False,
-        include_functional=False,
-        include_proxy=False,
-        include_kitchen=False,
-    ):
+    def _check_enabled_suites(self, include_unit=False,
+                              include_cloud_provider=False,
+                              include_functional=False,
+                              include_proxy=False,
+                              include_kitchen=False):
         '''
         Query whether test suites have been enabled
         '''
-        suites = self._get_suites(
-            include_unit=include_unit,
-            include_cloud_provider=include_cloud_provider,
-            include_functional=include_functional,
-            include_proxy=include_proxy,
-            include_kitchen=include_kitchen,
-        )
+        suites = self._get_suites(include_unit=include_unit,
+                                  include_cloud_provider=include_cloud_provider,
+                                  include_functional=include_functional,
+                                  include_proxy=include_proxy,
+                                  include_kitchen=include_kitchen)
 
-        blarp = list(suite for suite in suites if getattr(self.options, suite))
+        blarp = list(getattr(self.options, suite) for suite in suites)
         return any([getattr(self.options, suite) for suite in suites])
 
-    def _enable_suites(
-        self,
-        include_unit=False,
-        include_cloud_provider=False,
-        include_functional=False,
-        include_proxy=False,
-        include_kitchen=False,
-    ):
+    def _enable_suites(self, include_unit=False, include_cloud_provider=False,
+                       include_functional=False,
+                       include_proxy=False, include_kitchen=False):
         '''
         Enable test suites for current test run
         '''
-        suites = self._get_suites(
-            include_unit=include_unit,
-            include_cloud_provider=include_cloud_provider,
-            include_functional=include_functional,
-            include_proxy=include_proxy,
-            include_kitchen=include_kitchen,
-        )
+        suites = self._get_suites(include_unit=include_unit,
+                                  include_cloud_provider=include_cloud_provider,
+                                  include_functional=include_functional,
+                                  include_proxy=include_proxy,
+                                  include_kitchen=include_kitchen)
 
         for suite in suites:
             setattr(self.options, suite, True)
@@ -586,13 +562,13 @@ class SaltTestsuiteParser(SaltCoverageTestingParser):
 
         # When no tests are specifically enumerated on the command line, setup
         # a default run: +unit -cloud_provider
-        if not self.options.name and not self._check_enabled_suites(
-            include_unit=True,
-            include_cloud_provider=True,
-            include_functional=True,
-            include_proxy=True,
-            include_kitchen=True,
-        ):
+        if not self.options.name and not \
+                self._check_enabled_suites(include_unit=True,
+                                           include_cloud_provider=True,
+                                           include_functional=True,
+                                           include_proxy=True,
+                                           include_kitchen=True):
+            import pdb; pdb.set_trace()
             self._enable_suites(include_unit=True)
 
         self.start_coverage(
@@ -756,33 +732,15 @@ class SaltTestsuiteParser(SaltCoverageTestingParser):
 
         if self.options.name:
             for test in self.options.name:
-                if test.startswith(
-                    (
-                        'tests.unit.',
-                        'unit.',
-                        'test.kitchen.',
-                        'kitchen.',
-                        'tests.functional',
-                        'functional.',
-                    )
-                ):
+                if test.startswith(('tests.unit.', 'unit.', 'test.kitchen.', 'kitchen.', 'tests.functional', 'functional.')):
                     named_unit_test.append(test)
                     continue
                 named_tests.append(test)
 
-        if (
-            (
-                self.options.unit
-                or self.options.functional
-                or self.options.kitchen
-                or named_unit_test
-            )
-            and not named_tests
-            and (
-                self.options.from_filenames
-                or not self._check_enabled_suites(include_cloud_provider=True)
-            )
-        ):
+        if (self.options.unit or self.options.functional or self.options.kitchen or named_unit_test) \
+                and not named_tests \
+                and (self.options.from_filenames or
+                     not self._check_enabled_suites(include_cloud_provider=True)):
             # We're either not running any integration test suites, or we're
             # only running unit, functional, or kitchen tests by passing --unit or by passing only
             # `unit.<whatever>` to --name.  We don't need the tests daemon
@@ -897,7 +855,7 @@ class SaltTestsuiteParser(SaltCoverageTestingParser):
             self.set_filehandle_limits('functional')
 
             results = self.run_suite(
-                os.path.join(TEST_DIR, 'functional'), 'Functional', suffix='test_*.py'
+                os.path.join(TEST_DIR, 'functional'), 'Unit', suffix='test_*.py'
             )
             status.append(results)
             # We executed ALL functionaltests, we can skip running functional

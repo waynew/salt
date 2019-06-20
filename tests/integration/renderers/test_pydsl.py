@@ -15,6 +15,7 @@ import salt.utils.stringutils
 
 
 class PyDSLRendererIncludeTestCase(ModuleCase):
+    remote = True
 
     def test_rendering_includes(self):
         '''

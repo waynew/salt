@@ -21,6 +21,7 @@ class BeaconStateTestCase(ModuleCase, SaltReturnAssertsMixin):
     Test beacon states
     '''
     def setUp(self):
+        self.remote = True
         self.run_function('beacons.reset', f_timeout=300)
         self.wait_for_all_jobs()
         self.addCleanup(self.run_function, 'beacons.reset', f_timeout=300)

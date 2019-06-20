@@ -207,6 +207,7 @@ class BasePillarTest(_CommonBase):
     '''
     @classmethod
     def setUpClass(cls):
+        cls.remote = True
         super(BasePillarTest, cls).setUpClass()
         os.makedirs(cls.pillar_base)
         with salt.utils.files.fopen(cls.top_sls, 'w') as fp_:
@@ -266,6 +267,7 @@ class DecryptGPGPillarTest(_CommonBase):
     @classmethod
     def setUpClass(cls):
         super(DecryptGPGPillarTest, cls).setUpClass()
+        cls.remote = True
         try:
             os.makedirs(cls.gpg_homedir, mode=0o700)
         except Exception:

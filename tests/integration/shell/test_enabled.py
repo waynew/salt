@@ -24,6 +24,7 @@ class EnabledTest(ModuleCase):
     cmd = ("echo -e 'first\\nsecond\\nthird' | wc -l ; "
            "export SALTY_VARIABLE='saltines' && echo $SALTY_VARIABLE ; "
            "echo duh &> /dev/null")
+    remote = True
 
     @skipIf(True, 'WAR ROOM TEMPORARY SKIP')
     @skipIf(salt.utils.platform.is_windows(), 'Skip on Windows OS')

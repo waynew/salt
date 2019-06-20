@@ -70,6 +70,7 @@ class StateModuleTest(ModuleCase, SaltReturnAssertsMixin):
     '''
 
     maxDiff = None
+    remote = True
 
     @classmethod
     def setUpClass(cls):

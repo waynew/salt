@@ -27,6 +27,7 @@ class WinPKGTest(ModuleCase):
     '''
     @classmethod
     def setUpClass(cls):
+        cls.remote = True
         cls.repo_dir = os.path.join(RUNTIME_VARS.FILES, 'file', 'base', 'win', 'repo-ng')
         cls.curl_sls_path = os.path.join(cls.repo_dir, 'curl.sls')
 

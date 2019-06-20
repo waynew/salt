@@ -38,6 +38,8 @@ class CMDModuleTest(ModuleCase):
     '''
     Validate the cmd module
     '''
+    remote = salt.utils.platform.is_windows()
+
     def setUp(self):
         self.runas_usr = 'nobody'
         if salt.utils.platform.is_darwin():
@@ -70,7 +72,7 @@ class CMDModuleTest(ModuleCase):
         self.assertEqual(self.run_function('cmd.run',
                          ['echo {{grains.id}} | awk "{print $1}"'],
                          template='jinja',
-                         python_shell=True), 'minion')
+                         python_shell=True), 'master_minion')
         self.assertEqual(self.run_function('cmd.run',
                          ['grep f'],
                          stdin='one\ntwo\nthree\nfour\nfive\n'), 'four\nfive')
@@ -179,7 +181,7 @@ class CMDModuleTest(ModuleCase):
         cmd_blacklist_glob
         '''
         self.assertEqual(self.run_function('cmd.run',
-                ['bad_command --foo']).rstrip(),
+                ['bad_command --foo'], rem=True).rstrip(),
                 'ERROR: The shell command "bad_command --foo" is not permitted')
 
     def test_script(self):
@@ -196,7 +198,7 @@ class CMDModuleTest(ModuleCase):
         cmd.script_retcode
         '''
         script = 'salt://script.py'
-        ret = self.run_function('cmd.script_retcode', [script])
+        ret = self.run_function('cmd.script_retcode', [script], rem=True)
         self.assertEqual(ret, 0)
 
     def test_script_cwd(self):
@@ -376,7 +378,7 @@ class CMDModuleTest(ModuleCase):
             if not salt.utils.platform.is_windows() \
             else ['dir', 'c:\\']
 
-        error_command = ['thiscommanddoesnotexist']
+        error_command = ['echo to stderr 1>&2']
 
         # cmd.run
         out = self.run_function(

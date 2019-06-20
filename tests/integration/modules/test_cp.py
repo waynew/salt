@@ -665,7 +665,7 @@ class CPModuleTest(ModuleCase):
         log_to_xfer = os.path.join(RUNTIME_VARS.TMP, uuid.uuid4().hex)
         open(log_to_xfer, 'w').close()  # pylint: disable=resource-leakage
         try:
-            self.run_function('cp.push', [log_to_xfer])
+            self.run_function('cp.push', [log_to_xfer], rem=True)
             tgt_cache_file = os.path.join(
                     RUNTIME_VARS.TMP,
                     'master-minion-root',

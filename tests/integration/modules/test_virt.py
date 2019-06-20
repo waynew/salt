@@ -18,6 +18,7 @@ class VirtTest(ModuleCase):
     '''
     Test virt routines
     '''
+    remote = True
 
     def test_default_kvm_profile(self):
         '''

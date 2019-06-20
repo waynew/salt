@@ -15,6 +15,7 @@ from tests.support.case import ModuleCase
 from tests.support.mixins import SaltReturnAssertsMixin
 
 # Import salt libs
+import salt.utils.platform
 import salt.utils.files
 import salt.utils.stringutils
 
@@ -25,6 +26,7 @@ class HostTest(ModuleCase, SaltReturnAssertsMixin):
     '''
     Validate the host state
     '''
+    remote = salt.utils.platform.is_windows()
 
     @classmethod
     def setUpClass(cls):

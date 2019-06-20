@@ -1054,7 +1054,14 @@ def requires_system_grains(func):
                     cls.__class__.__name__
                 )
             )
-        return func(cls, grains=cls.run_function('grains.items'))
+        remote = False
+        try:
+            remote = cls.rem
+        except AttributeError:
+            pass  # Not all test classes will define if they want
+                  # to override and use a remote minion. So, they
+                  # don't have to.
+        return func(cls, grains=cls.run_function('grains.items', rem=remote))
     return decorator
 
 

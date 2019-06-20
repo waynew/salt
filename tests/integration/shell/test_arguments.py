@@ -18,6 +18,8 @@ import salt.utils.args
 @requires_salt_modules('test.ping', 'test.arg')
 @skipIf(True, "WAR ROOM TEMPORARY SKIP")
 class ArgumentTestCase(ModuleCase):
+    remote = True
+
     def test_unsupported_kwarg(self):
         '''
         Test passing a non-supported keyword argument. The relevant code that

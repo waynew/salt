@@ -25,6 +25,7 @@ class HostsModuleTest(ModuleCase):
     '''
 
     maxDiff = None
+    remote = True
 
     @classmethod
     def setUpClass(cls):

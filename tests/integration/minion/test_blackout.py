@@ -56,6 +56,7 @@ class MinionBlackoutTestCase(ModuleCase):
         refreshed = self.run_function(
             'saltutil.refresh_pillar',
             minion_tgt='sub_minion',
+            rem=True,
             **{'async': False})
         self.assertTrue(refreshed)
         self.wait_for_all_jobs()
@@ -76,6 +77,7 @@ class MinionBlackoutTestCase(ModuleCase):
             wfh.write(blackout_data)
         refreshed = self.run_function(
             'saltutil.refresh_pillar',
+            rem=True,
             **{'async': False})
         self.assertTrue(refreshed)
         log.info('Entered minion blackout.')
@@ -89,6 +91,7 @@ class MinionBlackoutTestCase(ModuleCase):
             wfh.write('minion_blackout: False\n')
         refreshed = self.run_function(
             'saltutil.refresh_pillar',
+            rem=True,
             **{'async': False})
         self.assertTrue(refreshed)
         self.wait_for_all_jobs()
@@ -101,12 +104,12 @@ class MinionBlackoutTestCase(ModuleCase):
         '''
         try:
             self.begin_blackout()
-            blackout_ret = self.run_function('test.ping')
+            blackout_ret = self.run_function('test.ping', rem=True)
             self.assertIn('Minion in blackout mode.', blackout_ret)
         finally:
             self.end_blackout()
 
-        ret = self.run_function('test.ping')
+        ret = self.run_function('test.ping', rem=True)
         self.assertEqual(ret, True)
 
     @flaky
@@ -121,10 +124,10 @@ class MinionBlackoutTestCase(ModuleCase):
               - test.fib
             '''))
 
-        ping_ret = self.run_function('test.ping')
+        ping_ret = self.run_function('test.ping', rem=True)
         self.assertEqual(ping_ret, True)
 
-        fib_ret = self.run_function('test.fib', [7])
+        fib_ret = self.run_function('test.fib', [7], rem=True)
         self.assertTrue(isinstance(fib_ret, list))
         self.assertEqual(fib_ret[0], 13)
 
@@ -141,8 +144,8 @@ class MinionBlackoutTestCase(ModuleCase):
               - test.fib
             '''))
 
-        state_ret = self.run_function('state.apply')
+        state_ret = self.run_function('state.apply', rem=True)
         self.assertIn('Minion in blackout mode.', state_ret)
 
-        cloud_ret = self.run_function('cloud.query', ['list_nodes_full'])
+        cloud_ret = self.run_function('cloud.query', ['list_nodes_full'], rem=True)
         self.assertIn('Minion in blackout mode.', cloud_ret)

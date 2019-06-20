@@ -86,7 +86,10 @@ class ManTest(ModuleCase):
         self.rootdir = os.path.join(RUNTIME_VARS.TMP, 'mantest')
         self.addCleanup(shutil.rmtree, self.rootdir, ignore_errors=True)
         if not os.path.exists(self.rootdir):
-            ret = self.run_function('mantest.install', [self.rootdir])
+            # TODO: Both of the `run_function` tests in here appear to come from somewhere else -W. Werner, 2019-06-24
+            # In theory we should be able to add them to the masterminion instead
+            # But just using rem=True is easier for now
+            ret = self.run_function('mantest.install', [self.rootdir], rem=True)
             if not isinstance(ret, dict):
                 self.fail(
                     'The \'mantest.install\' command did not return the excepted dictionary. Output:\n{}'.format(
@@ -104,7 +107,7 @@ class ManTest(ModuleCase):
         '''
         Make sure that man pages are installed
         '''
-        ret = self.run_function('mantest.search', [self.manpages, self.rootdir])
+        ret = self.run_function('mantest.search', [self.manpages, self.rootdir], rem=True)
         # The above function returns True if successful and an exception (which
         # will manifest in the return as a stringified exception) if
         # unsuccessful. Therefore, a simple assertTrue is not sufficient.

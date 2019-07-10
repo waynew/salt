@@ -32,6 +32,7 @@ def all_jobs(branches):
 
 
 def do_it():
+    branch = '2019.2.1'
     branch = 'neon'
     times = Counter()
     for job_url in all_jobs([branch]):
@@ -39,7 +40,9 @@ def do_it():
         branch = parts[4]
         suite = parts[6]
         suite = 'salt-centos-7-py2'
-        suite = 'salt-fedora-29-py2'
+        suite = 'salt-centos-6-py2'
+        suite = 'salt-centos-6-py2'
+        suite = 'salt-debian-8-py3'
         for url in builds(branch, suite, 1):
             parts = url.split('/')
             branch = parts[4]
@@ -47,7 +50,7 @@ def do_it():
             build_number = parts[7]
             has_failures = False
             uri = (
-                'https://jenkinsci.saltstack.com/job/{branch}/job'
+                'https://jenkinsci-staging.saltstack.com/job/{branch}/job'
                 '/{suite}/{build_number}/testReport/api/json'
             ).format(
                 branch=branch,
@@ -66,18 +69,21 @@ def do_it():
             data = resp.json()
             for suite in data['suites']:
                 for case in suite['cases']:
-                    times[case['className']] = case['duration']
-        for name, time in times.most_common(100):
-            print(f'{name:<70} {time:>7,.3f}')
-        with open('times.csv', 'w') as f:
+                    times[case['className']] += case['duration'] / 60
+            total = 0
             for name, time in times.most_common(100):
-                f.write(f'{name}\t{time}\n')
-        return
+                total += time
+                print(f'{name:<70} {time:>7,.3f}')
+            print('Total:', total/60, 'hrs')
+            with open('times.csv', 'w') as f:
+                for name, time in times.most_common(100):
+                    f.write(f'{name}\t{time:.3f}\n')
+            return
 
 
 def builds(branch, suite, number_of_builds=1):
     uri = (
-        'https://jenkinsci.saltstack.com/job/{branch}/job'
+        'https://jenkinsci-staging.saltstack.com/job/{branch}/job'
         '/{suite}/api/json'
     ).format(
         branch=branch,
@@ -92,12 +98,8 @@ def builds(branch, suite, number_of_builds=1):
     if resp.status_code != 200:
         log.error('Unable to fetch builds: %s %s %s %s', branch, suite, uri, resp.status_code)
         return
-    done = 0
-    for build in resp.json()['builds']:
+    for build in sorted(resp.json()['builds'], key=lambda x: x['number'], reverse=True):
         yield build['url']
-        done += 1
-        if done >= number_of_builds:
-            break
 #
 #
 #def test_report(branch, suite, build_number):

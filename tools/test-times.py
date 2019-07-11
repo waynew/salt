@@ -131,7 +131,7 @@ def do_it():
 
     print(f'A total: {a_total:4.3f} / B total: {b_total:4.3f}')
     print('*'*50)
-
+    print()
     print(f'{"Test Name":<85} {"A env":<18} {"A branch":<10} {"A duration":<10} {"B duration":<10} {"B env":<18} {"B branch":<10}')
     a_total = b_total = 0
     for name, duration in b_results.most_common(100):
@@ -144,6 +144,22 @@ def do_it():
         print(f"{name:<85} {a['env']:<18} {a['branch']:<10} {a_duration:>10,.3f} {b_duration:>10,.3f} {b['env']:<18} {b['branch']:<10}")
     print(f'A total: {a_total:4.3f} / B total: {b_total:4.3f}')
 
+    diffs = Counter()
+    for name in a_results:
+        a_duration = a_results[name]
+        if name.startswith('tests.') and not b_results[name]:
+            name = name.partition('.')[-1]
+        b_duration = b_results[name]
+        diff = a_duration - b_duration
+        diffs[name] = diff
+
+    for name, duration in diffs.most_common(10):
+        print(f'{duration:>7,.3f} {name}')
+
+    print('*'*50, end='\n'*2)
+    for name, duration in list(reversed(diffs.most_common()))[:10]:
+        print(f'{duration:>7,.3f} {name}')
+
 
 def builds(branch, suite, number_of_builds=1):
     uri = (
@@ -152,7 +168,6 @@ def builds(branch, suite, number_of_builds=1):
     resp = requests.get(
         uri,
         headers={'accept': 'application/json'},
-        # auth=requests.auth.HTTPBasicAuth(user, password),
     )
     log.debug('Fetching builds for branch: %s suite: %s uri: %s', branch, suite, uri)
     if resp.status_code != 200:

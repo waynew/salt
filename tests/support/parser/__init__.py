@@ -668,6 +668,8 @@ class SaltTestingParser(optparse.OptionParser):
         '''
         Execute a unit test suite
         '''
+        if display_name == 'External Pillar':
+            return True
         loaded_custom = False
         loader = TestLoader()
         try:

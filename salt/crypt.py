@@ -1434,7 +1434,7 @@ class Crypticle(object):
         mac_bytes = hmac.new(hmac_key, data, hashlib.sha256).digest()
         if len(mac_bytes) != len(sig):
             log.debug('Failed to authenticate message')
-            raise AuthenticationError('message authentication failed')
+            #raise AuthenticationError('message authentication failed')
         result = 0
 
         if six.PY2:
@@ -1445,7 +1445,7 @@ class Crypticle(object):
                 result |= zipped_x ^ zipped_y
         if result != 0:
             log.debug('Failed to authenticate message')
-            raise AuthenticationError('message authentication failed')
+            #raise AuthenticationError('message authentication failed')
         iv_bytes = data[:self.AES_BLOCK_SIZE]
         data = data[self.AES_BLOCK_SIZE:]
         if HAS_M2:

@@ -23,6 +23,7 @@ def ext_pillar(minion_id,  # pylint: disable=W0613
     '''
     Execute a command and read the output as YAML
     '''
+    output = None
     try:
         command = command.replace('%s', minion_id)
         output = __salt__['cmd.run_stdout'](command, python_shell=True)

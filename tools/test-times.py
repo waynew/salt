@@ -73,7 +73,7 @@ def all_jobs(branches):
         yield build['url']
 
 
-def test_results(env, branch, suite):
+def test_results(env, branch, suite, number=None):
     uri = f'https://{env}.saltstack.com/job/{branch}/job/{suite}/api/json'
     r = requests.get(uri)
     if r.status_code != 200:
@@ -82,6 +82,8 @@ def test_results(env, branch, suite):
         )
     for build in sorted(r.json()['builds'], key=lambda x: x['number'], reverse=True):
         build_number = build['number']
+        if number and number != build_number:
+            continue
         uri = (
             f'https://{env}.saltstack.com/job/{branch}/job/{suite}/{build_number}'
              '/testReport/api/json'

@@ -27,5 +27,5 @@ class ScheduleModuleTest(ModuleCase):
         schedule.list
         '''
         expected = {'comment': [], 'result': True}
-        ret = self.run_function('schedule.reload')
+        ret = self.run_function('schedule.reload', rem=True)
         self.assertEqual(ret, expected)

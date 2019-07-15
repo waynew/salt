@@ -323,7 +323,7 @@ class SaltMessageClientPoolTest(AsyncTestCase):
 
 @skipIf(True, 'WAR ROOM TEMPORARY SKIP')
 @skipIf(salt.utils.platform.is_windows(), 'WAR ROOM TEMPORARY SKIP')
-# This test hangs on Windows
+# This test hangs on Windows, Federa, Centos
 class SaltMessageClientCleanupTest(TestCase, AdaptedConfigurationTestCaseMixin):
 
     def setUp(self):
@@ -337,6 +337,7 @@ class SaltMessageClientCleanupTest(TestCase, AdaptedConfigurationTestCaseMixin):
         self.sock.close()
         del self.sock
 
+    @skipIf(True, reason='WAR ROOM TEMPORARY SKIP')
     def test_message_client(self):
         '''
         test message client cleanup on close

@@ -20,6 +20,8 @@ class BeaconsAddDeleteTest(ModuleCase):
     '''
     Tests the add and delete functions
     '''
+    remote = True
+
     def setUp(self):
         self.minion_conf_d_dir = os.path.join(
                 RUNTIME_VARS.TMP_CONF_DIR,
@@ -219,6 +221,7 @@ class BeaconsWithBeaconTypeTest(ModuleCase):
     Tests the beacons execution module
     '''
     beacons_config_file_path = minion_conf_d_dir = None
+    remote = True
 
     @classmethod
     def tearDownClass(cls):

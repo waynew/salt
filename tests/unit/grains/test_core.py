@@ -1079,7 +1079,8 @@ class CoreGrainsTestCase(TestCase, LoaderModuleMockMixin):
                                ('rinzler.evil-corp.com', ["false-hostname", "badaliass"], ['5.6.7.8']),
                                ('foo.bar.baz', [], ['fe80::a8b2:93ff:fe00:0']),
                                ('bluesniff.foo.bar', ["alias.bluesniff.foo.bar"], ['fe80::a8b2:93ff:dead:beef'])]
-        with patch.object(socket, 'gethostbyaddr', side_effect=reverse_resolv_mock):
+        with patch.object(socket, 'gethostbyaddr', side_effect=reverse_resolv_mock), \
+                patch.dict(core.__opts__, {'enable_fqdns_grains': True}):
             fqdns = core.fqdns()
             assert "fqdns" in fqdns
             for alias in ["this.is.valid.alias", "alias.bluesniff.foo.bar"]:

@@ -364,6 +364,7 @@ class AsyncZeroMQReqChannel(salt.transport.client.ReqChannel):
         :param int tries: The number of times to make before failure
         :param int timeout: The number of seconds on a response before failing
         '''
+        print('my message client is...', self.message_client)
         ret = yield self.message_client.send(
             self._package_load(load),
             timeout=timeout,
@@ -378,8 +379,10 @@ class AsyncZeroMQReqChannel(salt.transport.client.ReqChannel):
         Send a request, return a future which will complete when we send the message
         '''
         if self.crypt == 'clear':
+            print('Sending here')
             ret = yield self._uncrypted_transfer(load, tries=tries, timeout=timeout)
         else:
+            print('Sending crypto')
             ret = yield self._crypted_transfer(load, tries=tries, timeout=timeout, raw=raw)
         raise tornado.gen.Return(ret)
 
@@ -558,8 +561,12 @@ class AsyncZeroMQPubChannel(salt.transport.mixins.auth.AESPubClientMixin, salt.t
         '''
         Return the current zmqstream, creating one if necessary
         '''
+        def do_the_needful(msg):
+            print("We got a message!", msg)
         if not hasattr(self, '_stream'):
+            print('Streaming OK?')
             self._stream = zmq.eventloop.zmqstream.ZMQStream(self._socket, io_loop=self.io_loop)
+            self._stream.on_recv(do_the_needful)
         return self._stream
 
     def on_recv(self, callback):
@@ -568,11 +575,13 @@ class AsyncZeroMQPubChannel(salt.transport.mixins.auth.AESPubClientMixin, salt.t
 
         :param func callback: A function which should be called when data is received
         '''
+        print('attaching', callback)
         if callback is None:
             return self.stream.on_recv(None)
 
         @tornado.gen.coroutine
         def wrap_callback(messages):
+            print('Got some sort of...', messages)
             payload = yield self._decode_messages(messages)
             if payload is not None:
                 callback(payload)
@@ -1076,6 +1085,7 @@ class AsyncReqMessageClientPool(salt.transport.MessageClientPool):
 
     def send(self, *args, **kwargs):
         message_clients = sorted(self.message_clients, key=lambda x: len(x.send_queue))
+        print('I has the clients:', message_clients)
         return message_clients[0].send(*args, **kwargs)
 
     def destroy(self):
@@ -1195,6 +1205,7 @@ class AsyncReqMessageClient(object):
         self.socket.linger = self.linger
         log.debug('Trying to connect to: %s', self.addr)
         self.socket.connect(self.addr)
+        print('connecting on ', self.addr)
         self.stream = zmq.eventloop.zmqstream.ZMQStream(self.socket, io_loop=self.io_loop)
 
     @tornado.gen.coroutine
@@ -1209,15 +1220,23 @@ class AsyncReqMessageClient(object):
 
             # send
             def mark_future(msg):
+                print('Something came back', msg)
                 if not future.done():
-                    data = self.serial.loads(msg[0])
-                    future.set_result(data)
+                    try:
+                        data = self.serial.loads(msg[0])
+                    except Exception as e:
+                        future.set_result('Bad news' + str(e))
             self.stream.on_recv(mark_future)
+            print('Trying to send the message!')
             self.stream.send(message)
+            print('Message has been sent')
 
             try:
+                print('yielding on future')
                 ret = yield future
+                print('it was yielded')
             except Exception as err:  # pylint: disable=W0702
+                print('Oh dear, that was no good', err)
                 log.debug('Re-init ZMQ socket: %s', err)
                 self._init_socket()  # re-init the zmq socket (no other way in zmq)
                 del self.send_queue[0]

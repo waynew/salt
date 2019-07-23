@@ -26,7 +26,7 @@ SaltStack Test Failure Report
 =============================
 
 Usage:
-    test-failure-report.py [-h --url=JENKINS_URL --format=FORMAT] JOB PROJECT [START] [END]
+    test-failure-report.py [-h --url=JENKINS_URL --format=FORMAT] JOB [PROJECT] [START] [END]
 
 Produce a report of test failures for the provided range, defaults to the
 last day, i.e. 00:00:00 of the previous day, until now.
@@ -36,7 +36,9 @@ easy copy/pasting into a spreadsheet application.
 
 Arguments:
     JOB         The job/branch, e.g. neon, or 2019.2.1
-    PROJECT     The project/arch, e.g. salt-arch-py2, or salt-centos7-py2
+    PROJECT     The project/arch, e.g. salt-arch-py2, or salt-centos7-py2.
+                If not provided, all projects beginning with `salt-` under
+                the job will be searched.
     START       The start time (inclusive, in UTC) to filter by. Defaults
                 to yesterday at midnight, UTC.
     END         The end time (inclusive, in UTC) to filter by. Defaults to
@@ -74,6 +76,21 @@ except ImportError:
 async def fetch_project(*, session, jenkins_url, job, project):
     url = f'{jenkins_url.rstrip("/")}/job/{job}/job/{project}/api/json'
     async with session.get(url) as response:
+        if response.status == 200:
+            result = await response.json()
+        else:
+            result = None
+        return result
+
+
+async def fetch_projects(*, session, jenkins_url, job, projects):
+    for project in projects:
+        yield await fetch_project(session=session, jenkins_url=jenkins_url, job=job, project=project)
+
+
+async def fetch_job(*, session, jenkins_url, job):
+    url = f'{jenkins_url.rstrip("/")}/job/{job}/api/json'
+    async with session.get(url) as response:
         result = await response.json()
         return result
 
@@ -99,35 +116,47 @@ async def fetch_test_report(*, session, build_url):
 
 async def fetch_test_failures(*, jenkins_url, job, project, start, end):
     failures = []
+    projects = []
+    if project:
+        projects.append(project)
     async with aiohttp.ClientSession() as session:
-        data = await fetch_project(
-            session=session, jenkins_url=jenkins_url, job=job, project=project
-        )
-        async for build in fetch_builds(session=session, builds=data['builds']):
-            if build['result'].lower() == 'failure':
-                build_ts = datetime.fromtimestamp(
-                    build['timestamp'] / 1000, timezone.utc
-                )
-                if start <= build_ts <= end:
-                    test_report = await fetch_test_report(
-                        session=session, build_url=build['url']
+        if not projects:
+            data = await fetch_job(
+                session=session, jenkins_url=jenkins_url, job=job,
+            )
+            projects.extend(project['name'] for project in data['jobs'] if project['name'].startswith('salt-'))
+        async for project in fetch_projects(session=session, jenkins_url=jenkins_url, job=job, projects=projects):
+            if project is None:
+                # Couldn't retrieve the project page. We should probably log
+                # that, when we start logging(?)
+                continue
+            async for build in fetch_builds(session=session, builds=project['builds']):
+                if build['result'] and build['result'].lower() == 'failure':
+                    build_ts = datetime.fromtimestamp(
+                        build['timestamp'] / 1000, timezone.utc
                     )
-                    if test_report is None:
-                        failures.append({
-                            'job': job,
-                            'project': project,
-                            'test_case': 'Failed with no test results',
-                        })
-                    else:
-                        for suite in test_report['suites']:
-                            for case in suite['cases']:
-                                if case['status'].lower() == 'failed':
-                                    failures.append({
-                                        'job': job,
-                                        'project': project,
-                                        'test_case': case['className'],
-                                        'duration': case['duration'],
-                                    })
+                    if start <= build_ts <= end:
+                        test_report = await fetch_test_report(
+                            session=session, build_url=build['url']
+                        )
+                        if test_report is None:
+                            failures.append({
+                                'job': job,
+                                'project': project['name'],
+                                'test_case': 'Failed with no test results',
+                                'build_number': build['number'],
+                            })
+                        else:
+                            for suite in test_report['suites']:
+                                for case in suite['cases']:
+                                    if case['status'].lower() == 'failed':
+                                        failures.append({
+                                            'job': job,
+                                            'project': project['name'],
+                                            'test_case': case['className'],
+                                            'duration': case['duration'],
+                                            'build_number': build['number'],
+                                        })
     return failures
 
 
@@ -142,7 +171,7 @@ def produce_report(*, jenkins_url, job, project, start, end, report_format):
     )
     delimiter = '\t' if report_format == 'tsv' else ','
     report = io.StringIO()
-    writer = csv.DictWriter(report, delimiter=delimiter, fieldnames=('job', 'project', 'test_case', 'duration'))
+    writer = csv.DictWriter(report, delimiter=delimiter, fieldnames=('job', 'project', 'test_case', 'duration', 'build_number'))
     writer.writeheader()
     for row in result:
         writer.writerow(row)

@@ -11,6 +11,7 @@ SALT_ACTIVE_BRANCHES = [
     'neon',  # Release
     '2019.2',  # Release-1
     '2018.3',  # Release-1
+    '2019.2.1',
 ]
 
 
@@ -141,7 +142,7 @@ def do_it():  # Shia LeBeouf!
     with tempfile.NamedTemporaryFile() as d:
         patchfile = Path(d.name)
         output = subprocess.check_output(
-            ['git', 'format-patch', root_branch, '--stdout']
+            ['git', 'format-patch', f'{saltstack_remote}/{root_branch}', '--stdout']
         )
         patchfile.write_bytes(output)
 

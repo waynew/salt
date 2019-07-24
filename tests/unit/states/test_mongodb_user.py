@@ -72,9 +72,9 @@ class MongodbUserTestCase(TestCase, LoaderModuleMockMixin):
         name = 'myapp'
         passwd = 'password-of-myapp'
         db = 'myapp-database'
-        current_role = 'mongodb-role'
-        current_role_as_dict = ['mongodb-role']
-        new_role = 'new-mongodb-role'
+        current_role_string = 'current-mongodb-role'
+        current_role = [current_role_string]
+        new_role = ['new-mongodb-role']
 
         ret = {'name': name,
                'result': False,
@@ -86,7 +86,7 @@ class MongodbUserTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(mongodb_user.present(name, passwd, port={}), ret)
 
         mock_t = MagicMock(return_value=True)
-        mock = MagicMock(return_value=[{'user': name, 'roles':[{'db':db, 'role': current_role}]}])
+        mock = MagicMock(return_value=[{'user': name, 'roles':[{'db':db, 'role': current_role_string}]}])
         with patch.dict(mongodb_user.__salt__,
                         {
                          'mongodb.user_create': mock_t,
@@ -95,18 +95,30 @@ class MongodbUserTestCase(TestCase, LoaderModuleMockMixin):
             comt = ('User {0} is already present'
                 ).format(name)
             ret.update({'comment': comt, 'result': True})
-            self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=new_role), ret)
+            self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=current_role), ret)
 
             with patch.dict(mongodb_user.__opts__, {'test': True}):
                 comt = ('User {0} is already present'
                         .format(name))
                 ret.update({'comment': comt, 'result': True})
-                self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=new_role), ret)
+                self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=current_role), ret)
 
             with patch.dict(mongodb_user.__opts__, {'test': False}):
                 comt = ('User {0} is already present'.format(name))
+                ret.update({'comment': comt, 'result': True})
+                self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=current_role), ret)
+
+            with patch.dict(mongodb_user.__opts__, {'test': True}):
+                comt = ('User {0} is already present, but has new roles'
+                        .format(name))
+                ret.update({'comment': comt, 'result': None,
+                            'changes': {name: {'database': db, 'roles': {'old': current_role, 'new': new_role}}}})
+                self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=new_role), ret)
+
+            with patch.dict(mongodb_user.__opts__, {'test': False}):
+                comt = ('User {0} is already present, but has new roles'.format(name))
                 ret.update({'comment': comt, 'result': True,
-                            'changes': {name: {'database': db, 'roles': {'old': current_role_as_dict, 'new': new_role}}}})
+                            'changes': {name: {'database': db, 'roles': {'old': current_role, 'new': new_role}}}})
                 self.assertDictEqual(mongodb_user.present(name, passwd, database=db, roles=new_role), ret)
 
     # 'absent' function tests: 1

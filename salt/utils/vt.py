@@ -54,6 +54,7 @@ except ImportError:
 # Import salt libs
 import salt.utils.crypt
 import salt.utils.data
+import salt.utils.metrics
 import salt.utils.stringutils
 from salt.ext.six import string_types
 from salt.log.setup import LOG_LEVELS
@@ -484,6 +485,7 @@ class Terminal(object):
             if stderr_parent_fd < 0 or stderr_child_fd < 0:
                 raise TerminalException('Failed to open a TTY for stderr')
 
+            salt.utils.metrics.dump_metrics_now()
             pid = os.fork()
             if pid < pty.CHILD:
                 raise TerminalException('Failed to fork')

@@ -31,6 +31,7 @@ from salt.modules.inspectlib.entities import (AllowedDir, IgnoredDir, Package,
 import salt.utils.crypt
 import salt.utils.files
 import salt.utils.fsutils
+import salt.utils.metrics
 import salt.utils.path
 import salt.utils.stringutils
 from salt.exceptions import CommandExecutionError
@@ -504,6 +505,7 @@ if __name__ == '__main__':
 
     # Double-fork stuff
     try:
+        salt.utils.metrics.dump_metrics_now()
         if os.fork() > 0:
             salt.utils.crypt.reinit_crypto()
             sys.exit(0)
@@ -516,6 +518,7 @@ if __name__ == '__main__':
     os.umask(0o000)  # pylint: disable=blacklisted-function
 
     try:
+        salt.utils.metrics.dump_metrics_now()
         pid = os.fork()
         if pid > 0:
             salt.utils.crypt.reinit_crypto()

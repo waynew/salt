@@ -22,6 +22,7 @@ from tests.support.mock import (
 # Import salt libs
 import salt.utils.platform
 import salt.utils.process
+import salt.utils.metrics
 
 # Import 3rd-party libs
 from salt.ext import six
@@ -285,9 +286,11 @@ class TestSignalHandlingMultiprocessingProcess(TestCase):
 
     @staticmethod
     def kill_target_sub_proc():
+        salt.utils.metrics.dump_metrics_now()
         pid = os.fork()
         if pid == 0:
             return
+        salt.utils.metrics.dump_metrics_now()
         pid = os.fork()
         if pid == 0:
             return

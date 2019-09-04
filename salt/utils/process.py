@@ -25,6 +25,7 @@ import socket
 # Import salt libs
 import salt.defaults.exitcodes
 import salt.utils.files
+import salt.utils.metrics
 import salt.utils.path
 import salt.utils.platform
 import salt.log.setup
@@ -68,6 +69,7 @@ def daemonize(redirect_out=True):
     # Avoid circular import
     import salt.utils.crypt
     try:
+        salt.utils.metrics.dump_metrics_now()
         pid = os.fork()
         if pid > 0:
             # exit first parent
@@ -85,6 +87,7 @@ def daemonize(redirect_out=True):
 
     # do second fork
     try:
+        salt.utils.metrics.dump_metrics_now()
         pid = os.fork()
         if pid > 0:
             salt.utils.crypt.reinit_crypto()

@@ -21,8 +21,8 @@ JENKINS_URL = f'{JENKINS_ENV}/job/{JENKINS_BRANCH}/view/All/api/json'
 JENKINS_TIMESTAMP_OFFSET = 1000
 # Check all builds starting from 4AM UTC 08/13-> 11AM UTC
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(hours=24)
-START_LIMIT = datetime.datetime(2019, 8, 13, 3, 59)
-END_LIMIT = datetime.datetime(2019, 8, 13, 12)
+START_LIMIT = datetime.datetime(2019, 8, 14, 4, 0)
+END_LIMIT = datetime.datetime(2019, 8, 14, 15, 59)
 
 
 async def get_job(session, job_url):
@@ -78,7 +78,6 @@ async def get_recent_build_times(*, job, session, start_limit_inclusive=None):
                     'start_reason': get_start_reason(data),
                     'executor': await find_executor(job_url=data['url'], session=session),
                 })
-                return build_info
     return build_info
 
 

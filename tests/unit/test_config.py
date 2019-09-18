@@ -1193,10 +1193,6 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                          'key': 'supersecretkeysupersecretkey',
                          'driver': 'ec2',
                          'id': 'ABCDEFGHIJKLMNOP',
-<<<<<<< HEAD
-                         'location': 'ap-southeast-1'}}}
-        self.assertEqual(ret, sconfig.apply_cloud_providers_config(
-=======
                          'location': 'ap-southeast-1'},
                     'tencentcloud':
                         {'id': 'the-tencentcloud-id',
@@ -1205,7 +1201,6 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                          'profiles': {},
                          'driver': 'tencentcloud'}}}
         self.assertEqual(ret, salt.config.apply_cloud_providers_config(
->>>>>>> de3fd871dc... add tencentcloud testing
             overrides,
             defaults=DEFAULT))
 

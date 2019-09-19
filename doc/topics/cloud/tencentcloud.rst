@@ -3,7 +3,7 @@ Getting Started With TencentCloud
 =================================
 
 Tencent Cloud is a secure, reliable and high-performance cloud compute service
-provided by Tencent. It is the 2st largest Cloud Provider in China.
+provided by Tencent. It is the 2nd largest Cloud Provider in China.
 
 
 Dependencies

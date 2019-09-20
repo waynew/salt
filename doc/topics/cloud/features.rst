@@ -39,7 +39,7 @@ These are features that are available for almost every cloud host.
 .. container:: scrollable
 
     +-----------------------+--------+----------+-------+---+------+------+------+---------+---------+---------+-------+-------+---------+---------+------+------------+
-    |                       |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify|Vagrant|Softlayer|Softlayer|Aliyun|TencentCloud|
+    |                       |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify|Vagrant|Softlayer|Softlayer|Aliyun|Tencent Cloud|
     |                       |(Legacy)|          |Ocean  |   |      |      |      |         |         |(Legacy) |       |       |         |Hardware |      |            |
     +=======================+========+==========+=======+===+======+======+======+=========+=========+=========+=======+=======+=========+=========+======+============+
     |Query                  |Yes     |Yes       |Yes    |Yes|Yes   |Yes   |Yes   |Yes      |Yes      |Yes      |[1]    |[1]    |Yes      |Yes      |Yes   |Yes         |
@@ -75,7 +75,7 @@ instance name to be passed in. For example:
 .. container:: scrollable
 
     +-----------------------+--------+----------+-------+---+------+------+------+---------+---------+---------+--------+---------+---------+------+------------+
-    |Actions                |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify&|Softlayer|Softlayer|Aliyun|TencentCloud|
+    |Actions                |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify&|Softlayer|Softlayer|Aliyun|Tencent Cloud|
     |                       |(Legacy)|          |Ocean  |   |      |      |      |         |         |(Legacy) | Vagrant|         |Hardware |      |            |
     +=======================+========+==========+=======+===+======+======+======+=========+=========+=========+========+=========+=========+======+============+
     |attach_volume          |        |          |       |Yes|      |      |      |         |         |         |        |         |         |      |            |
@@ -127,7 +127,7 @@ require the name of the provider to be passed in. For example:
 .. container:: scrollable
 
     +-----------------------+--------+----------+-------+---+------+------+------+---------+---------+---------+--------+---------+---------+------+------------+
-    |Functions              |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify&|Softlayer|Softlayer|Aliyun|TencentCloud|
+    |Functions              |AWS     |CloudStack|Digital|EC2|GoGrid|JoyEnt|Linode|OpenStack|Parallels|Rackspace|Saltify&|Softlayer|Softlayer|Aliyun|Tencent Cloud|
     |                       |(Legacy)|          |Ocean  |   |      |      |      |         |         |(Legacy) | Vagrant|         |Hardware |      |            |
     +=======================+========+==========+=======+===+======+======+======+=========+=========+=========+========+=========+=========+======+============+
     |block_device_mappings  |Yes     |          |       |   |      |      |      |         |         |         |        |         |         |      |            |

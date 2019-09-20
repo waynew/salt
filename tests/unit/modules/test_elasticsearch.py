@@ -2265,29 +2265,22 @@ class ElasticsearchTestCase(TestCase):
                           MagicMock(return_value=MockElastic())):
             self.assertRaises(CommandExecutionError, elasticsearch.search_template_delete, "foo")
 
-    def test_cluster_get_settings_succeess(self):
+    def test_cluster_get_settings_success(self):
         '''
         Test if cluster get_settings fetch succeeds
         '''
-        class MockElasticCluster(object):
-            '''
-            Mock of Elasticsearch ClusterClient
-            '''
-            def get_settings(self, flat_settings=False, include_defaults=False):
-                '''
-                Mock of get_settings method
-                '''
-                return {"transient": {}, "persistent": {}}
 
-        class MockElastic(object):
-            '''
-            Mock of Elasticsearch client
-            '''
-            cluster = MockElasticCluster()
+        expected_settings = {"transient": {}, "persistent": {}}
+        fake_es = MagicMock()
+        fake_es.cluster = MagicMock()
+        fake_es.cluster.get_settings = MagicMock(return_value=expected_settings)
+        fake_instance = MagicMock(return_value=fake_es)
 
-        with patch.object(elasticsearch, '_get_instance',
-                          MagicMock(return_value=MockElastic())):
-            self.assertDictEqual(elasticsearch.cluster_get_settings(), {"transient": {}, "persistent": {}})
+        with patch.object(elasticsearch, '_get_instance', fake_instance):
+            actual_settings = elasticsearch.cluster_get_settings()
+            fake_es.cluster.get_settings.assert_called_with(flat_settings=False, include_defaults=False)
+            assert actual_settings == expected_settings
+
 
     def test_cluster_get_settings_failure(self):
         '''

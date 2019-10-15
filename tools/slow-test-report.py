@@ -81,7 +81,7 @@ parser.add_argument(
 async def collect_test_times():
     async with aiohttp.ClientSession() as session:
         urls = await jenkins_utils.get_suite_urls(
-            session=session, branch="master", jenkins_env="jenkinsci"
+            session=session, branch="Master Branch Jobs", jenkins_env="jenkinsci"
         )
         log.debug("Checking %r URLs", urls)
 

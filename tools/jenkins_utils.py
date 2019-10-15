@@ -23,7 +23,7 @@ def get_last_build(result):
 
 
 async def get_suite_urls(*, session, branch, jenkins_env):
-    url = f"https://{jenkins_env}.saltstack.com/job/{branch}/api/json"
+    url = f"https://{jenkins_env}.saltstack.com/view/{branch}/api/json"
     headers = {"Accept": "application/json"}
     log.debug("Requesting from %r", url)
     async with session.get(url, headers=headers) as resp:
@@ -55,7 +55,7 @@ async def get_most_recent_test_results(*, session, url):
             )
         else:
             result = await resp.json()
-            name = result["name"]
+            name = result["fullDisplayName"]
             last_build = get_last_build(result)
             if last_build is None:
                 return name, None

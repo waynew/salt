@@ -107,12 +107,16 @@ async def collect_test_times():
 def show_tsv_results(results, count):
     headers = ["Test Run", "Test Suite", "Duration"]
     output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=headers, delimiter='\t')
+    writer = csv.DictWriter(output, fieldnames=headers, delimiter="\t")
     writer.writeheader()
     for test_run in results:
         for result in results[test_run].most_common(count):
             writer.writerow(
-                {"Test Run": test_run, "Test Suite": result[0], "Duration": f"{result[1]:.2f}"}
+                {
+                    "Test Run": test_run,
+                    "Test Suite": result[0],
+                    "Duration": f"{result[1]:.2f}",
+                }
             )
     output.seek(0)
     print(output.read())
@@ -122,7 +126,7 @@ def show_plain_results(results, count):
     for test_run in sorted(results):
         print(test_run)
         if not results[test_run]:
-            print('\tUnable to find any test runs')
+            print("\tUnable to find any test runs")
             continue
         width = max(len(test) for test in results[test_run])
         for test, duration in results[test_run].most_common(count):

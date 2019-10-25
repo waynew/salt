@@ -98,7 +98,7 @@ def make_the_issues(pr_list: List[str], auth: Tuple[str, str]) -> None:
             card[col].rpartition("/")[-1] for card in r.json() if col in card
         )
     prs_to_post = set(pr_list) - set(existing_pr_numbers)
-    for pr in prs_to_post:
+    for pr in sorted(prs_to_post):
         id = get_pr_id(auth=auth, pr_number=pr)
         url = f"https://api.github.com/projects/columns/{NEED_BACKPORT_COLUMN}/cards"
         r = requests.post(
@@ -120,8 +120,10 @@ def create_needs_pr_card(auth, pr_id):
         json={"content_id": pr_id, "content_type": "PullRequest"},
     )
     if r.status_code != 201:
-        print(r.json())
-        sys.exit(r.status_code)
+        data = r.json()
+        print(data)
+        if 'Project already has the associated issue' not in str(data):
+            sys.exit(r.status_code)
 
 
 def get_pr_id(auth, pr_number):
@@ -159,8 +161,8 @@ def create_needs_prs(auth):
 if __name__ == "__main__":
     args: Namespace = parser.parse_args()
     auth = (args.github_api_user, args.github_api_token.read().strip())
-    # make_the_issues(
-    #    pr_list=args.PR_LIST_FILE.read().splitlines(),
-    #    auth=auth,
-    # )
-    create_needs_prs(auth=auth)
+    make_the_issues(
+       pr_list=args.PR_LIST_FILE.read().splitlines(),
+       auth=auth,
+    )
+    #create_needs_prs(auth=auth)

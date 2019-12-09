@@ -73,7 +73,7 @@ def create_alert(name=None, api_key=None, reason=None, action_type="Create"):
     _, _, _, values = inspect.getargvalues(inspect.currentframe())
     log.info("Arguments values: %s", values)
 
-    ret = {"result": "", "name": "", "changes": "", "comment": ""}
+    ret = {"result": "", "name": "", "changes": {}, "comment": ""}
 
     if api_key is None or reason is None:
         raise salt.exceptions.SaltInvocationError("API Key or Reason cannot be None.")

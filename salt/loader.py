@@ -11,6 +11,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import functools
 import inspect
 import logging
+import copy
 import os
 import re
 import sys
@@ -1100,9 +1101,9 @@ def cache(opts, serial):
     """
     return LazyLoader(
         _module_dirs(opts, "cache", "cache"),
-        opts,
+        copy.deepcopy(opts),
         tag="cache",
-        pack={"__opts__": opts, "__context__": {"serial": serial}},
+        pack={"__opts__": copy.deepcopy(opts), "__context__": {"serial": serial}},
     )
 
 

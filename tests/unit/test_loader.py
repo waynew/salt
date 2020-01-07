@@ -24,7 +24,6 @@ import salt.loader
 import salt.utils.files
 import salt.utils.stringutils
 
-# pylint: disable=import-error,no-name-in-module,redefined-builtin
 from salt.ext import six
 from salt.ext.six.moves import range
 from tests.support.case import ModuleCase
@@ -35,7 +34,6 @@ from tests.support.mock import MagicMock, patch
 from tests.support.runtests import RUNTIME_VARS
 from tests.support.unit import TestCase
 
-# pylint: enable=no-name-in-module,redefined-builtin
 
 log = logging.getLogger(__name__)
 
@@ -68,6 +66,22 @@ def loaded():
 def not_loaded():
     return True
 """
+
+
+def test_cache_should_pass_deepcopies_of_opts_to_LazyLoader():
+    opts = {}
+    patch_loader = patch("salt.loader.LazyLoader", auto_spec=True)
+    patch_module_dirs = patch("salt.loader._module_dirs", auto_spec=True)
+    # pylint: disable=confusing-with-statement
+    with patch_module_dirs, patch_loader as fake_loader:
+        salt.loader.cache(opts=opts, serial=None)
+
+        name, args, kwargs = fake_loader.mock_calls[0]
+
+        assert args[1] == opts
+        assert args[1] is not opts, "opts dictionary was not copied"
+        assert kwargs["pack"]["__opts__"] == opts
+        assert kwargs["pack"]["__opts__"] is not opts, "opts dictionary was not copied"
 
 
 class LazyLoaderTest(TestCase):

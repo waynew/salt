@@ -117,11 +117,12 @@ IRC
 The ``#salt`` IRC channel is hosted on the popular `Freenode`_ network. You
 can use the `Freenode webchat client`_ right from your browser.
 
-`Logs of the IRC channel activity`_ are being collected courtesy of Moritz Lenz.
+`Logs of the IRC channel activity`_ are being collected courtesy of `glob`_.
 
 .. _Freenode: http://freenode.net/irc_servers.shtml
 .. _`Freenode webchat client`: http://webchat.freenode.net/?channels=salt&uio=Mj10cnVlJjk9dHJ1ZSYxMD10cnVl83
-.. _`Logs of the IRC channel activity`: http://irclog.perlgeek.de/salt/
+.. _`Logs of the IRC channel activity`: https://freenode.logbot.info/salt/
+.. _glob: https://www.glob.com.au/
 
 If you wish to discuss the development of Salt itself join us in
 ``#salt-devel``.

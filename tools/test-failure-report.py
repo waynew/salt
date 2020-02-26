@@ -85,7 +85,9 @@ async def fetch_project(*, session, jenkins_url, job, project):
 
 async def fetch_projects(*, session, jenkins_url, job, projects):
     for project in projects:
-        yield await fetch_project(session=session, jenkins_url=jenkins_url, job=job, project=project)
+        yield await fetch_project(
+            session=session, jenkins_url=jenkins_url, job=job, project=project
+        )
 
 
 async def fetch_job(*, session, jenkins_url, job):
@@ -96,13 +98,13 @@ async def fetch_job(*, session, jenkins_url, job):
 
 
 async def fetch_build(*, session, build_url):
-    async with session.get(f'{build_url}/api/json') as response:
+    async with session.get(f"{build_url}/api/json") as response:
         return await response.json()
 
 
 async def fetch_builds(*, session, builds):
     for build in builds:
-        yield await fetch_build(session=session, build_url=build['url'])
+        yield await fetch_build(session=session, build_url=build["url"])
 
 
 async def fetch_test_report(*, session, build_url):
@@ -121,42 +123,50 @@ async def fetch_test_failures(*, jenkins_url, job, project, start, end):
         projects.append(project)
     async with aiohttp.ClientSession() as session:
         if not projects:
-            data = await fetch_job(
-                session=session, jenkins_url=jenkins_url, job=job,
+            data = await fetch_job(session=session, jenkins_url=jenkins_url, job=job)
+            projects.extend(
+                project["name"]
+                for project in data["jobs"]
+                if project["name"].startswith("salt-")
             )
-            projects.extend(project['name'] for project in data['jobs'] if project['name'].startswith('salt-'))
-        async for project in fetch_projects(session=session, jenkins_url=jenkins_url, job=job, projects=projects):
+        async for project in fetch_projects(
+            session=session, jenkins_url=jenkins_url, job=job, projects=projects
+        ):
             if project is None:
                 # Couldn't retrieve the project page. We should probably log
                 # that, when we start logging(?)
                 continue
-            async for build in fetch_builds(session=session, builds=project['builds']):
-                if build['result'] and build['result'].lower() == 'failure':
+            async for build in fetch_builds(session=session, builds=project["builds"]):
+                if build["result"] and build["result"].lower() == "failure":
                     build_ts = datetime.fromtimestamp(
-                        build['timestamp'] / 1000, timezone.utc
+                        build["timestamp"] / 1000, timezone.utc
                     )
                     if start <= build_ts <= end:
                         test_report = await fetch_test_report(
-                            session=session, build_url=build['url']
+                            session=session, build_url=build["url"]
                         )
                         if test_report is None:
-                            failures.append({
-                                'job': job,
-                                'project': project['name'],
-                                'test_case': 'Failed with no test results',
-                                'build_number': build['number'],
-                            })
+                            failures.append(
+                                {
+                                    "job": job,
+                                    "project": project["name"],
+                                    "test_case": "Failed with no test results",
+                                    "build_number": build["number"],
+                                }
+                            )
                         else:
-                            for suite in test_report['suites']:
-                                for case in suite['cases']:
-                                    if case['status'].lower() == 'failed':
-                                        failures.append({
-                                            'job': job,
-                                            'project': project['name'],
-                                            'test_case': case['className'],
-                                            'duration': case['duration'],
-                                            'build_number': build['number'],
-                                        })
+                            for suite in test_report["suites"]:
+                                for case in suite["cases"]:
+                                    if case["status"].lower() == "failed":
+                                        failures.append(
+                                            {
+                                                "job": job,
+                                                "project": project["name"],
+                                                "test_case": case["className"],
+                                                "duration": case["duration"],
+                                                "build_number": build["number"],
+                                            }
+                                        )
     return failures
 
 
@@ -169,9 +179,13 @@ def produce_report(*, jenkins_url, job, project, start, end, report_format):
             )
         )
     )
-    delimiter = '\t' if report_format == 'tsv' else ','
+    delimiter = "\t" if report_format == "tsv" else ","
     report = io.StringIO()
-    writer = csv.DictWriter(report, delimiter=delimiter, fieldnames=('job', 'project', 'test_case', 'duration', 'build_number'))
+    writer = csv.DictWriter(
+        report,
+        delimiter=delimiter,
+        fieldnames=("job", "project", "test_case", "duration", "build_number"),
+    )
     writer.writeheader()
     for row in result:
         writer.writerow(row)
@@ -185,10 +199,10 @@ def parse_start_and_end(*, start, end):
     since_midnight = now - now.replace(hour=0, minute=0, second=0, microsecond=0)
     yesterday = utcnow - since_midnight - timedelta(days=1)
     tomorrow = yesterday + timedelta(days=2) - timedelta(microseconds=1)
-    fmt = '%Y-%m-%d %H:%M %z'
+    fmt = "%Y-%m-%d %H:%M %z"
     if start:
         try:
-            start = datetime.strptime(start+' +0000', fmt)
+            start = datetime.strptime(start + " +0000", fmt)
         except ValueError:
             sys.exit(f'{start!r} not in format "%Y-%m-%d %H:%M"')
     else:
@@ -196,12 +210,12 @@ def parse_start_and_end(*, start, end):
 
     if end:
         try:
-            end = datetime.strptime(end+' +0000', fmt)
+            end = datetime.strptime(end + " +0000", fmt)
         except ValueError:
             sys.exit(f'{end!r} not in format "%Y-%m-%d %H:%M"')
     else:
         end = tomorrow
-    result = {'start': start, 'end': end}
+    result = {"start": start, "end": end}
     return result
 
 
@@ -211,7 +225,7 @@ if __name__ == "__main__":
         jenkins_url=args["--url"],
         job=args["JOB"],
         project=args["PROJECT"],
-        report_format=args['--format'],
-        **parse_start_and_end(start=args['START'], end=args['END']),
+        report_format=args["--format"],
+        **parse_start_and_end(start=args["START"], end=args["END"]),
     )
     print(report.read())

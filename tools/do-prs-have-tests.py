@@ -57,8 +57,11 @@ async def get_pr_title_and_text(*, pr, session, api_token):
 
 
 def is_doc_only_change(files_changed):
-    has_doc_change = any(filename.startswith('doc/') for filename in files_changed)
-    has_other_changes = any(filename.startswith('salt/') or filename.startswith('tests/') for filename in files_changed)
+    has_doc_change = any(filename.startswith("doc/") for filename in files_changed)
+    has_other_changes = any(
+        filename.startswith("salt/") or filename.startswith("tests/")
+        for filename in files_changed
+    )
     return has_doc_change and not has_other_changes
 
 
@@ -70,7 +73,7 @@ async def do_it(*, file, api_token, dump_dir):
     async with aiohttp.ClientSession() as session:
         prlen = len(ordered_prs)
         for count, pr in enumerate(ordered_prs, start=1):
-            log.debug('%r/%r - %0.2f%%', count, prlen, count/prlen)
+            log.debug("%r/%r - %0.2f%%", count, prlen, count / prlen)
             changes = await get_changes(pr=pr, session=session, api_token=api_token)
             if changes:
                 files_changed = [change["filename"] for change in changes]

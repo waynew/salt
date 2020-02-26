@@ -122,7 +122,7 @@ def create_needs_pr_card(auth, pr_id):
     if r.status_code != 201:
         data = r.json()
         print(data)
-        if 'Project already has the associated issue' not in str(data):
+        if "Project already has the associated issue" not in str(data):
             sys.exit(r.status_code)
 
 
@@ -142,7 +142,9 @@ def create_needs_prs(auth):
     url = f"https://api.github.com/repos/{OWNER_REPO}/issues"
     has_next = True
     while has_next:
-        r = requests.get(url, auth=auth, params={"labels": "master-port", "state": "all"})
+        r = requests.get(
+            url, auth=auth, params={"labels": "master-port", "state": "all"}
+        )
 
         for pr in r.json():
             if pr["number"] in existing_numbers:
@@ -161,8 +163,5 @@ def create_needs_prs(auth):
 if __name__ == "__main__":
     args: Namespace = parser.parse_args()
     auth = (args.github_api_user, args.github_api_token.read().strip())
-    make_the_issues(
-       pr_list=args.PR_LIST_FILE.read().splitlines(),
-       auth=auth,
-    )
-    #create_needs_prs(auth=auth)
+    make_the_issues(pr_list=args.PR_LIST_FILE.read().splitlines(), auth=auth)
+    # create_needs_prs(auth=auth)

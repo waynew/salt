@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.7
-'''
+"""
 Author: Wayne Werner <wwerner@saltstack.com>
 
 This is not a full-fledged tool yet, but it should be mildly helpful when
@@ -20,7 +20,7 @@ For more information about bisects, see the git book at
 https://git-scm.com/docs/git-bisect/2.1.0
 
 Requires Python 3.4 or newer, with a default shebang using 3.7.
-'''
+"""
 import subprocess
 import sys
 from enum import IntEnum
@@ -34,33 +34,33 @@ class GitStatus(IntEnum):
         return GitStatus.good if self is self.bad else GitStatus.bad
 
 
-#op = [line.strip() for line in subprocess.check_output(['git', 'bisect', 'log']).decode().split('\n')]
+# op = [line.strip() for line in subprocess.check_output(['git', 'bisect', 'log']).decode().split('\n')]
 git_status = GitStatus.good
 
 try:
-    with open('/tmp/last_stat', 'r') as f:
+    with open("/tmp/last_stat", "r") as f:
         last_stat = f.read().strip().lower()
-        git_status  = GitStatus[last_stat].toggle()
+        git_status = GitStatus[last_stat].toggle()
 except (FileNotFoundError, KeyError):
     pass
 
-with open('/tmp/last_stat', 'w') as f:
+with open("/tmp/last_stat", "w") as f:
     f.write(git_status.name)
 
-#for line in op:
+# for line in op:
 #    if not line.startswith('#'):
 #        try:
 #            last_stat = line.split()[2]
 #        except IndexError:
 #            continue
 
-print('Exit with:', git_status)
+print("Exit with:", git_status)
 
-#if False and sys.argv[1] == 'swap':
+# if False and sys.argv[1] == 'swap':
 #    exit_code = not exit_code
 
 
-with open('/tmp/revisions.log', 'ab') as f:
-    f.write(subprocess.check_output(['git', 'rev-parse', 'HEAD']))
+with open("/tmp/revisions.log", "ab") as f:
+    f.write(subprocess.check_output(["git", "rev-parse", "HEAD"]))
 
 sys.exit(git_status)

@@ -786,6 +786,7 @@ test_interfaces = [
                 '\n']},
         ]
 
+
 @skipIf(NO_MOCK, NO_MOCK_REASON)
 class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
     """

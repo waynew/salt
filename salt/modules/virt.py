@@ -106,6 +106,7 @@ import salt.utils.stringutils
 import salt.utils.templates
 import salt.utils.validate.net
 import salt.utils.versions
+import salt.utils.xmlutil as xmlutil
 import salt.utils.yaml
 
 from salt.utils.virt import check_remote, download_remote
@@ -1630,10 +1631,10 @@ def _disks_equal(disk1, disk2):
     '''
     target1 = disk1.find('target')
     target2 = disk2.find('target')
-    source1 = ElementTree.tostring(disk1.find('source')) if disk1.find('source') is not None else None
-    source2 = ElementTree.tostring(disk2.find('source')) if disk2.find('source') is not None else None
+    source1 = disk1.find('source') if disk1.find('source') is not None else ElementTree.Element('source')
+    source2 = disk2.find('source') if disk2.find('source') is not None else ElementTree.Element('source')
 
-    return source1 == source2 and \
+    return xmlutil.to_dict(source1, True) == xmlutil.to_dict(source2, True) and \
         target1 is not None and target2 is not None and \
         target1.get('bus') == target2.get('bus') and \
         disk1.get('device', 'disk') == disk2.get('device', 'disk') and \
@@ -1676,11 +1677,11 @@ def _graphics_equal(gfx1, gfx2):
         for default in defaults:
             node = gfx_copy.find(default['node'])
             attrib = default['attrib']
-            if node is not None and (attrib not in node.attrib or node.attrib[attrib] in default['values']):
-                node.set(attrib, default['values'][0])
+            if node is not None and (attrib in node.attrib and node.attrib[attrib] in default['values']):
+                node.attrib.pop(attrib)
         return gfx_copy
 
-    return ElementTree.tostring(_filter_graphics(gfx1)) == ElementTree.tostring(_filter_graphics(gfx2))
+    return xmlutil.to_dict(_filter_graphics(gfx1), True) == xmlutil.to_dict(_filter_graphics(gfx2), True)
 
 
 def _diff_lists(old, new, comparator):
@@ -5266,7 +5267,7 @@ def pool_update(name,
                     node.remove(child)
         visit_xml(old_xml, empty_node_remover)
 
-        needs_update = ElementTree.tostring(old_xml) != ElementTree.tostring(new_xml)
+        needs_update = xmlutil.to_dict(old_xml, True) != xmlutil.to_dict(new_xml, True)
         if needs_update and not test:
             conn.storagePoolDefineXML(salt.utils.stringutils.to_str(ElementTree.tostring(new_xml)))
     finally:

@@ -5,6 +5,7 @@ import pathlib
 import quiz
 
 GITHUB_GRAPHQL_API = "https://api.github.com/graphql"
+GITHUB_API = "https://api.github.com"
 
 
 log = logging.getLogger(__name__)

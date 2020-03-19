@@ -193,26 +193,6 @@ def __get_conn(**kwargs):
     if not conn_str:
         conn_str = __salt__['config.get']('virt:connection:uri', conn_str)
 
-    hypervisor = __salt__['config.get']('libvirt:hypervisor', None)
-    if hypervisor is not None:
-        salt.utils.versions.warn_until(
-            'Sodium',
-            '\'libvirt.hypervisor\' configuration property has been deprecated. '
-            'Rather use the \'virt:connection:uri\' to properly define the libvirt '
-            'URI or alias of the host to connect to. \'libvirt:hypervisor\' will '
-            'stop being used in {version}.'
-        )
-
-    if hypervisor == 'esxi' and conn_str is None:
-        salt.utils.versions.warn_until(
-            'Sodium',
-            'esxi hypervisor default with no default connection URI detected, '
-            'please set \'virt:connection:uri\' to \'esx\' for keep the legacy '
-            'behavior. Will default to libvirt guess once \'libvirt:hypervisor\' '
-            'configuration is removed in {version}.'
-        )
-        conn_str = 'esx'
-
     try:
         auth_types = [libvirt.VIR_CRED_AUTHNAME,
                       libvirt.VIR_CRED_NOECHOPROMPT,
@@ -1449,26 +1429,18 @@ def init(name,
     caps = capabilities(**kwargs)
     os_types = sorted({guest['os_type'] for guest in caps['guests']})
     arches = sorted({guest['arch']['name'] for guest in caps['guests']})
-    if not hypervisor:
-        hypervisor = __salt__['config.get']('libvirt:hypervisor', hypervisor)
-        if hypervisor is not None:
-            salt.utils.versions.warn_until(
-                'Sodium',
-                '\'libvirt:hypervisor\' configuration property has been deprecated. '
-                'Rather use the \'virt:connection:uri\' to properly define the libvirt '
-                'URI or alias of the host to connect to. \'libvirt:hypervisor\' will '
-                'stop being used in {version}.'
-            )
-        else:
-            # Use the machine types as possible values
-            # Prefer 'kvm' over the others if available
-            hypervisors = sorted({x for y in [guest['arch']['domains'].keys() for guest in caps['guests']] for x in y})
-            hypervisor = 'kvm' if 'kvm' in hypervisors else hypervisors[0]
+
+    virt_hypervisor = hypervisor
+    if not virt_hypervisor:
+        # Use the machine types as possible values
+        # Prefer 'kvm' over the others if available
+        hypervisors = sorted({x for y in [guest['arch']['domains'].keys() for guest in caps['guests']] for x in y})
+        virt_hypervisor = 'kvm' if 'kvm' in hypervisors else hypervisors[0]
 
     # esxi used to be a possible value for the hypervisor: map it to vmware since it's the same
-    hypervisor = 'vmware' if hypervisor == 'esxi' else hypervisor
+    virt_hypervisor = 'vmware' if virt_hypervisor == 'esxi' else virt_hypervisor
 
-    log.debug('Using hypervisor %s', hypervisor)
+    log.debug('Using hypervisor %s', virt_hypervisor)
 
     # the NICs are computed as follows:
     # 1 - get the default NICs from the profile
@@ -1481,7 +1453,7 @@ def init(name,
             '\'dmac\' parameter has been deprecated. Rather use the \'interfaces\' parameter '
             'to properly define the desired MAC address. \'dmac\' will be removed in {version}.'
         )
-    nicp = _get_merged_nics(hypervisor, nic, interfaces, dmac=dmac)
+    nicp = _get_merged_nics(virt_hypervisor, nic, interfaces, dmac=dmac)
 
     # the disks are computed as follows:
     # 1 - get the disks defined in the profile
@@ -1502,13 +1474,13 @@ def init(name,
             'to override or define the image. \'image\' will be removed in {version}.'
         )
 
-    diskp = _disk_profile(disk, hypervisor, disks, name, image=image, pool=pool, **kwargs)
+    diskp = _disk_profile(disk, virt_hypervisor, disks, name, image=image, pool=pool, **kwargs)
 
     # Create multiple disks, empty or from specified images.
     for _disk in diskp:
         log.debug("Creating disk for VM [ %s ]: %s", name, _disk)
 
-        if hypervisor == 'vmware':
+        if virt_hypervisor == 'vmware':
             if 'image' in _disk:
                 # TODO: we should be copying the image file onto the ESX host
                 raise SaltInvocationError(
@@ -1527,7 +1499,7 @@ def init(name,
                 )
                 define_vol_xml_str(vol_xml)
 
-        elif hypervisor in ['qemu', 'kvm', 'xen']:
+        elif virt_hypervisor in ['qemu', 'kvm', 'xen']:
 
             create_overlay = enable_qcow
             if create_overlay:
@@ -1564,7 +1536,7 @@ def init(name,
             # Unknown hypervisor
             raise SaltInvocationError(
                 'Unsupported hypervisor when handling disk image: {0}'
-                .format(hypervisor)
+                .format(virt_hypervisor)
             )
 
     log.debug('Generating VM XML')
@@ -1585,7 +1557,7 @@ def init(name,
     if boot is not None:
         boot = _handle_remote_boot_params(boot)
 
-    vm_xml = _gen_xml(name, cpu, mem, diskp, nicp, hypervisor, os_type, arch,
+    vm_xml = _gen_xml(name, cpu, mem, diskp, nicp, virt_hypervisor, os_type, arch,
                       graphics, boot, **kwargs)
     conn = __get_conn(**kwargs)
     try:
@@ -2609,32 +2581,22 @@ def get_profiles(hypervisor=None, **kwargs):
     '''
     ret = {}
 
+    # Use the machine types as possible values
+    # Prefer 'kvm' over the others if available
     caps = capabilities(**kwargs)
     hypervisors = sorted({x for y in [guest['arch']['domains'].keys() for guest in caps['guests']] for x in y})
     default_hypervisor = 'kvm' if 'kvm' in hypervisors else hypervisors[0]
 
     if not hypervisor:
-        hypervisor = __salt__['config.get']('libvirt:hypervisor')
-        if hypervisor is not None:
-            salt.utils.versions.warn_until(
-                'Sodium',
-                '\'libvirt:hypervisor\' configuration property has been deprecated. '
-                'Rather use the \'virt:connection:uri\' to properly define the libvirt '
-                'URI or alias of the host to connect to. \'libvirt:hypervisor\' will '
-                'stop being used in {version}.'
-            )
-        else:
-            # Use the machine types as possible values
-            # Prefer 'kvm' over the others if available
-            hypervisor = default_hypervisor
+        hypervisor = default_hypervisor
     virtconf = __salt__['config.get']('virt', {})
     for typ in ['disk', 'nic']:
         _func = getattr(sys.modules[__name__], '_{0}_profile'.format(typ))
-        ret[typ] = {'default': _func('default', hypervisor)}
+        ret[typ] = {'default': _func('default', hypervisor if hypervisor else default_hypervisor)}
         if typ in virtconf:
             ret.setdefault(typ, {})
             for prf in virtconf[typ]:
-                ret[typ][prf] = _func(prf, hypervisor)
+                ret[typ][prf] = _func(prf, hypervisor if hypervisor else default_hypervisor)
     return ret
 
 

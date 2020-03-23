@@ -1,6 +1,7 @@
 import argparse
 import logging
 import pathlib
+import subprocess
 
 import quiz
 
@@ -20,6 +21,7 @@ def make_parser():
     parser.add_argument(
         "--oneline", action="store_true", help="Print git commit hashes on one line"
     )
+    parser.add_argument("--exclude-merge-commits", type=bool, default=True, help="Exclude merge commits.")
     return parser
 
 
@@ -47,7 +49,7 @@ def load_auth():
     return (user, token)
 
 
-def do_it(*, owner, reponame, pr_number, auth, oneline):  # Shia LeBeouf
+def do_it(*, owner, reponame, pr_number, auth, oneline, exclude_merge_commits):  # Shia LeBeouf
     auth = load_auth()
     schema = get_schema(auth=auth, url=GITHUB_GRAPHQL_API)
     _ = quiz.SELECTOR
@@ -75,6 +77,10 @@ def do_it(*, owner, reponame, pr_number, auth, oneline):  # Shia LeBeouf
     # fmt: on
     result = quiz.execute(query, GITHUB_GRAPHQL_API, auth=auth)
     for node in result.repository.pull_request.commits.nodes:
+        if exclude_merge_commits:
+            result = subprocess.run(['git', 'show', '-s', '--pretty=%P', node.commit.oid], capture_output=True)
+            if len(result.stdout.decode().strip().split()) > 1:
+                continue
         print(node.commit.oid, end=" " if oneline else "\n")
 
 
@@ -91,4 +97,5 @@ if __name__ == "__main__":
         pr_number=args.pr_number,
         auth=auth,
         oneline=args.oneline,
+        exclude_merge_commits=args.exclude_merge_commits,
     )

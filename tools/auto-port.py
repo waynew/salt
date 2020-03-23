@@ -80,33 +80,42 @@ def do_it():  # Shia LeBeouf
             pr_number = node["node"]["content"]["number"]
             pr_numbers.append(pr_number)
 
-    with open("/tmp/failures.txt", "w") as f:
-        for num in sorted(pr_numbers):
-            print("Fetching hashes for", num)
-            os.chdir("/Users/wwerner/util/tools")
-            output = subprocess.run(
-                [sys.executable, "commits-in-pr.py", str(num)], capture_output=True
-            )
-            hashes = output.stdout.decode().splitlines()
-            try:
-                if not hashes:
-                    raise Exception("No hashes?")
-                os.chdir("/Users/wwerner/programming/salt")
-                subprocess.run(["git", "cherry-pick", "--abort"])
-                r = subprocess.run(["git", "checkout", "salt/master"])
-                r = subprocess.run(["git", "checkout", "-B", f"master-port/{num}"])
-                r = subprocess.run(["git", "fetch", "salt", f"refs/pull/{num}/head"])
-                cmd = ["git", "cherry-pick"] + hashes
-                print("running", cmd)
-                r = subprocess.run(cmd)
-            except:
-                subprocess.run(["git", "reset", "--hard", "HEAD"])
+    for num in sorted(pr_numbers):
+        print("Fetching hashes for", num)
+        os.chdir("/Users/wwerner/util/tools")
+        output = subprocess.run(
+            [sys.executable, "commits-in-pr.py", str(num)], capture_output=True
+        )
+        hashes = output.stdout.decode().splitlines()
+        try:
+            if not hashes:
+                raise Exception("No hashes?")
+            os.chdir("/Users/wwerner/programming/salt")
+            subprocess.run(["git", "cherry-pick", "--abort"])
+            r = subprocess.run(["git", "checkout", "salt/master"])
+            r = subprocess.run(["git", "checkout", "-B", f"master-port/{num}"])
+            r = subprocess.run(["git", "fetch", "salt", f"refs/pull/{num}/head"])
+            cmd = ["git", "cherry-pick"] + hashes
+            print("running", cmd)
+            r = subprocess.run(cmd)
+            if r.returncode == 0:
+                with open("/tmp/failures.txt", "a") as f:
+                    print(f'{num} OK!', file=f)
+            else:
+                with open("/tmp/failures.txt", "a") as f:
+                    print(f"Failed {num} hashes - {hashes!r}", file=f)
+        except:
+            with open("/tmp/failures.txt", "a") as f:
                 print(f"Failed {num} hashes - {hashes!r}", file=f)
-                f.flush()
+            subprocess.run(["git", "reset", "--hard", "HEAD"])
+        finally:
+            subprocess.run(["git", "cherry-pick", "--abort"])
+            subprocess.run(["git", "checkout", "salt/master"])
+            subprocess.run(["git", "branch", "-D", f"master-port/{num}"])
 
-            if os.path.exists("/tmp/abort"):
-                print("aborting!")
-                exit(1)
+        if os.path.exists("/tmp/abort"):
+            print("aborting!")
+            exit(1)
 
 
 if __name__ == "__main__":

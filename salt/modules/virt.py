@@ -141,76 +141,6 @@ def __virtual__():
     return 'virt'
 
 
-def __get_request_auth(username, password):
-    '''
-    Get libvirt.openAuth callback with username, password values overriding
-    the configuration ones.
-    '''
-
-    # pylint: disable=unused-argument
-    def __request_auth(credentials, user_data):
-        '''Callback method passed to libvirt.openAuth().
-
-        The credentials argument is a list of credentials that libvirt
-        would like to request. An element of this list is a list containing
-        5 items (4 inputs, 1 output):
-          - the credential type, e.g. libvirt.VIR_CRED_AUTHNAME
-          - a prompt to be displayed to the user
-          - a challenge
-          - a default result for the request
-          - a place to store the actual result for the request
-
-        The user_data argument is currently not set in the openAuth call.
-        '''
-        for credential in credentials:
-            if credential[0] == libvirt.VIR_CRED_AUTHNAME:
-                credential[4] = username if username else \
-                                __salt__['config.get']('virt:connection:auth:username', credential[3])
-            elif credential[0] == libvirt.VIR_CRED_NOECHOPROMPT:
-                credential[4] = password if password else \
-                                __salt__['config.get']('virt:connection:auth:password', credential[3])
-            else:
-                log.info('Unhandled credential type: %s', credential[0])
-        return 0
-
-
-def __get_conn(**kwargs):
-    '''
-    Detects what type of dom this node is and attempts to connect to the
-    correct hypervisor via libvirt.
-
-    :param connection: libvirt connection URI, overriding defaults
-    :param username: username to connect with, overriding defaults
-    :param password: password to connect with, overriding defaults
-
-    '''
-    # This has only been tested on kvm and xen, it needs to be expanded to
-    # support all vm layers supported by libvirt
-
-    username = kwargs.get('username', None)
-    password = kwargs.get('password', None)
-    conn_str = kwargs.get('connection', None)
-    if not conn_str:
-        conn_str = __salt__['config.get']('virt:connection:uri', conn_str)
-
-    try:
-        auth_types = [libvirt.VIR_CRED_AUTHNAME,
-                      libvirt.VIR_CRED_NOECHOPROMPT,
-                      libvirt.VIR_CRED_ECHOPROMPT,
-                      libvirt.VIR_CRED_PASSPHRASE,
-                      libvirt.VIR_CRED_EXTERNAL]
-        conn = libvirt.openAuth(conn_str, [auth_types, __get_request_auth(username, password), None], 0)
-    except Exception:  # pylint: disable=broad-except
-        raise CommandExecutionError(
-            'Sorry, {0} failed to open a connection to the hypervisor '
-            'software at {1}'.format(
-                __grains__['fqdn'],
-                conn_str
-            )
-        )
-    return conn
-
-
 def _get_domain(conn, *vms, **kwargs):
     '''
     Return a domain object for the named VM or return domain object for all VMs.
@@ -1393,7 +1323,7 @@ def init(name,
 
     vm_xml = _gen_xml(name, cpu, mem, diskp, nicp, virt_hypervisor, os_type, arch,
                       graphics, boot, **kwargs)
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         conn.defineXML(vm_xml)
     except libvirtError as err:
@@ -1656,7 +1586,7 @@ def update(name,
         'disk': {'attached': [], 'detached': []},
         'interface': {'attached': [], 'detached': []}
     }
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     domain = _get_domain(conn, name)
     desc = ElementTree.fromstring(domain.XMLDesc(0))
     need_update = False
@@ -1837,7 +1767,7 @@ def list_domains(**kwargs):
         salt '*' virt.list_domains
     '''
     vms = []
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     for dom in _get_domain(conn, iterable=True):
         vms.append(dom.name())
     conn.close()
@@ -1865,7 +1795,7 @@ def list_active_vms(**kwargs):
         salt '*' virt.list_active_vms
     '''
     vms = []
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     for dom in _get_domain(conn, iterable=True, inactive=False):
         vms.append(dom.name())
     conn.close()
@@ -1893,7 +1823,7 @@ def list_inactive_vms(**kwargs):
         salt '*' virt.list_inactive_vms
     '''
     vms = []
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     for dom in _get_domain(conn, iterable=True, active=False):
         vms.append(dom.name())
     conn.close()
@@ -1956,7 +1886,7 @@ def vm_info(vm_=None, **kwargs):
                 'mem': int(raw[2]),
                 'state': VIRT_STATE_NAME_MAP.get(raw[0], 'unknown')}
     info = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     if vm_:
         info[vm_] = _info(_get_domain(conn, vm_))
     else:
@@ -1999,7 +1929,7 @@ def vm_state(vm_=None, **kwargs):
         state = VIRT_STATE_NAME_MAP.get(raw[0], 'unknown')
         return state
     info = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     if vm_:
         info[vm_] = _info(_get_domain(conn, vm_))
     else:
@@ -2045,7 +1975,7 @@ def node_info(**kwargs):
 
         salt '*' virt.node_info
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     info = _node_info(conn)
     conn.close()
     return info
@@ -2072,7 +2002,7 @@ def get_nics(vm_, **kwargs):
 
         salt '*' virt.get_nics <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     nics = _get_nics(_get_domain(conn, vm_))
     conn.close()
     return nics
@@ -2124,7 +2054,7 @@ def get_graphics(vm_, **kwargs):
 
         salt '*' virt.get_graphics <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     graphics = _get_graphics(_get_domain(conn, vm_))
     conn.close()
     return graphics
@@ -2151,7 +2081,7 @@ def get_disks(vm_, **kwargs):
 
         salt '*' virt.get_disks <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     disks = _get_disks(_get_domain(conn, vm_))
     conn.close()
     return disks
@@ -2182,7 +2112,7 @@ def setmem(vm_, memory, config=False, **kwargs):
         salt '*' virt.setmem <domain> <size>
         salt '*' virt.setmem my_domain 768
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
 
     if VIRT_STATE_NAME_MAP.get(dom.info()[0], 'unknown') != 'shutdown':
@@ -2231,7 +2161,7 @@ def setvcpus(vm_, vcpus, config=False, **kwargs):
         salt '*' virt.setvcpus <domain> <amount>
         salt '*' virt.setvcpus my_domain 4
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
 
     if VIRT_STATE_NAME_MAP.get(dom.info()[0], 'unknown') != 'shutdown':
@@ -2284,7 +2214,7 @@ def freemem(**kwargs):
 
         salt '*' virt.freemem
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     mem = _freemem(conn)
     conn.close()
     return mem
@@ -2322,7 +2252,7 @@ def freecpu(**kwargs):
 
         salt '*' virt.freecpu
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     cpus = _freecpu(conn)
     conn.close()
     return cpus
@@ -2348,7 +2278,7 @@ def full_info(**kwargs):
 
         salt '*' virt.full_info
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     info = {'freecpu': _freecpu(conn),
             'freemem': _freemem(conn),
             'node_info': _node_info(conn),
@@ -2378,7 +2308,7 @@ def get_xml(vm_, **kwargs):
 
         salt '*' virt.get_xml <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     xml_desc = vm_.XMLDesc(0) if isinstance(
         vm_, libvirt.virDomain
     ) else _get_domain(conn, vm_).XMLDesc(0)
@@ -2455,7 +2385,7 @@ def shutdown(vm_, **kwargs):
 
         salt '*' virt.shutdown <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     ret = dom.shutdown() == 0
     conn.close()
@@ -2483,7 +2413,7 @@ def pause(vm_, **kwargs):
 
         salt '*' virt.pause <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     ret = dom.suspend() == 0
     conn.close()
@@ -2511,7 +2441,7 @@ def resume(vm_, **kwargs):
 
         salt '*' virt.resume <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     ret = dom.resume() == 0
     conn.close()
@@ -2539,7 +2469,7 @@ def start(name, **kwargs):
 
         salt '*' virt.start <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     ret = _get_domain(conn, name).create() == 0
     conn.close()
     return ret
@@ -2566,7 +2496,7 @@ def stop(name, **kwargs):
 
         salt '*' virt.stop <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     ret = _get_domain(conn, name).destroy() == 0
     conn.close()
     return ret
@@ -2593,7 +2523,7 @@ def reboot(name, **kwargs):
 
         salt '*' virt.reboot <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     ret = _get_domain(conn, name).reboot(libvirt.VIR_DOMAIN_REBOOT_DEFAULT) == 0
     conn.close()
     return ret
@@ -2620,7 +2550,7 @@ def reset(vm_, **kwargs):
 
         salt '*' virt.reset <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
 
     # reset takes a flag, like reboot, but it is not yet used
@@ -2652,7 +2582,7 @@ def ctrl_alt_del(vm_, **kwargs):
 
         salt '*' virt.ctrl_alt_del <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     ret = dom.sendKey(0, 0, [29, 56, 111], 3, 0) == 0
     conn.close()
@@ -2680,7 +2610,7 @@ def create_xml_str(xml, **kwargs):  # pylint: disable=redefined-outer-name
 
         salt '*' virt.create_xml_str <XML in string format>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     ret = conn.createXML(xml, 0) is not None
     conn.close()
     return ret
@@ -2738,7 +2668,7 @@ def define_xml_str(xml, **kwargs):  # pylint: disable=redefined-outer-name
 
         salt '*' virt.define_xml_str <XML in string format>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     ret = conn.defineXML(xml) is not None
     conn.close()
     return ret
@@ -2806,7 +2736,7 @@ def define_vol_xml_str(xml, **kwargs):  # pylint: disable=redefined-outer-name
             storagepool: mine
     '''
     poolname = __salt__['config.get']('virt:storagepool', 'default')
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     pool = conn.storagePoolLookupByName(six.text_type(poolname))
     ret = pool.createXML(xml, 0) is not None
     conn.close()
@@ -3011,7 +2941,7 @@ def set_autostart(vm_, state='on', **kwargs):
 
         salt "*" virt.set_autostart <domain> <on | off>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
 
     # return False if state is set to something other then on or off
@@ -3049,7 +2979,7 @@ def undefine(vm_, **kwargs):
 
         salt '*' virt.undefine <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     if getattr(libvirt, 'VIR_DOMAIN_UNDEFINE_NVRAM', False):
         # This one is only in 1.2.8+
@@ -3087,7 +3017,7 @@ def purge(vm_, dirs=False, removables=False, **kwargs):
 
         salt '*' virt.purge <domain>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     dom = _get_domain(conn, vm_)
     disks = _get_disks(dom)
     if VIRT_STATE_NAME_MAP.get(dom.info()[0], 'unknown') != 'shutdown' and dom.destroy() != 0:
@@ -3235,7 +3165,7 @@ def vm_cputime(vm_=None, **kwargs):
 
         salt '*' virt.vm_cputime
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     host_cpus = conn.getInfo()[2]
 
     def _info(dom):
@@ -3334,7 +3264,7 @@ def vm_netstats(vm_=None, **kwargs):
 
         return ret
     info = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     if vm_:
         info[vm_] = _info(_get_domain(conn, vm_))
     else:
@@ -3412,7 +3342,7 @@ def vm_diskstats(vm_=None, **kwargs):
 
         return ret
     info = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     if vm_:
         info[vm_] = _info(_get_domain(conn, vm_))
     else:
@@ -3471,7 +3401,7 @@ def list_snapshots(domain=None, **kwargs):
         salt '*' virt.list_snapshots <domain>
     '''
     ret = dict()
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     for vm_domain in _get_domain(conn, *(domain and [domain] or list()), iterable=True):
         ret[vm_domain.name()] = [_parse_snapshot_description(snap) for snap in vm_domain.listAllSnapshots()] or 'N/A'
 
@@ -3520,7 +3450,7 @@ def snapshot(domain, name=None, suffix=None, **kwargs):
     n_name = ElementTree.SubElement(doc, 'name')
     n_name.text = name
 
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     _get_domain(conn, domain).snapshotCreateXML(
         salt.utils.stringutils.to_str(ElementTree.tostring(doc))
     )
@@ -3556,7 +3486,7 @@ def delete_snapshots(name, *names, **kwargs):
         salt '*' virt.delete_snapshots <domain> <snapshot1> <snapshot2> ...
     '''
     deleted = dict()
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     domain = _get_domain(conn, name)
     for snap in domain.listAllSnapshots():
         if snap.getName() in names or not names:
@@ -3596,7 +3526,7 @@ def revert_snapshot(name, vm_snapshot=None, cleanup=False, **kwargs):
         salt '*' virt.revert <domain> <snapshot>
     '''
     ret = dict()
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     domain = _get_domain(conn, name)
     snapshots = domain.listAllSnapshots()
 
@@ -3877,7 +3807,7 @@ def capabilities(**kwargs):
 
         salt '*' virt.capabilities
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     caps = ElementTree.fromstring(conn.getCapabilities())
     conn.close()
 
@@ -3998,7 +3928,7 @@ def domain_capabilities(emulator=None, arch=None, machine=None, domain=None, **k
         salt '*' virt.domain_capabilities arch='x86_64' domain='kvm'
 
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     caps = ElementTree.fromstring(conn.getDomainCapabilities(emulator, arch, machine, domain, 0))
     conn.close()
 
@@ -4067,7 +3997,7 @@ def cpu_baseline(full=False, migratable=False, out='libvirt', **kwargs):
         salt '*' virt.cpu_baseline
 
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     caps = ElementTree.fromstring(conn.getCapabilities())
     cpu = caps.find('host/cpu')
     log.debug('Host CPU model definition: %s', salt.utils.stringutils.to_str(ElementTree.tostring(cpu)))
@@ -4181,7 +4111,7 @@ def network_define(name,
 
     .. versionadded:: 2019.2.0
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     vport = kwargs.get('vport', None)
     tag = kwargs.get('tag', None)
     autostart = kwargs.get('autostart', True)
@@ -4242,7 +4172,7 @@ def list_networks(**kwargs):
 
        salt '*' virt.list_networks
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         return [net.name() for net in conn.listAllNetworks()]
     finally:
@@ -4269,7 +4199,7 @@ def network_info(name=None, **kwargs):
         salt '*' virt.network_info default
     '''
     result = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
 
     def _net_get_leases(net):
         '''
@@ -4318,7 +4248,7 @@ def network_get_xml(name, **kwargs):
 
         salt '*' virt.network_get_xml default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         return conn.networkLookupByName(name).XMLDesc()
     finally:
@@ -4342,7 +4272,7 @@ def network_start(name, **kwargs):
 
         salt '*' virt.network_start default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         net = conn.networkLookupByName(name)
         return not bool(net.create())
@@ -4367,7 +4297,7 @@ def network_stop(name, **kwargs):
 
         salt '*' virt.network_stop default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         net = conn.networkLookupByName(name)
         return not bool(net.destroy())
@@ -4392,7 +4322,7 @@ def network_undefine(name, **kwargs):
 
         salt '*' virt.network_undefine default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         net = conn.networkLookupByName(name)
         return not bool(net.undefine())
@@ -4420,7 +4350,7 @@ def network_set_autostart(name, state='on', **kwargs):
 
         salt "*" virt.network_set_autostart <pool> <on | off>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         net = conn.networkLookupByName(name)
         return not bool(net.setAutostart(1 if state == 'on' else 0))
@@ -4478,7 +4408,7 @@ def pool_capabilities(**kwargs):
 
     '''
     try:
-        conn = __get_conn(**kwargs)
+        conn = salt.utils.libvirt.get_conn(**kwargs)
         has_pool_capabilities = bool(getattr(conn, 'getStoragePoolCapabilities', None))
         if has_pool_capabilities:
             caps = ElementTree.fromstring(conn.getStoragePoolCapabilities())
@@ -4728,7 +4658,7 @@ def pool_define(name,
 
     .. versionadded:: 2019.2.0
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     auth = _pool_set_secret(conn, ptype, name, source_auth)
 
     pool_xml = _gen_pool_xml(
@@ -4927,7 +4857,7 @@ def pool_update(name,
     .. versionadded:: 3000
     '''
     # Get the current definition to compare the two
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     needs_update = False
     try:
         pool = conn.storagePoolLookupByName(name)
@@ -5007,7 +4937,7 @@ def list_pools(**kwargs):
 
         salt '*' virt.list_pools
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         return [pool.name() for pool in conn.listAllStoragePools()]
     finally:
@@ -5034,7 +4964,7 @@ def pool_info(name=None, **kwargs):
         salt '*' virt.pool_info default
     '''
     result = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
 
     def _pool_extract_infos(pool):
         '''
@@ -5086,7 +5016,7 @@ def pool_get_xml(name, **kwargs):
 
         salt '*' virt.pool_get_xml default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         return conn.storagePoolLookupByName(name).XMLDesc()
     finally:
@@ -5110,7 +5040,7 @@ def pool_start(name, **kwargs):
 
         salt '*' virt.pool_start default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.create())
@@ -5135,7 +5065,7 @@ def pool_build(name, **kwargs):
 
         salt '*' virt.pool_build default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.build())
@@ -5160,7 +5090,7 @@ def pool_stop(name, **kwargs):
 
         salt '*' virt.pool_stop default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.destroy())
@@ -5185,7 +5115,7 @@ def pool_undefine(name, **kwargs):
 
         salt '*' virt.pool_undefine default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.undefine())
@@ -5210,7 +5140,7 @@ def pool_delete(name, **kwargs):
 
         salt '*' virt.pool_delete default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.delete(libvirt.VIR_STORAGE_POOL_DELETE_NORMAL))
@@ -5235,7 +5165,7 @@ def pool_refresh(name, **kwargs):
 
         salt '*' virt.pool_refresh default
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.refresh())
@@ -5263,7 +5193,7 @@ def pool_set_autostart(name, state='on', **kwargs):
 
         salt "*" virt.pool_set_autostart <pool> <on | off>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return not bool(pool.setAutostart(1 if state == 'on' else 0))
@@ -5288,7 +5218,7 @@ def pool_list_volumes(name, **kwargs):
 
         salt "*" virt.pool_list_volumes <pool>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         pool = conn.storagePoolLookupByName(name)
         return pool.listVolumes()
@@ -5362,7 +5292,7 @@ def volume_infos(pool=None, volume=None, **kwargs):
         salt "*" virt.volume_infos <pool> <volume>
     '''
     result = {}
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         backing_stores = _get_all_volumes_paths(conn)
         try:
@@ -5433,7 +5363,7 @@ def volume_delete(pool, volume, **kwargs):
 
         salt "*" virt.volume_delete <pool> <volume>
     '''
-    conn = __get_conn(**kwargs)
+    conn = salt.utils.libvirt.get_conn(**kwargs)
     try:
         vol = _get_storage_vol(conn, pool, volume)
         return not bool(vol.delete())

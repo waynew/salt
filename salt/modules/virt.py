@@ -108,6 +108,7 @@ import salt.utils.validate.net
 import salt.utils.versions
 import salt.utils.xmlutil as xmlutil
 import salt.utils.yaml
+import salt.utils.libvirt
 
 from salt.utils.virt import check_remote, download_remote
 from salt.exceptions import CommandExecutionError, SaltInvocationError

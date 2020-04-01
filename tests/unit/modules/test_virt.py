@@ -66,13 +66,17 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_subprocess = MagicMock()
         self.mock_subprocess.return_value = self.mock_subprocess  # pylint: disable=no-member
         self.mock_subprocess.Popen.return_value = self.mock_popen  # pylint: disable=no-member
+  
+        self.utils_mock = MagicMock()
+        self.utils_mock.get_conn.return_value = self.mock_conn
         loader_globals = {
             '__salt__': {
                 'config.get': config.get,
                 'config.option': config.option,
             },
             'libvirt': self.mock_libvirt,
-            'subprocess': self.mock_subprocess
+            'subprocess': self.mock_subprocess,
+            'salt.utils.libvirt': self.utils_mock
         }
         return {virt: loader_globals, config: loader_globals}
 
@@ -1723,8 +1727,9 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(res)
         mock_remove.assert_any_call('/disks/test.qcow2')
         mock_remove.assert_any_call('/disks/test-cdrom.iso')
-
-    def test_capabilities(self):
+ 
+    @patch('salt.utils.libvirt.get_conn', return_value=MagicMock())
+    def test_capabilities(self, conn_mock):
         '''
         Test the virt.capabilities parsing
         '''
@@ -1857,7 +1862,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
 </capabilities>
         '''
-        self.mock_conn.getCapabilities.return_value = xml  # pylint: disable=no-member
+        conn_mock.getCapabilities.return_value = xml  # pylint: disable=no-member
         caps = virt.capabilities()
 
         expected = {
@@ -2043,7 +2048,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 root.find("./ip[@address='192.168.2.0']/dhcp/range[@start='192.168.2.110']").attrib['end'],
                 '192.168.2.125')
 
-    def test_domain_capabilities(self):
+    @patch('salt.utils.libvirt', return_value=MagicMock())
+    def test_domain_capabilities(self, utils_mock):
         '''
         Test the virt.domain_capabilities parsing
         '''
@@ -2146,7 +2152,9 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 </domainCapabilities>
         '''
 
-        self.mock_conn.getDomainCapabilities.return_value = xml  # pylint: disable=no-member
+        conn_mock = MagicMock()
+        conn_mock.getDomainCapabilities.return_value = xml  # pylint: disable=no-member
+        utils_mock.get_conn.return_value = conn_mock
         caps = virt.domain_capabilities()
 
         expected = {

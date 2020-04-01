@@ -11,7 +11,6 @@ except ImportError:
 
 # import Salt libs
 import salt.modules.config
-import salt.grains.core
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 
 log = logging.getLogger(__name__)

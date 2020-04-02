@@ -64,9 +64,9 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.addCleanup(delattr, self, 'mock_conn')
         self.addCleanup(delattr, self, 'mock_popen')
         self.mock_subprocess = MagicMock()
-        self.mock_subprocess.return_value = self.mock_subprocess  # pylint: disable=no-member
-        self.mock_subprocess.Popen.return_value = self.mock_popen  # pylint: disable=no-member
-  
+        self.mock_subprocess.return_value = self.mock_subprocess
+        self.mock_subprocess.Popen.return_value = self.mock_popen
+
         self.utils_mock = MagicMock()
         self.utils_mock.get_conn.return_value = self.mock_conn
         loader_globals = {
@@ -84,13 +84,13 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Define VM to use in tests
         '''
-        self.mock_conn.listDefinedDomains.return_value = [name]  # pylint: disable=no-member
+        self.mock_conn.listDefinedDomains.return_value = [name]
         mock_domain = self.mock_libvirt.virDomain()
-        self.mock_conn.lookupByName.return_value = mock_domain  # pylint: disable=no-member
-        mock_domain.XMLDesc.return_value = xml  # pylint: disable=no-member
+        self.mock_conn.lookupByName.return_value = mock_domain
+        mock_domain.XMLDesc.return_value = xml
 
         # Return state as shutdown
-        mock_domain.info.return_value = [4, 2048 * 1024, 1024 * 1024, 2, 1234]  # pylint: disable=no-member
+        mock_domain.info.return_value = [4, 2048 * 1024, 1024 * 1024, 2, 1234]
         mock_domain.ID.return_value = 1
         mock_domain.name.return_value = name
         return mock_domain
@@ -421,7 +421,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._disk_profile() default ESXi profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._disk_profile('nonexistent', 'vmware')
             self.assertTrue(len(ret) == 1)
             found = [disk for disk in ret if disk['name'] == 'system']
@@ -436,7 +436,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._disk_profile() default KVM profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._disk_profile('nonexistent', 'kvm')
             self.assertTrue(len(ret) == 1)
             found = [disk for disk in ret if disk['name'] == 'system']
@@ -451,7 +451,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._disk_profile() default XEN profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._disk_profile('nonexistent', 'xen')
             self.assertTrue(len(ret) == 1)
             found = [disk for disk in ret if disk['name'] == 'system']
@@ -466,7 +466,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._nic_profile() default ESXi profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._nic_profile('nonexistent', 'vmware')
             self.assertTrue(len(ret) == 1)
             eth0 = ret[0]
@@ -480,7 +480,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._nic_profile() default KVM profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._nic_profile('nonexistent', 'kvm')
             self.assertTrue(len(ret) == 1)
             eth0 = ret[0]
@@ -494,7 +494,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         Test virt._nic_profile() default XEN profile
         '''
         mock = MagicMock(return_value={})
-        with patch.dict(virt.__salt__, {'config.get': mock}):  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': mock}):
             ret = virt._nic_profile('nonexistent', 'xen')
             self.assertTrue(len(ret) == 1)
             eth0 = ret[0]
@@ -659,7 +659,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 {'name': 'eth2', 'source': 'TWONET'}
             ]
         }
-        with patch.dict(virt.__salt__,  # pylint: disable=no-member
+        with patch.dict(virt.__salt__,
                         {'config.get': MagicMock(side_effect=[disks, nics])}):
             diskp = virt._disk_profile('noeffect', 'vmware', [], 'hello')
             nicp = virt._nic_profile('noeffect', 'vmware')
@@ -697,7 +697,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 {'name': 'eth2', 'source': 'b2'}
             ]
         }
-        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[
                 disks, nics])}):
             diskp = virt._disk_profile('noeffect', 'kvm', [], 'hello')
             nicp = virt._nic_profile('noeffect', 'kvm')
@@ -732,7 +732,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             ]
         }
 
-        # pylint: disable=no-member
         with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[
                 disks,
                 os.path.join(salt.syspaths.ROOT_DIR, 'default', 'path')])}):
@@ -745,7 +744,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(len(diskp), 2)
             self.assertTrue(diskp[0]['source_file'].startswith(pools_path))
             self.assertTrue(diskp[1]['source_file'].startswith(default_path))
-        # pylint: enable=no-member
 
     def test_disk_profile_kvm_disk_external_image(self):
         '''
@@ -770,7 +768,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 {'first': {'size': 8192, 'pool': 'default'}},
             ]
         }
-        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[
                 disks, "/default/path/"])}):
             with self.assertRaises(CommandExecutionError):
                 virt._disk_profile('noeffect', 'kvm', [], 'hello')
@@ -785,7 +783,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 {'first': {'size': 8192, 'pool': 'default'}},
             ]
         }
-        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[  # pylint: disable=no-member
+        with patch.dict(virt.__salt__, {'config.get': MagicMock(side_effect=[
                 disks, "/default/path/"])}):
             with self.assertRaises(CommandExecutionError):
                 virt._disk_profile('noeffect', 'kvm', [], 'hello')
@@ -1107,7 +1105,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
 </capabilities>
         '''
-        self.mock_conn.getCapabilities.return_value = xml  # pylint: disable=no-member
+        self.mock_conn.getCapabilities.return_value = xml
 
         root_dir = os.path.join(salt.syspaths.ROOT_DIR, 'srv', 'salt-images')
 
@@ -1115,8 +1113,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_conn.defineXML = defineMock
         mock_chmod = MagicMock()
         mock_run = MagicMock()
-        with patch.dict(os.__dict__, {'chmod': mock_chmod, 'makedirs': MagicMock()}):  # pylint: disable=no-member
-            with patch.dict(virt.__salt__, {'cmd.run': mock_run}):  # pylint: disable=no-member
+        with patch.dict(os.__dict__, {'chmod': mock_chmod, 'makedirs': MagicMock()}):
+            with patch.dict(virt.__salt__, {'cmd.run': mock_run}):
 
                 # Ensure the init() function allows creating VM without NIC and disk
                 virt.init('test vm',
@@ -1326,13 +1324,13 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         domain_mock.detachDevice = devdetach_mock
         mock_chmod = MagicMock()
         mock_run = MagicMock()
-        with patch.dict(os.__dict__, {'chmod': mock_chmod, 'makedirs': MagicMock()}):  # pylint: disable=no-member
-            with patch.dict(virt.__salt__, {'cmd.run': mock_run}):  # pylint: disable=no-member
+        with patch.dict(os.__dict__, {'chmod': mock_chmod, 'makedirs': MagicMock()}):
+            with patch.dict(virt.__salt__, {'cmd.run': mock_run}):
                 ret = virt.update('my vm', disk_profile='default', disks=[
                     {'name': 'cddrive', 'device': 'cdrom', 'source_file': None, 'model': 'ide'},
                     {'name': 'added', 'size': 2048}])
                 added_disk_path = os.path.join(
-                        virt.__salt__['config.get']('virt:images'), 'my vm_added.qcow2')  # pylint: disable=no-member
+                        virt.__salt__['config.get']('virt:images'), 'my vm_added.qcow2')
                 self.assertEqual(mock_run.call_args[0][0],
                                  'qemu-img create -f qcow2 "{0}" 2048M'.format(added_disk_path))
                 self.assertEqual(mock_chmod.call_args[0][0], added_disk_path)
@@ -1358,7 +1356,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mock_config = salt.utils.yaml.safe_load(yaml_config)
         devattach_mock.reset_mock()
         devdetach_mock.reset_mock()
-        with patch.dict(salt.modules.config.__opts__, mock_config):  # pylint: disable=no-member
+        with patch.dict(salt.modules.config.__opts__, mock_config):
             ret = virt.update('my vm', nic_profile='myprofile',
                               interfaces=[{'name': 'eth0', 'type': 'network', 'source': 'default',
                                            'mac': '52:54:00:39:02:b1'},
@@ -1465,7 +1463,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                       model: virtio
         '''
         mock_config = salt.utils.yaml.safe_load(yaml_config)
-        with patch.dict(salt.modules.config.__opts__, mock_config):  # pylint: disable=no-member
+        with patch.dict(salt.modules.config.__opts__, mock_config):
 
             for name in six.iterkeys(mock_config['virt']['nic']):
                 profile = salt.modules.virt._nic_profile(name, 'kvm')
@@ -1664,7 +1662,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "dirty-flag": false
         }]'''
 
-        self.mock_popen.communicate.return_value = [qemu_infos]  # pylint: disable=no-member
+        self.mock_popen.communicate.return_value = [qemu_infos]
 
         res = virt.purge('test-vm')
         self.assertTrue(res)
@@ -1721,14 +1719,14 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "dirty-flag": false
         }]'''
 
-        self.mock_popen.communicate.return_value = [qemu_infos]  # pylint: disable=no-member
+        self.mock_popen.communicate.return_value = [qemu_infos]
 
         res = virt.purge('test-vm', removables=True)
         self.assertTrue(res)
         mock_remove.assert_any_call('/disks/test.qcow2')
         mock_remove.assert_any_call('/disks/test-cdrom.iso')
- 
-    @patch('salt.utils.libvirt.get_conn', return_value=MagicMock())
+
+    @patch('salt.utils.libvirt.get_conn', autospec=True)
     def test_capabilities(self, conn_mock):
         '''
         Test the virt.capabilities parsing
@@ -1862,7 +1860,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
 </capabilities>
         '''
-        conn_mock.getCapabilities.return_value = xml  # pylint: disable=no-member
+        conn_mock.return_value.getCapabilities.return_value = xml
         caps = virt.capabilities()
 
         expected = {
@@ -2153,7 +2151,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
 
         conn_mock = MagicMock()
-        conn_mock.getDomainCapabilities.return_value = xml  # pylint: disable=no-member
+        conn_mock.getDomainCapabilities.return_value = xml
         utils_mock.get_conn.return_value = conn_mock
         caps = virt.domain_capabilities()
 
@@ -2246,7 +2244,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         for i, value in enumerate(names):
             net_mocks[i].name.return_value = value
 
-        self.mock_conn.listAllNetworks.return_value = net_mocks  # pylint: disable=no-member
+        self.mock_conn.listAllNetworks.return_value = net_mocks
         actual = virt.list_networks()
         self.assertEqual(names, actual)
 
@@ -2259,7 +2257,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
         net_mock = MagicMock()
 
-        # pylint: disable=no-member
         net_mock.name.return_value = 'foo'
         net_mock.UUIDString.return_value = 'some-uuid'
         net_mock.bridgeName.return_value = 'br0'
@@ -2280,7 +2277,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             }
         ]
         self.mock_conn.listAllNetworks.return_value = [net_mock]
-        # pylint: enable=no-member
 
         net = virt.network_info('foo')
         self.assertEqual({'foo': {
@@ -2311,7 +2307,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_libvirt.VIR_IP_ADDR_TYPE_IPV6 = 1
 
         net_mocks = []
-        # pylint: disable=no-member
         for i in range(2):
             net_mock = MagicMock()
 
@@ -2324,7 +2319,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             net_mock.DHCPLeases.return_value = []
             net_mocks.append(net_mock)
         self.mock_conn.listAllNetworks.return_value = net_mocks
-        # pylint: enable=no-member
 
         net = virt.network_info()
         self.assertEqual({
@@ -2351,9 +2345,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Test virt.network_info() when the network can't be found
         '''
-        # pylint: disable=no-member
         self.mock_conn.listAllNetworks.return_value = []
-        # pylint: enable=no-member
         net = virt.network_info('foo')
         self.assertEqual({}, net)
 
@@ -2611,7 +2603,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         for i, value in enumerate(names):
             pool_mocks[i].name.return_value = value
 
-        self.mock_conn.listAllStoragePools.return_value = pool_mocks  # pylint: disable=no-member
+        self.mock_conn.listAllStoragePools.return_value = pool_mocks
         actual = virt.list_pools()
         self.assertEqual(names, actual)
 
@@ -2619,7 +2611,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Test virt.pool_info()
         '''
-        # pylint: disable=no-member
         pool_mock = MagicMock()
         pool_mock.name.return_value = 'foo'
         pool_mock.UUIDString.return_value = 'some-uuid'
@@ -2644,7 +2635,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
   </target>
 </pool>'''
         self.mock_conn.listAllStoragePools.return_value = [pool_mock]
-        # pylint: enable=no-member
 
         pool = virt.pool_info('foo')
         self.assertEqual({'foo': {
@@ -2662,7 +2652,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Test virt.pool_info()
         '''
-        # pylint: disable=no-member
         pool_mock = MagicMock()
         pool_mock.name.return_value = 'ceph'
         pool_mock.UUIDString.return_value = 'some-uuid'
@@ -2685,7 +2674,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
   </source>
 </pool>'''
         self.mock_conn.listAllStoragePools.return_value = [pool_mock]
-        # pylint: enable=no-member
 
         pool = virt.pool_info('ceph')
         self.assertEqual({'ceph': {
@@ -2703,9 +2691,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Test virt.pool_info() when the pool can't be found
         '''
-        # pylint: disable=no-member
         self.mock_conn.listAllStoragePools.return_value = []
-        # pylint: enable=no-member
         pool = virt.pool_info('foo')
         self.assertEqual({}, pool)
 
@@ -2713,7 +2699,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         Test virt.pool_info()
         '''
-        # pylint: disable=no-member
         pool_mocks = []
         for i in range(2):
             pool_mock = MagicMock()
@@ -2741,7 +2726,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 </pool>'''
             pool_mocks.append(pool_mock)
         self.mock_conn.listAllStoragePools.return_value = pool_mocks
-        # pylint: enable=no-member
 
         pool = virt.pool_info()
         self.assertEqual({
@@ -2785,14 +2769,12 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         names = ['volume1', 'volume2']
         mock_pool = MagicMock()
-        # pylint: disable=no-member
         mock_pool.listVolumes.return_value = names
         self.mock_conn.storagePoolLookupByName.return_value = mock_pool
-        # pylint: enable=no-member
         self.assertEqual(names, virt.pool_list_volumes('default'))
 
-    @patch('salt.modules.virt._is_kvm_hyper', return_value=True)
-    @patch('salt.modules.virt._is_xen_hyper', return_value=False)
+    @patch('salt.modules.virt._is_kvm_hyper', autospec=True, return_value=True)
+    @patch('salt.modules.virt._is_xen_hyper', autospec=True, return_value=False)
     def test_get_hypervisor(self, isxen_mock, iskvm_mock):
         '''
         test the virt.get_hypervisor() function
@@ -2895,7 +2877,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "dirty-flag": false
         }]'''
 
-        self.mock_popen.communicate.return_value = [qemu_infos]  # pylint: disable=no-member
+        self.mock_popen.communicate.return_value = [qemu_infos]
 
         self.mock_conn.getInfo = MagicMock(return_value=['x86_64', 4096, 8, 2712, 1, 2, 4, 2])
 
@@ -3181,7 +3163,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mock_vms = []
         for idx, disk in enumerate(vms_disks):
             vm = MagicMock()
-            # pylint: disable=no-member
             vm.name.return_value = 'vm{0}'.format(idx)
             vm.XMLDesc.return_value = '''
                     <domain type='kvm' id='1'>
@@ -3189,7 +3170,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                       <devices>{1}</devices>
                     </domain>
                 '''.format(idx, disk)
-            # pylint: enable=no-member
             mock_vms.append(vm)
 
         mock_pool_data = [
@@ -3237,12 +3217,11 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mock_pools = []
         for pool_data in mock_pool_data:
             mock_pool = MagicMock()
-            mock_pool.name.return_value = pool_data['name']  # pylint: disable=no-member
+            mock_pool.name.return_value = pool_data['name']
             mock_pool.info.return_value = [pool_data['state']]
             mock_volumes = []
             for vol_data in pool_data['volumes']:
                 mock_volume = MagicMock()
-                # pylint: disable=no-member
                 mock_volume.name.return_value = vol_data['name']
                 mock_volume.key.return_value = vol_data['key']
                 mock_volume.path.return_value = '/path/to/{0}.qcow2'.format(vol_data['name'])
@@ -3268,8 +3247,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                     mock_volume.info.side_effect = self.mock_libvirt.libvirtError('No such volume')
                     mock_volume.XMLDesc.side_effect = self.mock_libvirt.libvirtError('No such volume')
                 mock_volumes.append(mock_volume)
-                # pylint: enable=no-member
-            mock_pool.listAllVolumes.return_value = mock_volumes  # pylint: disable=no-member
+            mock_pool.listAllVolumes.return_value = mock_volumes
             mock_pools.append(mock_pool)
 
         inactive_pool = MagicMock()
@@ -3278,9 +3256,9 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         inactive_pool.listAllVolumes.side_effect = self.mock_libvirt.libvirtError('pool is inactive')
         mock_pools.append(inactive_pool)
 
-        self.mock_conn.listAllStoragePools.return_value = mock_pools  # pylint: disable=no-member
+        self.mock_conn.listAllStoragePools.return_value = mock_pools
 
-        with patch('salt.modules.virt._get_domain', MagicMock(return_value=mock_vms)):
+        with patch('salt.modules.virt._get_domain', autospec=True, return_value=mock_vms):
             actual = virt.volume_infos('pool0', 'vol0')
             self.assertEqual(1, len(actual.keys()))
             self.assertEqual(1, len(actual['pool0'].keys()))
@@ -3326,7 +3304,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             })
 
         # Single VM test
-        with patch('salt.modules.virt._get_domain', MagicMock(return_value=mock_vms[0])):
+        with patch('salt.modules.virt._get_domain', autospec=True, return_value=mock_vms[0]):
             actual = virt.volume_infos('pool0', 'vol0')
             self.assertEqual(1, len(actual.keys()))
             self.assertEqual(1, len(actual['pool0'].keys()))
@@ -3372,7 +3350,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             })
 
         # No VM test
-        with patch('salt.modules.virt._get_domain', MagicMock(side_effect=CommandExecutionError('no VM'))):
+        with patch('salt.modules.virt._get_domain', autospec=True, side_effect=CommandExecutionError('no VM')):
             actual = virt.volume_infos('pool0', 'vol0')
             self.assertEqual(1, len(actual.keys()))
             self.assertEqual(1, len(actual['pool0'].keys()))
@@ -3423,9 +3401,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         '''
         mock_delete = MagicMock(side_effect=[0, 1])
         mock_volume = MagicMock()
-        mock_volume.delete = mock_delete  # pylint: disable=no-member
+        mock_volume.delete = mock_delete
         mock_pool = MagicMock()
-        # pylint: disable=no-member
         mock_pool.storageVolLookupByName.side_effect = [
                 mock_volume,
                 mock_volume,
@@ -3439,7 +3416,6 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 self.mock_libvirt.libvirtError("Missing pool"),
         ]
 
-        # pylint: enable=no-member
         self.assertTrue(virt.volume_delete('default', 'test_volume'))
         self.assertFalse(virt.volume_delete('default', 'test_volume'))
         with self.assertRaises(self.mock_libvirt.libvirtError):

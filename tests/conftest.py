@@ -8,9 +8,9 @@
     Prepare py.test for our test suite
 """
 # pylint: disable=wrong-import-order,wrong-import-position,3rd-party-local-module-not-gated
+# pylint: disable=3rd-party-module-not-gated
 # pylint: disable=redefined-outer-name,invalid-name
 
-# Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
 import fnmatch
@@ -27,15 +27,9 @@ from contextlib import contextmanager
 
 import _pytest.logging
 import _pytest.skipping
-
-# Import 3rd-party libs
 import psutil
-
-# Import pytest libs
 import pytest
 import salt.config
-
-# Import salt libs
 import salt.loader
 import salt.log.mixins
 import salt.log.setup
@@ -44,14 +38,10 @@ import salt.utils.path
 import salt.utils.platform
 import salt.utils.win_functions
 from _pytest.mark.evaluate import MarkEvaluator
-
-# Import Pytest Salt libs
 from pytestsalt.utils import cli_scripts
 from salt.ext import six
 from salt.serializers import yaml
 from salt.utils.immutabletypes import freeze
-
-# Import test libs
 from tests.support.runtests import RUNTIME_VARS
 from tests.support.sminion import create_sminion
 
@@ -201,6 +191,43 @@ def pytest_addoption(parser):
         "like for example bootstrapping a cloud VM. "
         "Default: False",
     )
+    test_selection_group.addoption(
+        "--run-0.01",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 0.01s",
+    )
+    test_selection_group.addoption(
+        "--run-0.1",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 0.1s",
+    )
+    test_selection_group.addoption(
+        "--run-1",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 1s",
+    )
+    test_selection_group.addoption(
+        "--run-10",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 10s",
+    )
+    test_selection_group.addoption(
+        "--run-30",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 30s",
+    )
+    test_selection_group.addoption(
+        "--run-60",
+        action="store_true",
+        default=False,
+        help="Run tests that take longer than 60s",
+    )
+
     output_options_group = parser.getgroup("Output Options")
     output_options_group.addoption(
         "--output-columns",
@@ -276,6 +303,24 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers",
         "requires_salt_modules(*required_module_names): Skip if at least one module is not available. ",
+    )
+    config.addinivalue_line(
+        "markers", "slow_0_01: Test takes 0.01s or longer to run.",
+    )
+    config.addinivalue_line(
+        "markers", "slow_0_1: Test takes 0.1s or longer to run.",
+    )
+    config.addinivalue_line(
+        "markers", "slow_1: Test takes 1s or longer to run.",
+    )
+    config.addinivalue_line(
+        "markers", "slow_10: Test takes 10s or longer to run.",
+    )
+    config.addinivalue_line(
+        "markers", "slow_30: Test takes 30s or longer to run.",
+    )
+    config.addinivalue_line(
+        "markers", "slow_60: Test takes 60s or longer to run.",
     )
     # Make sure the test suite "knows" this is a pytest test run
     RUNTIME_VARS.PYTEST_SESSION = True

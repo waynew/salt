@@ -7,6 +7,8 @@ import os
 import shutil
 import textwrap
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.platform
@@ -31,6 +33,10 @@ class PyDSLRendererIncludeTestCase(ModuleCase):
                 shutil.rmtree("\\tmp")
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_rendering_includes(self):
         """
         This test is currently hard-coded to /tmp to work-around a seeming

@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 
@@ -22,6 +24,9 @@ class SSHAuthStateTests(ModuleCase, SaltReturnAssertsMixin):
     @destructiveTest
     @skip_if_not_root
     @with_system_user("issue_7409", on_existing="delete", delete=True)
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_issue_7409_no_linebreaks_between_keys(self, username):
 
         userdetails = self.run_function("user.info", [username])
@@ -57,6 +62,9 @@ class SSHAuthStateTests(ModuleCase, SaltReturnAssertsMixin):
     @destructiveTest
     @skip_if_not_root
     @with_system_user("issue_10198", on_existing="delete", delete=True)
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_issue_10198_keyfile_from_another_env(self, username=None):
         userdetails = self.run_function("user.info", [username])
         user_ssh_dir = os.path.join(userdetails["home"], ".ssh")

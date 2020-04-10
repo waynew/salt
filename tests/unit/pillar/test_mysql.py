@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.pillar.mysql as mysql
+from salt.pillar import mysql
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase, skipIf
@@ -238,6 +240,7 @@ class MysqlPillarTestCase(TestCase):
             qbuffer,
         )
 
+    @pytest.mark.slow_0_01
     def test_004_extract_queries_mixed(self):
         return_data = mysql.MySQLExtPillar()
         args, kwargs = (
@@ -465,6 +468,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.enter_root(None)
         self.assertEqual(return_data.result, return_data.focus)
 
+    @pytest.mark.slow_0_01
     def test_021_process_fields(self):
         return_data = mysql.MySQLExtPillar()
         return_data.process_fields(["a", "b"], 0)
@@ -489,6 +493,7 @@ class MysqlPillarTestCase(TestCase):
         self.assertEqual(return_data.num_fields, 4)
         self.assertEqual(return_data.depth, 3)
 
+    @pytest.mark.slow_0_01
     def test_111_process_results_legacy(self):
         return_data = mysql.MySQLExtPillar()
         return_data.process_fields(["a", "b"], 0)
@@ -540,6 +545,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [5, 6, 7, 8]])
         self.assertEqual({1: {2: {3: 4}}, 5: {6: {7: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_125_process_results_depth_4(self):
         return_data = mysql.MySQLExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 4)
@@ -605,6 +611,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [1, 2, 7, 8]])
         self.assertEqual({1: {2: {"c": 7, "d": 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_201_process_results_complexity_multiresults(self):
         return_data = mysql.MySQLExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 2)
@@ -614,6 +621,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 7, 8]])
         self.assertEqual({1: {2: {"c": 7, "d": 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_202_process_results_complexity_as_list(self):
         return_data = mysql.MySQLExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 2)
@@ -674,6 +682,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 5]])
         self.assertEqual({1: {2: {3: [{6: 7}, 4, {8: 9}, 5]}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_207_process_results_complexity_collision_mismatch_depth(self):
         return_data = mysql.MySQLExtPillar()
         return_data.as_list = False
@@ -728,6 +737,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 5]])
         self.assertEqual({1: {2: {3: 5}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_207_process_results_complexity_roots_collision(self):
         return_data = mysql.MySQLExtPillar()
         return_data.as_list = False
@@ -739,6 +749,7 @@ class MysqlPillarTestCase(TestCase):
         return_data.process_results([[5, 6, 7, 8]])
         self.assertEqual({1: {5: {6: {7: 8}}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_301_process_results_with_lists(self):
         """
         Validates the following results:
@@ -795,6 +806,7 @@ class MysqlPillarTestCase(TestCase):
             else:
                 raise ValueError("Unexpected value {0}".format(x))
 
+    @pytest.mark.slow_0_01
     def test_302_process_results_with_lists_consecutive(self):
         """
         Validates the following results:

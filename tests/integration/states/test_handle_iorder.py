@@ -6,6 +6,8 @@ tests for host state
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ModuleCase
 
@@ -15,6 +17,8 @@ class HandleOrderTest(ModuleCase):
     Validate that ordering works correctly
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_handle_iorder(self):
         """
         Test the error with multiple states of the same type

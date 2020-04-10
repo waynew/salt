@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.bower as bower
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import bower
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -79,6 +81,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_removed_existing_with_error(self):
         """
         Test if it returns False when specified package is installed and
@@ -134,6 +137,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_bootstrap_success(self):
         """
         Test if it returns True when install packages succeeds
@@ -215,6 +219,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_installed_new_with_error(self):
         """
         Test if returns False when install packages fails (bower error)
@@ -235,6 +240,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_installed_success(self):
         """
         Test if it returns True when install succeeds

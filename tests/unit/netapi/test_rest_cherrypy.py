@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.json
 import salt.utils.yaml
@@ -26,6 +28,7 @@ class TestOutFormats(BaseToolsTest):
         request, response = self.request("/")
         self.assertEqual(response.headers["Content-type"], "application/json")
 
+    @pytest.mark.slow_0_01
     def test_unsupported_accept(self):
         request, response = self.request(
             "/", headers=(("Accept", "application/ms-word"),)
@@ -49,6 +52,7 @@ class TestInFormats(BaseToolsTest):
             "tools.hypermedia_in.on": True,
         }
 
+    @pytest.mark.slow_0_01
     def test_urlencoded_ctype(self):
         data = {"valid": "stuff"}
         request, response = self.request(
@@ -60,6 +64,7 @@ class TestInFormats(BaseToolsTest):
         self.assertEqual(response.status, "200 OK")
         self.assertDictEqual(request.unserialized_data, data)
 
+    @pytest.mark.slow_0_01
     def test_json_ctype(self):
         data = {"valid": "stuff"}
         request, response = self.request(

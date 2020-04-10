@@ -5,8 +5,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_timezone as win_timezone
+from salt.modules import win_timezone
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -68,6 +70,7 @@ class WinTimezoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_zonecode' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_zonecode(self):
         """
         Test if it get current timezone (i.e. PST, MDT, etc)

@@ -6,10 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.pkgutil as pkgutil
+import pytest
 import salt.utils.pkg
 from salt.exceptions import CommandExecutionError, MinionError
+
+# Import Salt Libs
+from salt.modules import pkgutil
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class PkgutilTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'refresh_db' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_refresh_db(self):
         """
         Test if it updates the pkgutil repo database (pkgutil -U).
@@ -135,6 +138,7 @@ class PkgutilTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'latest_version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_latest_version(self):
         """
         Test if it return the latest version of the named package
@@ -166,6 +170,7 @@ class PkgutilTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'install' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_install(self):
         """
         Test if it install packages using the pkgutil tool.
@@ -200,6 +205,7 @@ class PkgutilTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'remove' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_remove(self):
         """
         Test if it remove a package and all its dependencies

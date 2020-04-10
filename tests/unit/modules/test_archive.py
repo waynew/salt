@@ -12,13 +12,15 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
-# Import salt libs
-import salt.modules.archive as archive
+import pytest
 import salt.utils.path
 from salt.exceptions import CommandNotFoundError
 
 # Import 3rd-party libs
 from salt.ext.six.moves import zip
+
+# Import salt libs
+from salt.modules import archive
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -120,6 +122,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                     template=None,
                 )
 
+    @pytest.mark.slow_0_01
     def test_gzip_raises_exception_if_not_found(self):
         mock = MagicMock(return_value="salt")
         with patch.dict(archive.__salt__, {"cmd.run": mock}):
@@ -153,6 +156,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertFalse(mock.called)
 
+    @pytest.mark.slow_0_01
     def test_cmd_zip(self):
         with patch("glob.glob", lambda pathname: [pathname]):
             with patch("salt.utils.path.which", lambda exe: exe):
@@ -200,6 +204,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                         cwd=None,
                     )
 
+    @pytest.mark.slow_0_01
     def test_zip(self):
         with patch("glob.glob", lambda pathname: [pathname]):
             with patch.multiple(
@@ -221,6 +226,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                     ]
                     self.assertEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_zip_raises_exception_if_not_found(self):
         mock = MagicMock(return_value="salt")
         with patch.dict(archive.__salt__, {"cmd.run": mock}):
@@ -234,6 +240,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertFalse(mock.called)
 
+    @pytest.mark.slow_0_01
     def test_cmd_unzip(self):
         def _get_mock():
             """
@@ -391,6 +398,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                     template="jinja",
                 )
 
+    @pytest.mark.slow_0_01
     def test_unzip(self):
         mock = ZipFileMock()
         with patch("zipfile.ZipFile", mock):
@@ -462,6 +470,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                         cwd=None,
                     )
 
+    @pytest.mark.slow_0_01
     def test_rar_raises_exception_if_not_found(self):
         mock = MagicMock(return_value="salt")
         with patch.dict(archive.__salt__, {"cmd.run": mock}):
@@ -532,6 +541,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                         template=None,
                     )
 
+    @pytest.mark.slow_0_01
     def test_unrar_raises_exception_if_not_found(self):
         with patch("salt.utils.path.which_bin", lambda exe: None):
             mock = MagicMock(return_value="salt")
@@ -544,6 +554,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertFalse(mock.called)
 
+    @pytest.mark.slow_0_01
     def test_trim_files(self):
         with patch("salt.utils.path.which_bin", lambda exe: exe):
             source = "file.tar.gz"

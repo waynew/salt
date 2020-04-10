@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -40,6 +41,7 @@ class NapalmNtpModuleTestCase(TestCase, LoaderModuleMockMixin):
 
         return {napalm_ntp: module_globals}
 
+    @pytest.mark.slow_0_01
     def test_peers(self):
         ret = napalm_ntp.peers()
         assert "172.17.17.1" in ret["out"]
@@ -56,6 +58,7 @@ class NapalmNtpModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_ntp.set_peers("1.2.3.4", "5.6.7.8")
         assert ret is None
 
+    @pytest.mark.slow_0_01
     def test_set_servers(self):
         ret = napalm_ntp.set_servers("2.2.3.4", "6.6.7.8")
         assert ret is None

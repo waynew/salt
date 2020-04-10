@@ -6,9 +6,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
+import pytest
 import salt.config
-import salt.modules.saltcheck as saltcheck
-import salt.syspaths as syspaths
+from salt import syspaths
+from salt.modules import saltcheck
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -33,6 +34,9 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
         self.addCleanup(patcher.stop)
         return {saltcheck: {"__opts__": local_opts}}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_call_salt_command(self):
         """test simple test.echo module"""
         with patch.dict(
@@ -49,6 +53,9 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(returned, "hello")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_call_salt_command2(self):
         """test simple test.echo module again"""
         with patch.dict(
@@ -65,6 +72,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertNotEqual(returned, "not-hello")
 
+    @pytest.mark.slow_0_01
     def test__assert_equal1(self):
         """test"""
         with patch.dict(
@@ -80,6 +88,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_equal(aaa, bbb)
             self.assertTrue(mybool)
 
+    @pytest.mark.slow_0_01
     def test__assert_equal2(self):
         """test"""
         with patch.dict(
@@ -93,6 +102,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_equal(False, True)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_not_equal1(self):
         """test"""
         with patch.dict(
@@ -108,6 +118,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_equal(aaa, bbb)
             self.assertTrue(mybool)
 
+    @pytest.mark.slow_0_01
     def test__assert_not_equal2(self):
         """test"""
         with patch.dict(
@@ -123,6 +134,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_equal(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_true1(self):
         """test"""
         with patch.dict(
@@ -136,6 +148,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_equal(True, True)
             self.assertTrue(mybool)
 
+    @pytest.mark.slow_0_01
     def test__assert_true2(self):
         """test"""
         with patch.dict(
@@ -149,6 +162,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_equal(False, True)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_false1(self):
         """test"""
         with patch.dict(
@@ -162,6 +176,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_false(False)
             self.assertTrue(mybool)
 
+    @pytest.mark.slow_0_01
     def test__assert_false2(self):
         """test"""
         with patch.dict(
@@ -175,6 +190,8 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_false(True)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test__assert_in1(self):
         """test"""
         with patch.dict(
@@ -190,6 +207,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_in(aaa, mylist)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_in2(self):
         """test"""
         with patch.dict(
@@ -205,6 +223,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_in(aaa, mylist)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_not_in1(self):
         """test"""
         with patch.dict(
@@ -220,6 +239,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_in(aaa, mylist)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_not_in2(self):
         """test"""
         with patch.dict(
@@ -235,6 +255,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_in(aaa, mylist)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater1(self):
         """test"""
         with patch.dict(
@@ -250,6 +271,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater(aaa, bbb)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater2(self):
         """test"""
         with patch.dict(
@@ -265,6 +287,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater3(self):
         """test"""
         with patch.dict(
@@ -280,6 +303,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater_equal1(self):
         """test"""
         with patch.dict(
@@ -295,6 +319,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater_equal(aaa, bbb)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater_equal2(self):
         """test"""
         with patch.dict(
@@ -310,6 +335,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater_equal(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_greater_equal3(self):
         """test"""
         with patch.dict(
@@ -325,6 +351,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_greater_equal(aaa, bbb)
             self.assertEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
     def test__assert_less1(self):
         """test"""
         with patch.dict(
@@ -340,6 +367,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less(aaa, bbb)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_less2(self):
         """test"""
         with patch.dict(
@@ -355,6 +383,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_less3(self):
         """test"""
         with patch.dict(
@@ -370,6 +399,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_less_equal1(self):
         """test"""
         with patch.dict(
@@ -385,6 +415,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less_equal(aaa, bbb)
             self.assertTrue(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_less_equal2(self):
         """test"""
         with patch.dict(
@@ -400,6 +431,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less_equal(aaa, bbb)
             self.assertNotEqual(mybool, True)
 
+    @pytest.mark.slow_0_01
     def test__assert_less_equal3(self):
         """test"""
         with patch.dict(
@@ -415,6 +447,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_less_equal(aaa, bbb)
             self.assertEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
     def test__assert_empty(self):
         """test"""
         with patch.dict(
@@ -428,6 +461,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_empty("")
             self.assertEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
     def test__assert_empty_fail(self):
         """test"""
         with patch.dict(
@@ -441,6 +475,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_empty("data")
             self.assertNotEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
     def test__assert__not_empty(self):
         """test"""
         with patch.dict(
@@ -454,6 +489,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_empty("data")
             self.assertEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
     def test__assert__not_empty_fail(self):
         """test"""
         with patch.dict(
@@ -467,6 +503,9 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             mybool = sc_instance._SaltCheck__assert_not_empty("")
             self.assertNotEqual(mybool, "Pass")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_run_test_1(self):
         """test"""
         with patch.dict(
@@ -488,6 +527,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(returned["status"], "Pass")
 
+    @pytest.mark.slow_0_01
     def test_report_highstate_tests(self):
         """test report_highstate_tests"""
         expected_output = {
@@ -505,6 +545,8 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
                 returned = saltcheck.report_highstate_tests()
                 self.assertEqual(returned, expected_output)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_validation(self):
         """test validation of tests"""
         sc_instance = saltcheck.SaltCheck()
@@ -657,6 +699,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             val_ret = sc_instance._SaltCheck__is_valid_test(test_dict)
             self.assertEqual(val_ret, expected_return)
 
+    @pytest.mark.slow_0_01
     def test_sls_path_generation(self):
         """test generation of sls paths"""
         with patch.dict(
@@ -691,6 +734,7 @@ class SaltcheckTestCase(TestCase, LoaderModuleMockMixin):
             ret = testLoader._generate_sls_path(state_name)
             self.assertEqual(ret, expected_return)
 
+    @pytest.mark.slow_0_01
     def test_generate_output(self):
         # passing states
         sc_results = {

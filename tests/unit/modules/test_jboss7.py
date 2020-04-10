@@ -3,7 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.jboss7 as jboss7
+import pytest
+from salt.modules import jboss7
 
 # Import salt libs
 from salt.utils.odict import OrderedDict
@@ -58,6 +59,7 @@ class JBoss7TestCase(TestCase, LoaderModuleMockMixin):
             r'/subsystem=naming/binding="java:global/env":write-attribute(name=value, value="INT\\\\2")',
         )
 
+    @pytest.mark.slow_0_01
     def test_read_binding(self):
         def cli_command_response(jboss_config, cli_command):
             if (
@@ -134,6 +136,7 @@ class JBoss7TestCase(TestCase, LoaderModuleMockMixin):
             fail_on_error=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datasource_format_boolean_value_when_boolean(self):
         def cli_command_response(jboss_config, cli_command, fail_on_error=False):
             if (
@@ -157,6 +160,7 @@ class JBoss7TestCase(TestCase, LoaderModuleMockMixin):
             fail_on_error=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datasource_format_int_value_when_int(self):
         def cli_command_response(jboss_config, cli_command, fail_on_error=False):
             if (
@@ -203,6 +207,7 @@ class JBoss7TestCase(TestCase, LoaderModuleMockMixin):
             fail_on_error=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_read_datasource(self):
         def cli_command_response(jboss_config, cli_command):
             if (

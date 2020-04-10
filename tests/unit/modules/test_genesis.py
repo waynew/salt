@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.genesis as genesis
+from salt.modules import genesis
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class GenesisTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {genesis: {}}
 
+    @pytest.mark.slow_0_01
     def test_bootstrap(self):
         """
         Test for Create an image for a specific platform.
@@ -194,6 +197,7 @@ class GenesisTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(genesis, "_tar", return_value="tar"):
             self.assertEqual(genesis.pack("name", "root"), None)
 
+    @pytest.mark.slow_0_01
     def test_unpack(self):
         """
         Test for Unpack an image into a directory structure

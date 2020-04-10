@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.devmap as devmap
+from salt.modules import devmap
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class DevMapTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {devmap: {}}
 
+    @pytest.mark.slow_0_01
     def test_multipath_list(self):
         """
         Test for Device-Mapper Multipath list

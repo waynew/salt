@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.pillar.sqlcipher as sqlcipher
+from salt.pillar import sqlcipher
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -13,6 +15,7 @@ from tests.support.unit import TestCase
 class SQLCipherPillarTestCase(TestCase):
     maxDiff = None
 
+    @pytest.mark.slow_0_01
     def test_001_extract_queries_list(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         args, kwargs = (
@@ -217,6 +220,7 @@ class SQLCipherPillarTestCase(TestCase):
             qbuffer,
         )
 
+    @pytest.mark.slow_0_01
     def test_003_extract_queries_mixed(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         args, kwargs = (
@@ -490,6 +494,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [5, 6, 7, 8]])
         self.assertEqual({1: {2: {3: 4}}, 5: {6: {7: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_122_process_results_depth_1(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 1)
@@ -527,6 +532,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [5, 6, 7, 8]])
         self.assertEqual({1: {2: {3: 4}}, 5: {6: {7: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_131_process_results_overwrite_legacy_multiple(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.process_fields(["a", "b"], 0)
@@ -550,6 +556,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [1, 2, 3, 8]])
         self.assertEqual({1: {2: {3: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_134_process_results_deepmerge_depth_0(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 0)
@@ -593,6 +600,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 7, 8]])
         self.assertEqual({1: {2: {"c": 7, "d": 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_202_process_results_complexity_as_list(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 2)
@@ -613,6 +621,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 8]])
         self.assertEqual({1: {2: {3: [4, 8]}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_204_process_results_complexity_as_list_mismatch_depth(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.as_list = True
@@ -678,6 +687,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 5]])
         self.assertEqual({1: {2: {3: 5}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_209_process_results_complexity_collision_mismatch_depth_weird_order(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.as_list = False
@@ -707,6 +717,7 @@ class SQLCipherPillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 5]])
         self.assertEqual({1: {2: {3: 5}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_207_process_results_complexity_roots_collision(self):
         return_data = sqlcipher.SQLCipherExtPillar()
         return_data.as_list = False

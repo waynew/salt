@@ -7,6 +7,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import sys
 
+import pytest
 import salt.exceptions
 import salt.ext.six
 import salt.utils.json
@@ -99,6 +100,7 @@ class SSHThinTestCase(TestCase):
     @patch("salt.exceptions.SaltSystemExit", Exception)
     @patch("salt.utils.thin.log", MagicMock())
     @patch("salt.utils.thin.os.path.isfile", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_get_ext_tops_cfg_missing_interpreter(self):
         """
         Test thin.get_ext_tops contains interpreter configuration.
@@ -131,6 +133,7 @@ class SSHThinTestCase(TestCase):
     @patch("salt.exceptions.SaltSystemExit", Exception)
     @patch("salt.utils.thin.log", MagicMock())
     @patch("salt.utils.thin.os.path.isfile", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_get_ext_tops_cfg_interpreter(self):
         """
         Test thin.get_ext_tops interpreter configuration.
@@ -167,6 +170,7 @@ class SSHThinTestCase(TestCase):
     @patch("salt.exceptions.SaltSystemExit", Exception)
     @patch("salt.utils.thin.log", MagicMock())
     @patch("salt.utils.thin.os.path.isfile", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_get_ext_tops_dependency_config_check(self):
         """
         Test thin.get_ext_tops dependencies are importable
@@ -253,6 +257,7 @@ class SSHThinTestCase(TestCase):
         assert "__init__" not in container[1]
         assert container == ["/foo/bar.py", "/something/else"]
 
+    @pytest.mark.slow_0_01
     def test_thin_path(self):
         """
         Test thin.thin_path returns the expected path.
@@ -355,6 +360,7 @@ class SSHThinTestCase(TestCase):
         type(str("concurrent"), (), {"__file__": "/site-packages/concurrent"}),
     )
     @patch("salt.utils.thin.log", MagicMock())
+    @pytest.mark.slow_0_01
     def test_get_tops(self):
         """
         Test thin.get_tops to get top directories, based on the interpreter.
@@ -428,6 +434,7 @@ class SSHThinTestCase(TestCase):
         type(str("concurrent"), (), {"__file__": "/site-packages/concurrent"}),
     )
     @patch("salt.utils.thin.log", MagicMock())
+    @pytest.mark.slow_0_01
     def test_get_tops_extra_mods(self):
         """
         Test thin.get_tops to get extra-modules alongside the top directories, based on the interpreter.
@@ -511,6 +518,7 @@ class SSHThinTestCase(TestCase):
         type(str("concurrent"), (), {"__file__": "/site-packages/concurrent"}),
     )
     @patch("salt.utils.thin.log", MagicMock())
+    @pytest.mark.slow_0_01
     def test_get_tops_so_mods(self):
         """
         Test thin.get_tops to get extra-modules alongside the top directories, based on the interpreter.
@@ -628,6 +636,8 @@ class SSHThinTestCase(TestCase):
     @patch("salt.utils.thin.shutil", MagicMock())
     @patch("salt.utils.path.which", MagicMock(return_value=""))
     @patch("salt.utils.thin._get_thintar_prefix", MagicMock())
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_thin_python_exist_or_not(self):
         """
         Test thin.gen_thin function if the opposite python
@@ -694,6 +704,7 @@ class SSHThinTestCase(TestCase):
     @patch("salt.utils.thin._six.PY2", False)
     @patch("salt.utils.thin.sys.version_info", _version_info(None, 3, 6))
     @patch("salt.utils.path.which", MagicMock(return_value="/usr/bin/python"))
+    @pytest.mark.slow_0_01
     def test_gen_thin_compression_fallback_py3(self):
         """
         Test thin.gen_thin function if fallbacks to the gzip compression, once setup wrong.
@@ -746,6 +757,8 @@ class SSHThinTestCase(TestCase):
     @patch("salt.utils.thin._six.PY2", False)
     @patch("salt.utils.thin.sys.version_info", _version_info(None, 3, 6))
     @patch("salt.utils.path.which", MagicMock(return_value="/usr/bin/python"))
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_thin_control_files_written_py3(self):
         """
         Test thin.gen_thin function if control files are written (version, salt-call etc).
@@ -808,6 +821,8 @@ class SSHThinTestCase(TestCase):
     @patch("salt.utils.thin.sys.version_info", _version_info(None, 3, 6))
     @patch("salt.utils.hashutils.DigestCollector", MagicMock())
     @patch("salt.utils.path.which", MagicMock(return_value="/usr/bin/python"))
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_thin_main_content_files_written_py3(self):
         """
         Test thin.gen_thin function if main content files are written.
@@ -883,6 +898,8 @@ class SSHThinTestCase(TestCase):
     @patch("salt.utils.thin.sys.version_info", _version_info(None, 3, 6))
     @patch("salt.utils.hashutils.DigestCollector", MagicMock())
     @patch("salt.utils.path.which", MagicMock(return_value="/usr/bin/python"))
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_thin_ext_alternative_content_files_written_py3(self):
         """
         Test thin.gen_thin function if external alternative content files are written.

@@ -6,11 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.states.test as test
+import pytest
 
 # Import Salt Libs
 from salt.exceptions import SaltInvocationError
 from salt.ext import six
+from salt.states import test
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing Libs
@@ -65,6 +66,7 @@ class TestTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertDictEqual(test.succeed_with_changes("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_fail_with_changes(self):
         """
             Test to returns failure and changes is not empty.
@@ -118,6 +120,7 @@ class TestTestCase(TestCase, LoaderModuleMockMixin):
             ret = test.configurable_test_state(mock_name, comment=mock_comment)
             self.assertDictEqual(ret, mock_ret)
 
+    @pytest.mark.slow_0_01
     def test_configurable_test_state_changes(self):
         """
         Test test.configurable_test_state with permutations of changes and with
@@ -175,6 +178,7 @@ class TestTestCase(TestCase, LoaderModuleMockMixin):
                 changes="Cheese",
             )
 
+    @pytest.mark.slow_0_01
     def test_configurable_test_state_result(self):
         """
         Test test.configurable_test_state with permutations of result and with
@@ -366,6 +370,7 @@ class TestTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(test.__salt__, {"pillar.get": pillar_mock}):
             self.assertEqual(test.check_pillar("salt", present="my_pillar"), ret)
 
+    @pytest.mark.slow_0_01
     def test_check_pillar_string(self):
         """
             Test to ensure the check_pillar function
@@ -403,6 +408,7 @@ class TestTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(test.__salt__, {"pillar.get": pillar_mock}):
             self.assertFalse(test.check_pillar("salt", string="my_pillar")["result"])
 
+    @pytest.mark.slow_0_01
     def test_check_pillar_dictionary(self):
         """
             Test to ensure the check_pillar function

@@ -3,10 +3,11 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.pdbedit as pdbedit_mod
+import pytest
+from salt.modules import pdbedit as pdbedit_mod
 
 # Import Salt Libs
-import salt.states.pdbedit as pdbedit
+from salt.states import pdbedit
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +23,7 @@ class PdbeditTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {pdbedit: {}, pdbedit_mod: {}}
 
+    @pytest.mark.slow_0_01
     def test_generate_absent(self):
         """
         Test salt.states.pdbedit.absent when

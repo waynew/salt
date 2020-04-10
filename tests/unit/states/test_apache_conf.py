@@ -2,8 +2,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.apache_conf as apache_conf
+from salt.states import apache_conf
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -53,6 +55,7 @@ class ApacheConfTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'disabled' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_disabled(self):
         """
         Test to ensure an Apache conf is disabled.

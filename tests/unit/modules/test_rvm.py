@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.rvm as rvm
+from salt.modules import rvm
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class TestRvmModule(TestCase, LoaderModuleMockMixin):
                 env=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_rvm_do(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": "stdout"})
         with patch.dict(rvm.__salt__, {"cmd.run_all": mock}):
@@ -57,6 +60,7 @@ class TestRvmModule(TestCase, LoaderModuleMockMixin):
             )
             mock.assert_called_once_with(curl_cmd, runas=None, python_shell=True)
 
+    @pytest.mark.slow_0_01
     def test_install_ruby_nonroot(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": "stdout"})
         expected = [
@@ -79,6 +83,8 @@ class TestRvmModule(TestCase, LoaderModuleMockMixin):
             rvm.install_ruby("2.0.0", runas="rvm")
             self.assertEqual(mock.call_args_list, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_install_with_env(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": "stdout"})
         expected = [
@@ -121,6 +127,7 @@ class TestRvmModule(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(mock.call_args_list, expected)
 
+    @pytest.mark.slow_0_01
     def test_list(self):
         list_output = """
 rvm rubies
@@ -165,6 +172,7 @@ gemsets for ree-1.8.7-2012.02 (found in /usr/local/rvm/gems/ree-1.8.7-2012.02)
             mock_method.return_value = output
             self.assertEqual(["global", "bar", "foo"], rvm.gemset_list())
 
+    @pytest.mark.slow_0_01
     def test_gemset_list_all(self):
         output = """
 

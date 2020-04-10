@@ -5,10 +5,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.utils.dictdiffer as dictdiffer
+import pytest
 from salt.exceptions import CommandExecutionError
 from salt.states import elasticsearch
+
+# Import Salt Libs
+from salt.utils import dictdiffer
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -100,6 +102,7 @@ class ElasticsearchTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'index_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_index_present(self):
         """
         Test to manage a elasticsearch index.
@@ -245,6 +248,7 @@ class ElasticsearchTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'alias_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_alias_present(self):
         """
         Test to manage a elasticsearch alias.
@@ -495,6 +499,7 @@ class ElasticsearchTestCase(TestCase, LoaderModuleMockMixin):
             ret.update({"comment": "", "result": False, "changes": {}})
             self.assertDictEqual(elasticsearch.index_template_present(name, {}), ret)
 
+    @pytest.mark.slow_0_01
     def test_index_template_present_check_definition(self):
         """
         Test to manage a elasticsearch index template.
@@ -642,6 +647,7 @@ class ElasticsearchTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'pipeline_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_pipeline_present(self):
         """
         Test to manage a elasticsearch pipeline.
@@ -811,6 +817,7 @@ class ElasticsearchTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'pipeline_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_search_template_present(self):
         """
         Test to manage a elasticsearch search template.

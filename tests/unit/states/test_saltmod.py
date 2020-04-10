@@ -9,12 +9,14 @@ import os
 import tempfile
 import time
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 import salt.loader
-import salt.states.saltmod as saltmod
 import salt.utils.event
 import salt.utils.jid
+from salt.states import saltmod
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -49,6 +51,9 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'state' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_state(self):
         """
         Test to invoke a state run on a given target
@@ -195,6 +200,9 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'function' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_function(self):
         """
         Test to execute a single module function on a remote
@@ -229,6 +237,7 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'wait_for_event' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_wait_for_event(self):
         """
         Test to watch Salt's event bus and block until a condition is met
@@ -281,6 +290,7 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'runner' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_runner(self):
         """
         Test to execute a runner module on the master
@@ -301,6 +311,7 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'wheel' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_wheel(self):
         """
         Test to execute a wheel module on the master
@@ -319,6 +330,9 @@ class SaltmodTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(saltmod.__salt__, {"saltutil.wheel": wheel_mock}):
             self.assertDictEqual(saltmod.wheel(name), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_state_ssh(self):
         """
         Test saltmod passes roster to saltutil.cmd
@@ -358,6 +372,7 @@ class StatemodTests(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_statemod_state(self):
         """ Smoke test for for salt.states.statemod.state().  Ensures that we
             don't take an exception if optional parameters are not specified in

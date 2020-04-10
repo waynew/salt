@@ -3,9 +3,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.win_task as win_task
+import pytest
 import salt.utils.platform
+
+# Import Salt Libs
+from salt.modules import win_task
 from tests.support.helpers import destructiveTest
 
 # Import Salt Testing Libs
@@ -19,6 +21,7 @@ class WinTaskTestCase(TestCase):
         Test cases for salt.modules.win_task
     """
 
+    @pytest.mark.slow_0_01
     def test_repeat_interval(self):
         task_name = "SaltTest1"
         try:
@@ -41,6 +44,7 @@ class WinTaskTestCase(TestCase):
             ret = win_task.delete_task(task_name)
             self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_repeat_interval_and_indefinitely(self):
         task_name = "SaltTest2"
         try:

@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import textwrap
 
+import pytest
+
 # Import Salt Libs
-import salt.grains.disks as disks
+from salt.grains import disks
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class IscsiGrainsTestCase(TestCase, LoaderModuleMockMixin):
             )
             mock_run_all.assert_called_once_with(cmd)
 
+    @pytest.mark.slow_0_01
     def test__windows_disks_retcode(self):
         """
         Test grains._windows_disks, retcode 1

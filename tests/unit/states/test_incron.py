@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.incron as incron
+from salt.states import incron
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class IncronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to verifies that the specified incron job is present

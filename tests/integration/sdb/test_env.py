@@ -7,6 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import textwrap
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 
@@ -48,6 +50,10 @@ class EnvTestCase(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         os.remove(self.state_file_set_var)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_env_module_sets_key(self):
         state_key = "test_|-always-changes-and-succeeds_|-foo_|-succeed_with_changes"
         ret = self.run_function("state.sls", [self.state_name])

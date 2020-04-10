@@ -6,8 +6,7 @@ unit tests for the alias state
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.alias as alias
+import pytest
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -78,6 +77,7 @@ class AliasTest(TestCase, LoaderModuleMockMixin):
                 with patch.dict(alias.__salt__, {"aliases.set_target": set_target}):
                     self.assertEqual(alias.present(name, target), ret)
 
+    @pytest.mark.slow_0_01
     def test_present_set_target_failed(self):
         """
         test alias.present set target failure
@@ -115,6 +115,7 @@ class AliasTest(TestCase, LoaderModuleMockMixin):
         with patch.dict(alias.__salt__, {"aliases.get_target": get_target}):
             self.assertEqual(alias.absent(name), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent_not_gone_test(self):
         """
         test alias.absent already gone test mode
@@ -153,6 +154,7 @@ class AliasTest(TestCase, LoaderModuleMockMixin):
                 with patch.dict(alias.__salt__, {"aliases.rm_alias": rm_alias}):
                     self.assertEqual(alias.absent(name), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent_rm_alias_failed(self):
         """
         test alias.absent remove alias failure

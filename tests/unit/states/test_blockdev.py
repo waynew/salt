@@ -7,9 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.states.blockdev as blockdev
+import pytest
 import salt.utils.path
+
+# Import Salt Libs
+from salt.states import blockdev
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -50,6 +52,7 @@ class BlockdevTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'formatted' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_formatted(self):
         """
         Test to manage filesystems of partitions.

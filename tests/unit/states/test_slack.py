@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.slack as slack
+from salt.states import slack
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class SlackTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'post_message' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_post_message_apikey(self):
         """
         Test to send a message to a Slack channel using an API Key.

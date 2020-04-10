@@ -12,6 +12,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.stringutils
@@ -28,6 +30,9 @@ class StateMatchTest(ModuleCase):
     """
 
     @skip_if_not_root
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_issue_2167_ipcidr_no_AttributeError(self):
         subnets = self.run_function("network.subnets")
         self.assertTrue(len(subnets) > 0)

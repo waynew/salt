@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_certutil as certutil
+from salt.modules import win_certutil as certutil
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -36,6 +38,7 @@ class CertUtilTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_get_serials(self):
         """
             Test getting all the serial numbers from a store
@@ -61,6 +64,7 @@ class CertUtilTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with("certutil.exe -store TrustedPublisher")
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_add_store(self):
         """
             Test adding a certificate to a specific store

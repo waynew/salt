@@ -9,6 +9,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import inspect
 import time
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.path
 from tests.support.case import ModuleCase, ShellCase
@@ -108,6 +110,9 @@ class VaultTestCase(ModuleCase, ShellCase):
             self.run_state("docker_image.absent", name="vault", force=True)
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_sdb(self):
         assert (
             self.run_function(
@@ -123,6 +128,10 @@ class VaultTestCase(ModuleCase, ShellCase):
         )
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_sdb_runner(self):
         assert self.run_run(
             "sdb.set sdb://sdbvault/secret/test/test_sdb_runner/foo bar"
@@ -132,6 +141,10 @@ class VaultTestCase(ModuleCase, ShellCase):
         ) == ["bar"]
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_config(self):
         assert (
             self.run_function(

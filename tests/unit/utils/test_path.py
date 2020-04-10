@@ -13,6 +13,8 @@ import posixpath
 import sys
 import tempfile
 
+import pytest
+
 # Import Salt libs
 import salt.utils.compat
 import salt.utils.path
@@ -136,6 +138,7 @@ class PathJoinTestCase(TestCase):
 
 
 class PathTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_which_bin(self):
         ret = salt.utils.path.which_bin("str")
         self.assertIs(None, ret)
@@ -204,6 +207,7 @@ class TestWhich(TestCase):
             with patch("salt.utils.path.which", lambda exe: exe):
                 self.assertTrue(salt.utils.path.which("this-binary-exists-under-linux"))
 
+    @pytest.mark.slow_0_01
     def test_existing_binary_in_windows(self):
         with patch("os.path.isfile") as isfile:
             # We define the side_effect attribute on the mocked object in order to

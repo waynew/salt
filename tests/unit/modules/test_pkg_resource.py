@@ -6,13 +6,14 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.pkg_resource as pkg_resource
+import pytest
 
 # Import Salt Libs
 import salt.utils.data
 import salt.utils.yaml
 import yaml
 from salt.ext import six
+from salt.modules import pkg_resource
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -45,6 +46,7 @@ class PkgresTestCase(TestCase, LoaderModuleMockMixin):
 
                 self.assertTrue(pkg_resource.pack_sources([{"A": "a"}]))
 
+    @pytest.mark.slow_0_01
     def test_parse_targets(self):
         """
             Test to parses the input to pkg.install and
@@ -173,6 +175,7 @@ class PkgresTestCase(TestCase, LoaderModuleMockMixin):
                 pkg_resource.format_pkg_list(packages, False, None), expected_pkg_list
             )
 
+    @pytest.mark.slow_0_01
     def test_format_pkg_list_with_attr(self):
         """
             Test to output format of the package list with attr parameter.
@@ -258,6 +261,7 @@ class PkgresTestCase(TestCase, LoaderModuleMockMixin):
                     expected_pkg_list,
                 )
 
+    @pytest.mark.slow_0_01
     def test_stringify(self):
         """
             Test to takes a dict of package name/version information

@@ -11,6 +11,8 @@ import datetime
 import logging
 import os
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 from salt.utils.schedule import Schedule
@@ -61,6 +63,9 @@ class ScheduleTestCase(TestCase):
 
     # delete_job tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_job_exists(self):
         """
         Tests ensuring the job exists and deleting it
@@ -70,6 +75,9 @@ class ScheduleTestCase(TestCase):
         self.schedule.delete_job("foo")
         self.assertNotIn("foo", self.schedule.opts["schedule"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_job_in_pillar(self):
         """
         Tests ignoring deletion job from pillar
@@ -81,6 +89,9 @@ class ScheduleTestCase(TestCase):
         self.schedule.delete_job("foo")
         self.assertIn("foo", self.schedule.opts["pillar"]["schedule"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_job_intervals(self):
         """
         Tests removing job from intervals
@@ -90,6 +101,9 @@ class ScheduleTestCase(TestCase):
         self.schedule.delete_job("foo")
         self.assertNotIn("foo", self.schedule.intervals)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_job_prefix(self):
         """
         Tests ensuring jobs exists and deleting them by prefix
@@ -106,6 +120,9 @@ class ScheduleTestCase(TestCase):
         self.schedule.delete_job_prefix("fooba")
         self.assertEqual(self.schedule.opts, ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_job_prefix_in_pillar(self):
         """
         Tests ignoring deletion jobs by prefix from pillar
@@ -138,6 +155,9 @@ class ScheduleTestCase(TestCase):
         data = {"key1": "value1", "key2": "value2"}
         self.assertRaises(ValueError, Schedule.add_job, self.schedule, data)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_add_job(self):
         """
         Tests adding a job to the schedule
@@ -161,6 +181,9 @@ class ScheduleTestCase(TestCase):
 
     # enable_job tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_enable_job(self):
         """
         Tests enabling a job
@@ -169,6 +192,9 @@ class ScheduleTestCase(TestCase):
         Schedule.enable_job(self.schedule, "name")
         self.assertTrue(self.schedule.opts["schedule"]["name"]["enabled"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_enable_job_pillar(self):
         """
         Tests ignoring enable a job from pillar
@@ -181,6 +207,9 @@ class ScheduleTestCase(TestCase):
 
     # disable_job tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_disable_job(self):
         """
         Tests disabling a job
@@ -191,6 +220,9 @@ class ScheduleTestCase(TestCase):
         Schedule.disable_job(self.schedule, "name")
         self.assertFalse(self.schedule.opts["schedule"]["name"]["enabled"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_disable_job_pillar(self):
         """
         Tests ignoring disable a job in pillar
@@ -203,6 +235,9 @@ class ScheduleTestCase(TestCase):
 
     # modify_job tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_modify_job(self):
         """
         Tests modifying a job in the scheduler
@@ -241,6 +276,9 @@ class ScheduleTestCase(TestCase):
 
     # enable_schedule tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_enable_schedule(self):
         """
         Tests enabling the scheduler
@@ -256,6 +294,9 @@ class ScheduleTestCase(TestCase):
 
     # disable_schedule tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_disable_schedule(self):
         """
         Tests disabling the scheduler
@@ -295,6 +336,7 @@ class ScheduleTestCase(TestCase):
         Schedule.reload(self.schedule, saved)
         self.assertEqual(self.schedule.opts, ret)
 
+    @pytest.mark.slow_0_01
     def test_reload_no_schedule_in_opts(self):
         """
         Tests reloading the schedule from saved schedule that does not
@@ -335,6 +377,7 @@ class ScheduleTestCase(TestCase):
         self.schedule.opts.update({"schedule": {}, "pillar": {"schedule": ""}})
         self.assertRaises(ValueError, Schedule.eval, self.schedule)
 
+    @pytest.mark.slow_0_01
     def test_eval_schedule_time(self):
         """
         Tests eval if the schedule setting time is in the future
@@ -406,6 +449,9 @@ class ScheduleTestCase(TestCase):
             > self.schedule.opts["schedule"]["testjob"]["_next_fire_time"]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_handle_func_schedule_minion_blackout(self):
         """
         Tests eval if the schedule from pillar is not a dictionary

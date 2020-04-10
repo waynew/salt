@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.udev as udev
+import pytest
 from salt.ext import six
+
+# Import Salt Libs
+from salt.modules import udev
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -66,6 +68,7 @@ class UdevTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'exportdb' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_exportdb(self):
         """
         Test if it returns the all the udev database into a dict

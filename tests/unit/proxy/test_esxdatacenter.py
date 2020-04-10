@@ -8,11 +8,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.exceptions
+from salt.config.schemas.esxdatacenter import EsxdatacenterProxySchema
 
 # Import Salt Libs
-import salt.proxy.esxdatacenter as esxdatacenter
-from salt.config.schemas.esxdatacenter import EsxdatacenterProxySchema
+from salt.proxy import esxdatacenter
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -77,6 +78,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
     def test_merge(self):
         mock_pillar_proxy = MagicMock()
         mock_opts_proxy = MagicMock()
@@ -86,6 +88,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
                 esxdatacenter.init(opts={"proxy": mock_opts_proxy})
         mock_merge.assert_called_once_with(mock_opts_proxy, mock_pillar_proxy)
 
+    @pytest.mark.slow_0_01
     def test_esxdatacenter_schema(self):
         mock_json_validate = MagicMock()
         serialized_schema = EsxdatacenterProxySchema().serialize()
@@ -147,6 +150,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
             "Mechanism is set to 'sspi', but no " "'domain' key found in proxy config.",
         )
 
+    @pytest.mark.slow_0_01
     def test_no_principal(self):
         opts = self.opts_sspi.copy()
         del opts["proxy"]["principal"]

@@ -6,9 +6,11 @@ unit tests for the cache runner
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.runners.cache as cache
+import pytest
 import salt.utils.master
+
+# Import Salt Libs
+from salt.runners import cache
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import patch
 
@@ -33,6 +35,7 @@ class CacheTest(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_grains(self):
         """
         test cache.grains runner

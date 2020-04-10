@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.environ as environ
+from salt.modules import environ
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -44,6 +46,7 @@ class EnvironTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(os.environ, mock_environ):
             self.assertFalse(environ.setval("key", True))
 
+    @pytest.mark.slow_0_01
     def test_set_val_permanent(self):
         with patch.dict(os.environ, {}), patch.dict(
             environ.__salt__,
@@ -67,6 +70,7 @@ class EnvironTestCase(TestCase, LoaderModuleMockMixin):
                 "HKLM", key, "key", "Test"
             )
 
+    @pytest.mark.slow_0_01
     def test_setenv(self):
         """
         Set multiple salt process environment variables from a dict.
@@ -92,6 +96,7 @@ class EnvironTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(environ.get("key"), "")
 
+    @pytest.mark.slow_0_01
     def test_has_value(self):
         """
         Determine whether the key exists in the current salt process

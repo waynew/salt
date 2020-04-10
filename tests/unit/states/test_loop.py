@@ -5,6 +5,8 @@ Tests for loop state(s)
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.states.loop
 from salt.ext.six.moves import range
@@ -48,6 +50,7 @@ class LoopTestCase(TestCase, LoaderModuleMockMixin):
         assert ret["result"] is True
         self.mock.assert_called_once_with(*self.m_args, **self.m_kwargs)
 
+    @pytest.mark.slow_0_01
     def test_until_without_args(self):
         ret = salt.states.loop.until(
             name=self.func,
@@ -91,6 +94,7 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
         utils = salt.loader.utils(opts)
         return {salt.states.loop: {"__opts__": opts, "__utils__": utils}}
 
+    @pytest.mark.slow_0_01
     def test_test_mode(self):
         """
         Test response when test_mode is enabled.
@@ -119,6 +123,9 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_immediate_success(self):
         """
         Test for an immediate success.
@@ -205,6 +212,7 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_immediate_failure(self):
         """
         Test for an immediate failure.
@@ -237,6 +245,7 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_eval_exceptions(self):
         """
         Test a couple of eval exceptions.
@@ -254,6 +263,7 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 NameError, salt.states.loop.until, name="foo.bar", condition="foo"
             )
 
+    @pytest.mark.slow_0_01
     def test_no_eval_exceptions(self):
         """
         Test exception handling in until_no_eval.
@@ -274,6 +284,7 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_retried_success(self):
         """
         Test if the function does indeed return after a fixed amount of retries.
@@ -317,6 +328,8 @@ class LoopTestCaseNoEval(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_retried_failure(self):
         """
         Test if the function fails after the designated timeout.

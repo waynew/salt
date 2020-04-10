@@ -3,10 +3,11 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.deb_postgres as deb_postgres
+import pytest
 
 # Import salt libs
 from salt.ext import six
+from salt.modules import deb_postgres
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -41,6 +42,7 @@ class PostgresClusterTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_cluster_create(self):
         deb_postgres.cluster_create(
             "9.3",

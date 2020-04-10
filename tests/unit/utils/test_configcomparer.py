@@ -5,8 +5,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
+import pytest
+
 # Import Salt libs
-import salt.utils.configcomparer as configcomparer
+from salt.utils import configcomparer
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -22,6 +24,7 @@ class UtilConfigcomparerTestCase(TestCase):
         "attr5": {"subattr1": "value1", "subattr2": ["item1"]},
     }
 
+    @pytest.mark.slow_0_01
     def test_compare_and_update_config(self):
 
         # empty config

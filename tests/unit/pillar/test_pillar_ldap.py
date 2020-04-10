@@ -3,6 +3,7 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.utils.stringutils
 from salt.pillar.pillar_ldap import _config
 from tests.support.unit import TestCase
@@ -13,6 +14,7 @@ class LdapPillarTestCase(TestCase):
         conf = {"foo": "bar"}
         assert _config("foo", conf) == salt.utils.stringutils.to_str("bar")
 
+    @pytest.mark.slow_0_01
     def test__conf_defaults_to_none(self):
         conf = {"foo": "bar"}
         assert _config("bang", conf) is None

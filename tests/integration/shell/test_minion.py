@@ -16,6 +16,8 @@ import os
 import platform
 import sys
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.platform
@@ -250,6 +252,10 @@ class MinionTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMix
                 minion.shutdown()
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_exit_status_unknown_user(self):
         """
         Ensure correct exit status when the minion is configured to run as an unknown user.
@@ -282,6 +288,10 @@ class MinionTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMix
             minion.shutdown()
 
     #    @skipIf(salt.utils.platform.is_windows(), 'Skip on Windows OS')
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_exit_status_unknown_argument(self):
         """
         Ensure correct exit status when an unknown argument is passed to salt-minion.
@@ -310,6 +320,9 @@ class MinionTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMix
             minion.shutdown()
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_exit_status_correct_usage(self):
         """
         Ensure correct exit status when salt-minion starts correctly.

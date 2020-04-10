@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt module
-import salt.modules.mac_pkgutil as mac_pkgutil
+from salt.modules import mac_pkgutil
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -31,6 +33,7 @@ class MacPkgutilTestCase(TestCase, LoaderModuleMockMixin):
         # Then
         _install_from_path.assert_called_with(source)
 
+    @pytest.mark.slow_0_01
     def test_install_already_there(self):
         # Given
         source = "/foo/bar/fubar.pkg"

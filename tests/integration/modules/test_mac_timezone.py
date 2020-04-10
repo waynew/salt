@@ -15,6 +15,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -90,6 +92,9 @@ class MacTimezoneModuleTest(ModuleCase):
             "Invalid Date/Time Format: 13/12/2014",
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_time(self):
         """
         Test timezone.get_time
@@ -180,6 +185,9 @@ class MacTimezoneModuleTest(ModuleCase):
         )
         self.assertEqual(self.run_function("timezone.get_zonecode"), "WAKT")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list_zones(self):
         """
         Test timezone.list_zones

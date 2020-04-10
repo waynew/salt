@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.incron as incron
+from salt.modules import incron
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -75,6 +77,7 @@ class IncronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_tab' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_tab(self):
         """
         Test if it return the contents of the specified user's incrontab
@@ -89,6 +92,7 @@ class IncronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_job' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_job(self):
         """
         Test if it sets a cron job up for a specified user.
@@ -173,6 +177,7 @@ class IncronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'rm_job' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_rm_job(self):
         """
         Test if it remove a cron job for a specified user. If any of the

@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.path
 from tests.support.case import ModuleCase
@@ -53,6 +55,11 @@ class ZookeeperTestCase(ModuleCase, SaltReturnAssertsMixin):
         self.run_state("docker_container.absent", name=self.container_name)
         self.run_state("docker_image.absent", name="docker.io/zookeeper", force=True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_zookeeper_present(self):
         ret = self.run_state(
             "zookeeper.present", name="/test/name", value="testuser", makepath=True,
@@ -77,6 +84,12 @@ class ZookeeperTestCase(ModuleCase, SaltReturnAssertsMixin):
         )
         self.assertSaltTrueReturn(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_zookeeper_absent(self):
         self.run_state(
             "zookeeper.present", name="/test/name", value="testuser", makepath=True,
@@ -91,6 +104,11 @@ class ZookeeperTestCase(ModuleCase, SaltReturnAssertsMixin):
             bool(ret["zookeeper_|-/test/name_|-/test/name_|-absent"]["changes"])
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_zookeeper_acls(self):
         ret = self.run_state(
             "zookeeper.acls",

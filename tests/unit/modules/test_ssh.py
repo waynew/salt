@@ -5,12 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import tempfile
 
-import salt.modules.ssh as ssh
+import pytest
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError
+from salt.modules import ssh
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -74,6 +75,7 @@ class SSHAuthKeyTestCase(TestCase, LoaderModuleMockMixin):
         invalid_key = "AAAAB3NzaC1kc3MAAACBAL0sQ9fJ5bYTEyY"  # missing padding
         self.assertEqual(ssh.set_auth_key("user", invalid_key), "Invalid public key")
 
+    @pytest.mark.slow_0_01
     def test_replace_auth_key(self):
         """
         Test the _replace_auth_key with some different authorized_keys examples

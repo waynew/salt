@@ -8,10 +8,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.states.archive as archive
+import pytest
 import salt.utils.platform
 from salt.ext.six.moves import zip  # pylint: disable=import-error,redefined-builtin
+
+# Import Salt Libs
+from salt.states import archive
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -52,6 +54,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_extracted_tar(self):
         """
         archive.extracted tar options
@@ -135,6 +138,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
                     ret_opts, cwd=tmp_dir + os.sep, python_shell=False
                 )
 
+    @pytest.mark.slow_0_01
     def test_tar_gnutar(self):
         """
         Tests the call of extraction with gnutar
@@ -186,6 +190,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(ret["changes"]["extracted_files"], ["stdout"])
 
+    @pytest.mark.slow_0_01
     def test_tar_bsdtar(self):
         """
         Tests the call of extraction with bsdtar
@@ -237,6 +242,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(ret["changes"]["extracted_files"], ["stderr"])
 
+    @pytest.mark.slow_0_01
     def test_extracted_when_if_missing_path_exists(self):
         """
         When if_missing exists, we should exit without making any changes.
@@ -253,6 +259,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(ret["result"], ret)
             self.assertEqual(ret["comment"], "Path {0} exists".format(if_missing))
 
+    @pytest.mark.slow_0_01
     def test_clean_parent_conflict(self):
         """
         Tests the call of extraction with gnutar with both clean_parent plus clean set to True
@@ -368,6 +375,7 @@ class ArchiveTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(ret["changes"], {})
             self.assertEqual(ret["comment"], ret_comment)
 
+    @pytest.mark.slow_0_01
     def test_skip_files_list_verify_success(self):
         """
         Test that if the local and expected source hash are the same we won't do anything.

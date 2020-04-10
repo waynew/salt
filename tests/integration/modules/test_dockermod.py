@@ -10,6 +10,8 @@ import random
 import string
 import sys
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.path
 
@@ -66,6 +68,11 @@ class DockerCallTestCase(ModuleCase, SaltReturnAssertsMixin):
         delattr(self, "random_name")
         delattr(self, "image_tag")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_docker_call(self):
         """
         check that docker.call works, and works with a container not running as root
@@ -73,6 +80,11 @@ class DockerCallTestCase(ModuleCase, SaltReturnAssertsMixin):
         ret = self.run_function("docker.call", [self.random_name, "test.ping"])
         assert ret is True
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_docker_sls(self):
         """
         check that docker.sls works, and works with a container not running as root
@@ -80,6 +92,11 @@ class DockerCallTestCase(ModuleCase, SaltReturnAssertsMixin):
         ret = self.run_function("docker.apply", [self.random_name, "core"])
         self.assertSaltTrueReturn(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_docker_highstate(self):
         """
         check that docker.highstate works, and works with a container not running as root

@@ -10,6 +10,7 @@ import imp
 import os
 import sys
 
+import pytest
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing Libs
@@ -32,6 +33,7 @@ class ZyppPluginsTestCase(TestCase):
     Test shipped libzypp plugins.
     """
 
+    @pytest.mark.slow_0_01
     def test_drift_detector(self):
         """
         Test drift detector for a correct cookie file.

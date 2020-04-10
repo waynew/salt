@@ -10,11 +10,12 @@ import os
 import shutil
 import tempfile
 
-import salt.pillar.file_tree as file_tree
+import pytest
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.stringutils
+from salt.pillar import file_tree
 from tests.support.helpers import TstSuiteLoggingHandler
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
@@ -103,6 +104,7 @@ class FileTreePillarTestCase(TestCase, LoaderModuleMockMixin):
                 data_file.write(salt.utils.stringutils.to_str(FILE_DATA[filename]))
         return pillar_path
 
+    @pytest.mark.slow_0_01
     def test_absolute_path(self):
         "check file tree is imported correctly with an absolute path"
         absolute_path = os.path.join(self.pillar_path, "base")
@@ -117,6 +119,7 @@ class FileTreePillarTestCase(TestCase, LoaderModuleMockMixin):
                 mypillar = file_tree.ext_pillar(MINION_ID, None, absolute_path)
                 self.assertEqual(BASE_PILLAR_CONTENT, mypillar)
 
+    @pytest.mark.slow_0_01
     def test_relative_path(self):
         "check file tree is imported correctly with a relative path"
         with patch(
@@ -130,6 +133,7 @@ class FileTreePillarTestCase(TestCase, LoaderModuleMockMixin):
                 mypillar = file_tree.ext_pillar(MINION_ID, None, ".")
                 self.assertEqual(DEV_PILLAR_CONTENT, mypillar)
 
+    @pytest.mark.slow_0_01
     def test_parent_path(self):
         "check if file tree is merged correctly with a .. path"
         with patch(
@@ -140,6 +144,7 @@ class FileTreePillarTestCase(TestCase, LoaderModuleMockMixin):
                 mypillar = file_tree.ext_pillar(MINION_ID, None, "..")
                 self.assertEqual(PARENT_PILLAR_CONTENT, mypillar)
 
+    @pytest.mark.slow_0_01
     def test_no_pillarenv(self):
         "confirm that file_tree yells when pillarenv is missing for a relative path"
         with patch(

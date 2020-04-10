@@ -6,9 +6,11 @@ Unit tests for the docker state
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.dockermod as docker_mod
-import salt.states.docker_volume as docker_state
+from salt.modules import dockermod as docker_mod
+from salt.states import docker_volume as docker_state
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class DockerVolumeTestCase(TestCase, LoaderModuleMockMixin):
             docker_state: {"__opts__": {"test": False}},
         }
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test docker_volume.present

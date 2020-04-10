@@ -9,6 +9,7 @@ from __future__ import absolute_import
 import os
 import sys
 
+import pytest
 import salt.utils.platform
 
 # Import Salt Testing libs
@@ -20,6 +21,11 @@ class MinionTimeoutTestCase(ShellCase):
     Test minion timing functions
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_long_running_job(self):
         """
         Test that we will wait longer than the job timeout for a minion to

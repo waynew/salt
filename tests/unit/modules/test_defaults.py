@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import inspect
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.defaults as defaults
+from salt.modules import defaults
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class DefaultsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {defaults: {}}
 
+    @pytest.mark.slow_0_01
     def test_get_mock(self):
         """
         Test if it execute a defaults client run and return a dict

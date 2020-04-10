@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.logadm as logadm
+from salt.modules import logadm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -49,6 +51,7 @@ class LogadmTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(logadm.rotate("name"), {"Result": "Success"})
 
+    @pytest.mark.slow_0_01
     def test_remove(self):
         """
         Test for Remove log pattern from logadm

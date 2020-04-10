@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.netscaler as netscaler
+from salt.modules import netscaler
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -583,6 +585,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'servicegroup_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_servicegroup_exists(self):
         """
         Tests if it checks if a service group exists
@@ -637,6 +640,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'servicegroup_server_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_servicegroup_server_exists(self):
         """
         Tests if it check if a server:port combination
@@ -652,6 +656,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'servicegroup_server_up' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_servicegroup_server_up(self):
         """
         Tests if it check if a server:port combination
@@ -700,6 +705,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'servicegroup_server_disable' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_sergrp_server_disable(self):
         """
         Tests if it disable a server:port member of a servicegroup
@@ -733,6 +739,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'servicegroup_server_add' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_servicegroup_server_add(self):
         """
         Tests if it add a server:port member to a servicegroup
@@ -804,6 +811,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'service_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_service_exists(self):
         """
         Tests if it checks if a service is UP
@@ -814,6 +822,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'service_enable' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_service_enable(self):
         """
         Tests if it enable a service
@@ -922,6 +931,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'server_enabled' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_server_enabled(self):
         """
         Tests if it check if a server is enabled globally
@@ -933,6 +943,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'server_enable' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_server_enable(self):
         """
         Tests if it enables a server globally
@@ -974,6 +985,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'vserver_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_vserver_exists(self):
         """
         Tests if it checks if a vserver exists
@@ -1104,6 +1116,7 @@ class NetscalerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'vserver_sslcert_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_vserver_sslcert_exists(self):
         """
         Tests if it checks if a SSL certificate is tied to a vserver

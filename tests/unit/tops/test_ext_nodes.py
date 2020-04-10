@@ -9,10 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import subprocess
 import textwrap
 
-import salt.tops.ext_nodes as ext_nodes
+import pytest
 
 # Import Salt libs
 import salt.utils.stringutils
+from salt.tops import ext_nodes
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -36,6 +37,7 @@ class ExtNodesTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_ext_nodes(self):
         """
         Confirm that subprocess.Popen works as expected and does not raise an
@@ -54,6 +56,7 @@ class ExtNodesTestCase(TestCase, LoaderModuleMockMixin):
             ret = ext_nodes.top(opts={"id": "foo"})
         self.assertEqual(ret, {"base": ["one", "two"]})
 
+    @pytest.mark.slow_0_01
     def test_ext_nodes_with_environment(self):
         """
         Same as above, but also tests that the matches are assigned to the proper

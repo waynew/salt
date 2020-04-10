@@ -11,6 +11,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from copy import deepcopy
 
+import pytest
+
 # Import Salt Libs
 from salt import config
 from salt.cloud.clouds import vmware
@@ -25,7 +27,7 @@ from tests.support.unit import TestCase, skipIf
 HAS_LIBS = True
 # pylint: disable=import-error,no-name-in-module,unused-import
 try:
-    from pyVim.connect import SmartConnect, Disconnect
+    from pyVim.connect import Disconnect, SmartConnect
     from pyVmomi import vim, vmodl
 except ImportError:
     HAS_LIBS = False
@@ -113,6 +115,8 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.avail_locations, call="action")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_avail_sizes_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call avail_sizes
@@ -127,6 +131,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.list_datacenters, call="action")
 
+    @pytest.mark.slow_0_01
     def test_list_clusters_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_clusters
@@ -185,6 +190,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.list_nodes_min, call="action")
 
+    @pytest.mark.slow_0_01
     def test_list_nodes_full_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_nodes_full
@@ -240,6 +246,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.list_hosts_by_datacenter, call="action"
         )
 
+    @pytest.mark.slow_0_01
     def test_list_hbas_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_hbas
@@ -247,6 +254,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.list_hbas, call="action")
 
+    @pytest.mark.slow_0_01
     def test_list_dvs_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_dvs
@@ -261,6 +269,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.list_vapps, call="action")
 
+    @pytest.mark.slow_0_01
     def test_list_templates_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_templates
@@ -275,6 +284,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.create_datacenter, call="action")
 
+    @pytest.mark.slow_0_01
     def test_create_cluster_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call create_cluster
@@ -314,6 +324,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.exit_maintenance_mode, call="action"
         )
 
+    @pytest.mark.slow_0_01
     def test_create_folder_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call create_folder
@@ -349,6 +360,7 @@ class VMwareTestCase(ExtendedTestCase):
         """
         self.assertRaises(SaltCloudSystemExit, vmware.disconnect_host, call="action")
 
+    @pytest.mark.slow_0_01
     def test_reboot_host_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call reboot_host
@@ -383,6 +395,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.start, name=VM_NAME, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_stop_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call stop
@@ -392,6 +405,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.stop, name=VM_NAME, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_suspend_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call suspend
@@ -518,6 +532,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.create_datacenter, kwargs=None, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datacenter_no_name_in_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when name is not present in
@@ -542,6 +557,7 @@ class VMwareTestCase(ExtendedTestCase):
             call="function",
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datacenter_name_too_long(self):
         """
         Tests that a SaltCloudSystemExit is raised when name is present in kwargs
@@ -601,6 +617,7 @@ class VMwareTestCase(ExtendedTestCase):
             call="function",
         )
 
+    @pytest.mark.slow_0_01
     def test_rescan_hba_no_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when no kwargs are provided to
@@ -610,6 +627,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.rescan_hba, kwargs=None, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_rescan_hba_no_host_in_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when host is not present in
@@ -705,6 +723,7 @@ class VMwareTestCase(ExtendedTestCase):
                 True,
             )
 
+    @pytest.mark.slow_0_01
     def test_just_clonefrom(self):
         """
         Tests that the profile is configured correctly when deploying by cloning from a template
@@ -891,6 +910,7 @@ class VMwareTestCase(ExtendedTestCase):
                     )
 
     @skipIf(HAS_LIBS is False, "Install pyVmomi to be able to run this unit test.")
+    @pytest.mark.slow_0_01
     def test_add_host_datacenter_not_exists(self):
         """
         Tests that a SaltCloudSystemExit is raised when the specified datacenter
@@ -920,6 +940,7 @@ class VMwareTestCase(ExtendedTestCase):
                         call="function",
                     )
 
+    @pytest.mark.slow_0_01
     def test_remove_host_no_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when no kwargs are provided to
@@ -929,6 +950,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.remove_host, kwargs=None, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_remove_host_no_host_in_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when host is not present in
@@ -959,6 +981,7 @@ class VMwareTestCase(ExtendedTestCase):
                     call="function",
                 )
 
+    @pytest.mark.slow_0_01
     def test_connect_host_no_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when no kwargs are provided to
@@ -1007,6 +1030,7 @@ class VMwareTestCase(ExtendedTestCase):
             SaltCloudSystemExit, vmware.disconnect_host, kwargs=None, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_disconnect_host_no_host_in_kwargs(self):
         """
         Tests that a SaltCloudSystemExit is raised when host is not present in
@@ -1020,6 +1044,7 @@ class VMwareTestCase(ExtendedTestCase):
         )
 
     @skipIf(HAS_LIBS is False, "Install pyVmomi to be able to run this unit test.")
+    @pytest.mark.slow_0_01
     def test_disconnect_host_not_exists(self):
         """
         Tests that a SaltCloudSystemExit is raised when the specified host present
@@ -1100,6 +1125,7 @@ class VMwareTestCase(ExtendedTestCase):
             call="function",
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datastore_cluster_name_too_short(self):
         """
         Tests that a SaltCloudSystemExit is raised when name is present in kwargs
@@ -1126,6 +1152,7 @@ class VMwareTestCase(ExtendedTestCase):
             call="function",
         )
 
+    @pytest.mark.slow_0_01
     def test__add_new_hard_disk_helper(self):
         with patch("salt.cloud.clouds.vmware._get_si", MagicMock(return_value=None)):
             with patch(
@@ -1186,6 +1213,7 @@ class CloneFromSnapshotTest(TestCase):
         self._test_clone_type(vmware.QUICK_LINKED_CLONE)
 
     @skipIf(HAS_LIBS is False, "Install pyVmomi to be able to run this unit test.")
+    @pytest.mark.slow_0_01
     def test_current_state_linked_clone(self):
         """
         Test that disk move type is
@@ -1194,6 +1222,7 @@ class CloneFromSnapshotTest(TestCase):
         self._test_clone_type(vmware.CURRENT_STATE_LINKED_CLONE)
 
     @skipIf(HAS_LIBS is False, "Install pyVmomi to be able to run this unit test.")
+    @pytest.mark.slow_0_01
     def test_copy_all_disks_full_clone(self):
         """
         Test that disk move type is

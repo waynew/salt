@@ -5,6 +5,8 @@ Tests for the nacl execution module
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.stringutils
 
@@ -13,9 +15,9 @@ from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.unit import TestCase, skipIf
 
 try:
-    import libnacl.secret  # pylint: disable=unused-import
     import libnacl.sealed  # pylint: disable=unused-import
-    import salt.modules.nacl as nacl
+    import libnacl.secret  # pylint: disable=unused-import
+    from salt.modules import nacl
 
     HAS_LIBNACL = True
 except (ImportError, OSError, AttributeError):
@@ -46,6 +48,7 @@ class NaclTest(TestCase, LoaderModuleMockMixin):
         self.pk = ret["pk"]
         self.sk = ret["sk"]
 
+    @pytest.mark.slow_0_01
     def test_keygen(self):
         """
         Test keygen
@@ -53,6 +56,7 @@ class NaclTest(TestCase, LoaderModuleMockMixin):
         self.assertEqual(len(self.pk), 44)
         self.assertEqual(len(self.sk), 44)
 
+    @pytest.mark.slow_0_01
     def test_enc_dec(self):
         """
         Generate keys, encrypt, then decrypt.
@@ -64,6 +68,7 @@ class NaclTest(TestCase, LoaderModuleMockMixin):
         decrypted_data = nacl.dec(data=encrypted_data, sk=self.sk)
         self.assertEqual(self.unencrypted_data, decrypted_data)
 
+    @pytest.mark.slow_0_01
     def test_sealedbox_enc_dec(self):
         """
         Generate keys, encrypt, then decrypt.
@@ -76,6 +81,7 @@ class NaclTest(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(self.unencrypted_data, decrypted_data)
 
+    @pytest.mark.slow_0_01
     def test_secretbox_enc_dec(self):
         """
         Generate keys, encrypt, then decrypt.

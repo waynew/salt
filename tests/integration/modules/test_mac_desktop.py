@@ -6,6 +6,8 @@ Integration tests for the mac_desktop execution module.
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import 3rd-party libs
 from salt.ext import six
 
@@ -29,6 +31,8 @@ class MacDesktopTestCase(ModuleCase):
         if os_grain["kernel"] not in "Darwin":
             self.skipTest("Test not applicable to '{kernel}' kernel".format(**os_grain))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_output_volume(self):
         """
         Tests the return of get_output_volume.
@@ -36,6 +40,9 @@ class MacDesktopTestCase(ModuleCase):
         ret = self.run_function("desktop.get_output_volume")
         self.assertIsNotNone(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_set_output_volume(self):
         """
         Tests the return of set_output_volume.
@@ -53,18 +60,25 @@ class MacDesktopTestCase(ModuleCase):
         # Set volume back to what it was before
         self.run_function("desktop.set_output_volume", [current_vol])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_screensaver(self):
         """
         Tests the return of the screensaver function.
         """
         self.assertTrue(self.run_function("desktop.screensaver"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_lock(self):
         """
         Tests the return of the lock function.
         """
         self.assertTrue(self.run_function("desktop.lock"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_say(self):
         """
         Tests the return of the say function.

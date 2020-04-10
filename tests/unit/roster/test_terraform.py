@@ -7,6 +7,8 @@ from __future__ import absolute_import, unicode_literals
 
 import os.path
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 import salt.loader
@@ -31,6 +33,7 @@ class TerraformTestCase(TestCase, LoaderModuleMockMixin):
         utils = salt.loader.utils(opts, whitelist=["roster_matcher"])
         return {terraform: {"__utils__": utils, "__opts__": {}}}
 
+    @pytest.mark.slow_0_01
     def test_default_output(self):
         """
         Test the output of a fixture tfstate file wich contains libvirt
@@ -80,6 +83,7 @@ class TerraformTestCase(TestCase, LoaderModuleMockMixin):
             ret = terraform.targets("*")
             self.assertDictEqual(expected_result, ret)
 
+    @pytest.mark.slow_0_01
     def test_default_matching(self):
         """
         Test the output of a fixture tfstate file wich contains libvirt

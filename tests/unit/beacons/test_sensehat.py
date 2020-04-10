@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.sensehat as sensehat
+from salt.beacons import sensehat
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock
 
@@ -38,6 +40,7 @@ class SensehatBeaconTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_non_list_config(self):
         config = {}
 
@@ -47,6 +50,7 @@ class SensehatBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret, (False, "Configuration for sensehat beacon must be a list.")
         )
 
+    @pytest.mark.slow_0_01
     def test_empty_config(self):
         config = [{}]
 
@@ -76,6 +80,7 @@ class SensehatBeaconTestCase(TestCase, LoaderModuleMockMixin):
         ret = sensehat.beacon(config)
         self.assertEqual(ret, [{"tag": "sensehat/temperature", "temperature": 30}])
 
+    @pytest.mark.slow_0_01
     def test_sensehat_temperature_match_range(self):
 
         config = [{"sensors": {"temperature": [20, 29]}}]

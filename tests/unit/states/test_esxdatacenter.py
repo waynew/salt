@@ -8,9 +8,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.esxdatacenter as esxdatacenter
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import esxdatacenter
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -54,6 +56,7 @@ class DatacenterConfiguredTestCase(TestCase, LoaderModuleMockMixin):
             except AttributeError:
                 continue
 
+    @pytest.mark.slow_0_01
     def test_dc_name_different_proxy(self):
         with patch.dict(
             esxdatacenter.__salt__,
@@ -93,6 +96,7 @@ class DatacenterConfiguredTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_get_service_instance(self):
         mock_get_service_instance = MagicMock()
         with patch.dict(
@@ -102,6 +106,7 @@ class DatacenterConfiguredTestCase(TestCase, LoaderModuleMockMixin):
             esxdatacenter.datacenter_configured("fake_dc")
         mock_get_service_instance.assert_called_once_with()
 
+    @pytest.mark.slow_0_01
     def test_list_datacenters(self):
         mock_list_datacenters = MagicMock()
         with patch.dict(
@@ -134,6 +139,7 @@ class DatacenterConfiguredTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_create_datacenter_test_mode(self):
         with patch.dict(esxdatacenter.__opts__, {"test": True}):
             with patch.dict(
@@ -169,6 +175,7 @@ class DatacenterConfiguredTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_state_get_service_instance_raise_command_execution_error(self):
         mock_disconnect = MagicMock()
         with patch.dict(

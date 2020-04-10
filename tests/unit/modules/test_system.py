@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.system as system
+from salt.modules import system
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -52,6 +54,7 @@ class SystemTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(system.reboot(), "A")
         cmd_mock.assert_called_with(["shutdown", "-r", "now"], python_shell=False)
 
+    @pytest.mark.slow_0_01
     def test_reboot_with_delay(self):
         """
         Test to reboot the system using shutdown -r with a delay
@@ -61,6 +64,7 @@ class SystemTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(system.reboot(at_time=5), "A")
         cmd_mock.assert_called_with(["shutdown", "-r", "5"], python_shell=False)
 
+    @pytest.mark.slow_0_01
     def test_shutdown(self):
         """
         Test to shutdown a running system

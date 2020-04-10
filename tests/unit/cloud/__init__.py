@@ -5,11 +5,13 @@
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.cloud
 from tests.support.unit import TestCase
 
 
 class CloudTest(TestCase):
+    @pytest.mark.slow_10
     def test_vm_config_merger(self):
         """
         Validate the vm's config is generated correctly.

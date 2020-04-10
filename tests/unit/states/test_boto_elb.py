@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
+import pytest
+
 # Import Salt Libs
-import salt.states.boto_elb as boto_elb
+from salt.states import boto_elb
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class BotoElbTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensure the IAM role exists.
@@ -175,6 +178,7 @@ class BotoElbTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure the IAM role is deleted.

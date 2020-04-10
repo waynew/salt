@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.lvs as lvs
+from salt.modules import lvs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -119,6 +121,7 @@ class LvsTestCase(TestCase, LoaderModuleMockMixin):
                 ):
                     self.assertEqual(lvs.delete_server(), "stderr")
 
+    @pytest.mark.slow_0_01
     def test_clear(self):
         """
         Test for Clear the virtual server table
@@ -134,6 +137,7 @@ class LvsTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 self.assertEqual(lvs.clear(), "stderr")
 
+    @pytest.mark.slow_0_01
     def test_get_rules(self):
         """
         Test for Get the virtual server rules
@@ -142,6 +146,7 @@ class LvsTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(lvs.__salt__, {"cmd.run": MagicMock(return_value="A")}):
                 self.assertEqual(lvs.get_rules(), "A")
 
+    @pytest.mark.slow_0_01
     def test_list_(self):
         """
         Test for List the virtual server table
@@ -175,6 +180,7 @@ class LvsTestCase(TestCase, LoaderModuleMockMixin):
                 ):
                     self.assertEqual(lvs.zero("p", "s"), "stderr")
 
+    @pytest.mark.slow_0_01
     def test_check_service(self):
         """
         Test for Check the virtual service exists.

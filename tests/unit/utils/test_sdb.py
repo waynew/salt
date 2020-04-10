@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.utils.sdb as sdb
+from salt.utils import sdb
 from tests.support.mixins import LoaderModuleMockMixin
 
 # Import Salt Testing Libs
@@ -48,12 +50,15 @@ class SdbTestCase(TestCase, LoaderModuleMockMixin):
 
     # test with SQLite database key not presest
 
+    @pytest.mark.slow_0_01
     def test_sqlite_get_not_found(self):
         what = sdb.sdb_get("sdb://test_sdb_data/thisKeyDoesNotExist", self.sdb_opts)
         self.assertEqual(what, None)
 
     # test with SQLite database write and read
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_sqlite_get_found(self):
         expected = {b"name": b"testone", b"number": 46}
         sdb.sdb_set("sdb://test_sdb_data/test1", expected, self.sdb_opts)

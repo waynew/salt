@@ -6,11 +6,13 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.apache as apache
+import pytest
 from salt.ext.six.moves.urllib.error import (  # pylint: disable=import-error,no-name-in-module
     URLError,
 )
+
+# Import Salt Libs
+from salt.modules import apache
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing Libs
@@ -28,6 +30,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
         return {apache: {}}
 
     # 'version' function tests: 1
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test if return server version (``apachectl -v``)
@@ -57,6 +60,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'modules' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_modules(self):
         """
         Test if return list of static and shared modules
@@ -158,6 +162,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'useradd' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_useradd(self):
         """
         Test if it add HTTP user using the ``htpasswd`` command
@@ -187,6 +192,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(apache.__salt__, {"config.get": mock}):
                 assert apache.server_status() == {}
 
+    @pytest.mark.slow_0_01
     def test_server_status_error(self):
         """
         Test if return get error from the Apache server-status
@@ -211,6 +217,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # '_parse_config' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test__parse_config_dict(self):
         """
         Test parsing function which creates configs from dict like (legacy way):
@@ -261,6 +268,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
         parse = apache._parse_config(data_in, "VirtualHost")
         assert parse == dataout
 
+    @pytest.mark.slow_0_01
     def test__parse_config_list(self):
         """
         Test parsing function which creates configs from variable structure (list of dicts or

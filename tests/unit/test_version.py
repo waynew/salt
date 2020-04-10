@@ -14,6 +14,7 @@ from __future__ import absolute_import
 
 import re
 
+import pytest
 import salt.version
 
 # Import Salt libs
@@ -62,6 +63,7 @@ class VersionTestCase(TestCase):
                 version = strip_initial_non_numbers_regex.search(vstr).group("vs")
             self.assertEqual(saltstack_version.string, version)
 
+    @pytest.mark.slow_0_01
     def test_version_comparison(self):
         examples = (
             ("debian/0.11.1+ds-1-3-ga0afcbd", "0.11.1+ds-2"),
@@ -120,6 +122,7 @@ class VersionTestCase(TestCase):
             else:
                 assert not ret
 
+    @pytest.mark.slow_0_01
     def test_version_report_lines(self):
         """
         Validate padding in versions report is correct
@@ -192,6 +195,7 @@ class VersionTestCase(TestCase):
         assert ver.bugfix == 0
         assert ver.string == "{0}.{1}.0".format(maj_ver, min_ver)
 
+    @pytest.mark.slow_0_01
     def test_noc_info(self):
         """
         Test noc_info property method
@@ -249,6 +253,7 @@ class VersionTestCase(TestCase):
             assert saltstack_version.full_info_all_versions, full_info
             assert len(saltstack_version.full_info_all_versions) == len(full_info)
 
+    @pytest.mark.slow_0_01
     def test_discover_version(self):
         """
         Test call to __discover_version

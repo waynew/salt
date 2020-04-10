@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_dism as dism
+from salt.modules import win_dism as dism
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                     ]
                 )
 
+    @pytest.mark.slow_0_01
     def test_add_capability_with_extras(self):
         """
             Test installing a capability with DISM
@@ -56,6 +59,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                     ]
                 )
 
+    @pytest.mark.slow_0_01
     def test_remove_capability(self):
         """
             Test uninstalling a capability with DISM
@@ -187,6 +191,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                 ]
             )
 
+    @pytest.mark.slow_0_01
     def test_remove_feature_with_extras(self):
         """
             Test uninstalling a capability with DISM
@@ -206,6 +211,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                 ]
             )
 
+    @pytest.mark.slow_0_01
     def test_get_features(self):
         """
             Test getting all the features
@@ -240,6 +246,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(out, ["Capa1"])
 
+    @pytest.mark.slow_0_01
     def test_available_features(self):
         """
             Test getting all the available features
@@ -257,6 +264,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(out, ["Capa2"])
 
+    @pytest.mark.slow_0_01
     def test_add_package(self):
         """
             Test installing a package with DISM

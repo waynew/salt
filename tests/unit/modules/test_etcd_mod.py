@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.etcd_mod as etcd_mod
-import salt.utils.etcd_util as etcd_util
+from salt.modules import etcd_mod
+from salt.utils import etcd_util
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get(self):
         """
         Test if it get a value from etcd, by direct path
@@ -55,6 +58,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test if it set a key in etcd, by direct path
@@ -83,6 +87,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'update' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         """
         Test if can set multiple keys in etcd
@@ -110,6 +115,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'ls_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_ls(self):
         """
         Test if it return all keys and dirs inside a specific path
@@ -130,6 +136,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'rm_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_rm(self):
         """
         Test if it delete a key from etcd
@@ -150,6 +157,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'tree' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_tree(self):
         """
         Test if it recurses through etcd and return all values
@@ -169,6 +177,7 @@ class EtcdModTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'watch' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_watch(self):
         """
         Test if watch returns the right tuples

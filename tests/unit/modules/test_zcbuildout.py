@@ -9,9 +9,8 @@ import shutil
 import subprocess
 import tempfile
 
-import salt.modules.cmdmod as cmd
+import pytest
 import salt.modules.virtualenv_mod
-import salt.modules.zcbuildout as buildout
 
 # Import Salt libs
 import salt.utils.files
@@ -22,6 +21,8 @@ import salt.utils.platform
 from salt.ext import six
 from salt.ext.six.moves.urllib.error import URLError
 from salt.ext.six.moves.urllib.request import urlopen
+from salt.modules import cmdmod as cmd
+from salt.modules import zcbuildout as buildout
 
 # Import Salt Testing libs
 from tests.support.helpers import patched_environ, requires_network
@@ -147,6 +148,9 @@ class Base(TestCase, LoaderModuleMockMixin):
 )
 class BuildoutTestCase(Base):
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_onlyif_unless(self):
         b_dir = os.path.join(self.tdir, "b")
         ret = buildout.buildout(b_dir, onlyif=RUNTIME_VARS.SHELL_FALSE_PATH)
@@ -157,6 +161,9 @@ class BuildoutTestCase(Base):
         self.assertTrue(ret["status"] is True)
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_salt_callback(self):
         @buildout._salt_callback
         def callback1(a, b=1):
@@ -214,6 +221,9 @@ class BuildoutTestCase(Base):
         # pylint: enable=invalid-sequence-index
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_bootstrap_url(self):
         for path in [
             os.path.join(self.tdir, "var/ver/1/dumppicked"),
@@ -238,6 +248,9 @@ class BuildoutTestCase(Base):
             )
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_buildout_ver(self):
         for path in [
             os.path.join(self.tdir, "var/ver/1/dumppicked"),
@@ -258,6 +271,9 @@ class BuildoutTestCase(Base):
             )
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_bootstrap_content(self):
         self.assertEqual(
             "",
@@ -273,6 +289,9 @@ class BuildoutTestCase(Base):
         )
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_logger_clean(self):
         buildout.LOG.clear()
         # nothing in there
@@ -291,6 +310,9 @@ class BuildoutTestCase(Base):
         )
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_logger_loggers(self):
         buildout.LOG.clear()
         # nothing in there
@@ -303,6 +325,9 @@ class BuildoutTestCase(Base):
             self.assertEqual(buildout.LOG.by_level[i][-1], "moo")
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test__find_cfgs(self):
         result = sorted(
             [a.replace(self.root, "") for a in buildout._find_cfgs(self.root)]
@@ -470,6 +495,9 @@ class BuildoutOnlineTestCase(Base):
         )
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_run_buildout(self):
         if salt.modules.virtualenv_mod.virtualenv_ver(self.ppy_st) >= (20, 0, 0):
             self.skipTest(
@@ -485,6 +513,10 @@ class BuildoutOnlineTestCase(Base):
         self.assertTrue("Installing b" in out)
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_buildout(self):
         if salt.modules.virtualenv_mod.virtualenv_ver(self.ppy_st) >= (20, 0, 0):
             self.skipTest(
@@ -547,6 +579,7 @@ class BuildoutAPITestCase(TestCase):
             self.assertTrue(out in uretm["logs_by_level"]["info"])
             self.assertTrue(out in uretm["outlog_by_level"])
 
+    @pytest.mark.slow_0_01
     def test_setup(self):
         buildout.LOG.clear()
         buildout.LOG.info("àé")

@@ -11,6 +11,8 @@ import logging
 import os
 import re
 
+import pytest
+
 # Import Salt libs
 import salt.modules.cmdmod
 import salt.utils.platform
@@ -27,6 +29,11 @@ class DocTestCase(TestCase):
     Unit test case for testing doc files and strings.
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_check_for_doc_inline_markup(self):
         """
         We should not be using the ``:doc:`` inline markup option when

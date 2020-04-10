@@ -5,6 +5,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
@@ -34,36 +36,45 @@ class HashutilTestCase(ModuleCase):
         )
         self.hashutil = salt.loader.raw_mod(minion_opts, "hashutil", None)
 
+    @pytest.mark.slow_0_01
     def test_base64_encodestring(self):
         ret = self.hashutil["hashutil.base64_encodestring"](self.the_string)
         self.assertEqual(ret, self.the_string_base64)
 
+    @pytest.mark.slow_0_01
     def test_base64_decodestring(self):
         ret = self.hashutil["hashutil.base64_decodestring"](self.the_string_base64)
         self.assertEqual(ret, self.the_string)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_md5_digest(self):
         ret = self.hashutil["hashutil.md5_digest"](self.the_string)
         self.assertEqual(ret, self.the_string_md5)
 
+    @pytest.mark.slow_0_01
     def test_sha256_digest(self):
         ret = self.hashutil["hashutil.sha256_digest"](self.the_string)
         self.assertEqual(ret, self.the_string_sha256)
 
+    @pytest.mark.slow_0_01
     def test_sha512_digest(self):
         ret = self.hashutil["hashutil.sha512_digest"](self.the_string)
         self.assertEqual(ret, self.the_string_sha512)
 
+    @pytest.mark.slow_0_01
     def test_hmac_signature(self):
         ret = self.hashutil["hashutil.hmac_signature"](
             self.the_string, "shared secret", self.the_string_hmac
         )
         self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_hmac_compute(self):
         ret = self.hashutil["hashutil.hmac_compute"](self.the_string, "shared secret")
         self.assertEqual(ret, self.the_string_hmac_compute)
 
+    @pytest.mark.slow_0_01
     def test_github_signature(self):
         ret = self.hashutil["hashutil.github_signature"](
             self.the_string, "shared secret", self.the_string_github

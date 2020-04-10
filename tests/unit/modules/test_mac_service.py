@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.mac_service as mac_service
+from salt.modules import mac_service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -53,6 +55,7 @@ class MacServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(mac_service, "launchctl", MagicMock(return_value=cmd)):
                 self.assertFalse(mac_service.disabled(name))
 
+    @pytest.mark.slow_0_01
     def test_service_disabled_status_upper_case(self):
         """
         test service.disabled when disabled status is uppercase
@@ -82,6 +85,7 @@ class MacServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch("os.path.exists", MagicMock(return_value=False)):
                 assert mac_service._always_running_service(srv_name) is False
 
+    @pytest.mark.slow_0_01
     def test_service_keep_alive_empty(self):
         """
         test _always_running_service when keep_alive
@@ -120,6 +124,7 @@ class MacServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch("os.path.exists", MagicMock(return_value=False)):
                 assert mac_service._always_running_service(srv_name) is True
 
+    @pytest.mark.slow_0_01
     def test_service_keep_alive_pathstate(self):
         """
         test _always_running_service when keep_alive
@@ -189,6 +194,7 @@ class MacServiceTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(mac_service, "show", MagicMock(return_value=info)):
             assert mac_service._always_running_service(srv_name) is False
 
+    @pytest.mark.slow_0_01
     def test_service_keep_alive_wrong_setting(self):
         """
         test _always_running_service when keep_alive

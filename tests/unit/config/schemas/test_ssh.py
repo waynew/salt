@@ -8,6 +8,7 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.utils.stringutils
 
 # Import Salt Libs
@@ -31,6 +32,7 @@ except ImportError:
 
 
 class RosterEntryConfigTest(TestCase):
+    @pytest.mark.slow_0_01
     def test_config(self):
         config = ssh_schemas.RosterEntryConfig()
 
@@ -133,6 +135,7 @@ class RosterEntryConfigTest(TestCase):
             raise
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_config_validate(self):
         try:
             jsonschema.validate(
@@ -244,6 +247,7 @@ class RosterItemTest(TestCase):
             raise
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_roster_config_validate(self):
         try:
             jsonschema.validate(

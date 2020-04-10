@@ -6,8 +6,10 @@ Unit tests for the Nested outputter
 # Import Python Libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.output.nested as nested
+from salt.output import nested
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -104,6 +106,7 @@ class NestedOutputterTestCase(TestCase, LoaderModuleMockMixin):
         ret = nested.output(self.data, _retcode=1)
         self.assertEqual(ret, expected_output_str)
 
+    @pytest.mark.slow_0_01
     def test_output_with_indent(self):
         # Everything must be indented by exactly two spaces
         # (using nested_indent=2 sent to nested.output as kwarg)

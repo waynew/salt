@@ -8,9 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import types
 
-# Import Salt Libs
-import salt.modules.win_dns_client as win_dns_client
+import pytest
 import salt.utils.stringutils
+
+# Import Salt Libs
+from salt.modules import win_dns_client
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -82,6 +84,7 @@ class WinDnsClientTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_dns_servers' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_dns_servers(self):
         """
         Test if it return a list of the configured DNS servers
@@ -113,6 +116,7 @@ class WinDnsClientTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'add_dns' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_add_dns(self):
         """
         Test if it add the DNS server to the network interface.
@@ -153,6 +157,7 @@ class WinDnsClientTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_dns_config' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_dns_config(self):
         """
         Test if it get the type of DNS configuration (dhcp / static)
@@ -167,6 +172,7 @@ class WinDnsClientTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(win_dns_client.get_dns_config())
 
     @patch("salt.utils.platform.is_windows")
+    @pytest.mark.slow_0_01
     def test___virtual__non_windows(self, mock):
         mock.return_value = False
         result = win_dns_client.__virtual__()

@@ -3,8 +3,10 @@
 # Import pytohn libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
-import salt.modules.artifactory as artifactory
+from salt.modules import artifactory
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -16,6 +18,7 @@ class ArtifactoryTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {artifactory: {}}
 
+    @pytest.mark.slow_0_01
     def test_artifact_get_metadata(self):
         with patch(
             "salt.modules.artifactory._get_artifact_metadata_xml",
@@ -46,6 +49,7 @@ class ArtifactoryTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(metadata["latest_version"], "1.1_RC11")
 
+    @pytest.mark.slow_0_01
     def test_snapshot_version_get_metadata(self):
         with patch(
             "salt.modules.artifactory._get_snapshot_version_metadata_xml",

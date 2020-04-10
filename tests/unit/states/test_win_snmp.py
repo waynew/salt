@@ -9,9 +9,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.win_snmp as win_snmp
+import pytest
 from salt.ext import six
+
+# Import Salt Libs
+from salt.states import win_snmp
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -86,6 +88,7 @@ class WinSnmpTestCase(TestCase, LoaderModuleMockMixin):
                 ret["result"] = None
                 self.assertEqual(win_snmp.auth_traps_enabled(**kwargs), ret)
 
+    @pytest.mark.slow_0_01
     def test_community_names(self):
         """
         Test - Manage the SNMP accepted community names and their permissions.

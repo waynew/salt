@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.postfix as postfix
+from salt.modules import postfix
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -38,6 +40,7 @@ class PostfixTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(postfix, "_write_conf", return_value=None):
                 self.assertTrue(postfix.set_master("a", "b"))
 
+    @pytest.mark.slow_0_01
     def test_show_main(self):
         """
         Test for return a dict of active config values
@@ -45,6 +48,7 @@ class PostfixTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(postfix, "_parse_main", return_value=({"A": "a"}, ["b"])):
             self.assertDictEqual(postfix.show_main("path"), {"A": "a"})
 
+    @pytest.mark.slow_0_01
     def test_set_main(self):
         """
         Test for set a single config value in the master.cf file

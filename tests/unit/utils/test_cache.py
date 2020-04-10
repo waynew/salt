@@ -14,13 +14,15 @@ import shutil
 import tempfile
 import time
 
+import pytest
+
 # Import salt libs
 import salt.config
 import salt.loader
 import salt.payload
-import salt.utils.cache as cache
 import salt.utils.data
 import salt.utils.files
+from salt.utils import cache
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -41,6 +43,8 @@ class CacheDictTestCase(TestCase):
         del cd["foo"]
         self.assertNotIn("foo", cd)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_ttl(self):
         cd = cache.CacheDict(0.1)
         cd["foo"] = "bar"
@@ -59,6 +63,7 @@ class CacheContextTestCase(TestCase):
         if os.path.exists(context_dir):
             shutil.rmtree(os.path.join(tempfile.gettempdir(), "context"))
 
+    @pytest.mark.slow_0_01
     def test_smoke_context(self):
         """
         Smoke test the context cache
@@ -76,6 +81,7 @@ class CacheContextTestCase(TestCase):
 
             self.assertDictEqual({"a": "b"}, ret)
 
+    @pytest.mark.slow_0_01
     def test_context_wrapper(self):
         """
         Test to ensure that a module which decorates itself
@@ -170,6 +176,8 @@ class ContextCacheTest(TestCase):
 
 
 class CacheDiskTestCase(TestCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_everything(self):
         """
         Make sure you can instantiate, add, update, remove, expire

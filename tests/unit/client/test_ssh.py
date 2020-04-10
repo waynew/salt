@@ -10,6 +10,8 @@ import os
 import shutil
 import tempfile
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.roster
@@ -37,6 +39,9 @@ self:
 
 @skipIf(not salt.utils.path.which("ssh"), "No ssh binary found in path")
 class SSHPasswordTests(ShellCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_password_failure(self):
         """
         Check password failures when trying to deploy keys
@@ -77,6 +82,7 @@ class SSHPasswordTests(ShellCase):
 
 
 class SSHRosterDefaults(TestCase):
+    @pytest.mark.slow_0_01
     def test_roster_defaults_flat(self):
         """
         Test Roster Defaults on the flat roster
@@ -114,6 +120,7 @@ class SSHSingleTests(TestCase):
     def setUp(self):
         self.tmp_cachedir = tempfile.mkdtemp(dir=RUNTIME_VARS.TMP)
 
+    @pytest.mark.slow_0_01
     def test_single_opts(self):
         """ Sanity check for ssh.Single options
         """

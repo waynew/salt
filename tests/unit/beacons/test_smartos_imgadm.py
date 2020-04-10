@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Salt libs
-import salt.beacons.smartos_imgadm as imgadm
+from salt.beacons import smartos_imgadm as imgadm
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -101,6 +103,7 @@ class SmartOSImgAdmBeaconTestCase(TestCase, LoaderModuleMockMixin):
             assert imgadm.validate(config) == (True, "Valid beacon configuration")
             assert imgadm.beacon(config) == []
 
+    @pytest.mark.slow_0_01
     def test_imported(self):
         """
         Test with one image and a new image added on the 2nd pass
@@ -133,6 +136,7 @@ class SmartOSImgAdmBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
             assert ret == res
 
+    @pytest.mark.slow_0_01
     def test_deleted(self):
         """
         Test with two images and one gets deletes

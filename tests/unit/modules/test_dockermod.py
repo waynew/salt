@@ -8,12 +8,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 import salt.loader
-import salt.modules.dockermod as docker_mod
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.ext.six.moves import range
+from salt.modules import dockermod as docker_mod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -58,6 +60,7 @@ class DockerUnitTestCase(TestCase, LoaderModuleMockMixin):
             },
         }
 
+    @pytest.mark.slow_0_01
     def test_trans_tar_should_have_grains_in_sls_opts_including_pillar_override(self):
         container_name = "fnord"
         expected_grains = {
@@ -144,6 +147,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         """
         docker_mod.__context__.pop("docker.client", None)
 
+    @pytest.mark.slow_0_01
     def test_failed_login(self):
         """
         Check that when docker.login failed a retcode other then 0
@@ -175,6 +179,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertIn("retcode", ret)
                     self.assertNotEqual(ret["retcode"], 0)
 
+    @pytest.mark.slow_0_01
     def test_ps_with_host_true(self):
         """
         Check that docker.ps called with host is ``True``,
@@ -192,6 +197,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                 ret = docker_mod.ps_(host=True)
                 self.assertEqual(ret, {"host": {"interfaces": {"mocked": None}}})
 
+    @pytest.mark.slow_0_01
     def test_ps_with_filters(self):
         """
         Check that docker.ps accept filters parameter.
@@ -206,6 +212,9 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                 all=True, filters={"label": "KEY"}
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_check_mine_cache_is_refreshed_on_container_change_event(self):
         """
         Every command that might modify docker containers state.
@@ -343,6 +352,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                         "arguments: {1}".format(command_name, exc)
                     )
 
+    @pytest.mark.slow_0_01
     def test_update_mine(self):
         """
         Test the docker.update_mine config option
@@ -392,6 +402,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         _docker_py_version() < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_list_networks(self, *args):
         """
         test list networks.
@@ -416,6 +427,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_create_network(self, *args):
         """
         test create network.
@@ -460,6 +472,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_remove_network(self, *args):
         """
         test remove network.
@@ -482,6 +495,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_inspect_network(self, *args):
         """
         test inspect network.
@@ -504,6 +518,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_connect_container_to_network(self, *args):
         """
         test connect_container_to_network
@@ -529,6 +544,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_disconnect_container_from_network(self, *args):
         """
         test disconnect_container_from_network
@@ -553,6 +569,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_list_volumes(self, *args):
         """
         test list volumes.
@@ -574,6 +591,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_create_volume(self, *args):
         """
         test create volume.
@@ -599,6 +617,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_remove_volume(self, *args):
         """
         test remove volume.
@@ -620,6 +639,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_version < (1, 5, 0),
         "docker module must be installed to run this test or is too old. >=1.5.0",
     )
+    @pytest.mark.slow_0_01
     def test_inspect_volume(self, *args):
         """
         test inspect volume.
@@ -637,6 +657,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                 docker_mod.inspect_volume("foo")
         client.inspect_volume.assert_called_once_with("foo")
 
+    @pytest.mark.slow_0_01
     def test_wait_success(self):
         client = Mock()
         client.api_version = "1.21"
@@ -659,6 +680,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_wait_fails_already_stopped(self):
         client = Mock()
         client.api_version = "1.21"
@@ -682,6 +704,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_wait_success_already_stopped(self):
         client = Mock()
         client.api_version = "1.21"
@@ -705,6 +728,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_wait_success_absent_container(self):
         client = Mock()
         client.api_version = "1.21"
@@ -717,6 +741,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                 result = docker_mod.wait("foo", ignore_already_stopped=True)
         self.assertEqual(result, {"result": True, "comment": "Container 'foo' absent"})
 
+    @pytest.mark.slow_0_01
     def test_wait_fails_on_exit_status(self):
         client = Mock()
         client.api_version = "1.21"
@@ -739,6 +764,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_wait_fails_on_exit_status_and_already_stopped(self):
         client = Mock()
         client.api_version = "1.21"
@@ -764,6 +790,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_sls_build(self, *args):
         """
         test build sls image.
@@ -822,6 +849,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
         docker_commit_mock.assert_called_once_with("ID", "foo", tag="latest")
         self.assertEqual({"Id": "ID2", "Image": "foo", "Time_Elapsed": 42}, ret)
 
+    @pytest.mark.slow_0_01
     def test_sls_build_dryrun(self, *args):
         """
         test build sls image in dryrun mode.
@@ -896,6 +924,9 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             ret,
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_call_success(self):
         """
         test module calling inside containers
@@ -965,6 +996,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual({"retcode": 0, "comment": "container cmd"}, ret)
 
+    @pytest.mark.slow_0_01
     def test_images_with_empty_tags(self):
         """
         docker 1.12 reports also images without tags with `null`.
@@ -985,6 +1017,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             result = docker_mod.images()
         self.assertEqual(result, {"sha256:abcdefg": {"RepoTags": ["image:latest"]}})
 
+    @pytest.mark.slow_0_01
     def test_compare_container_image_id_resolution(self):
         """
         Test comparing two containers when one's inspect output is an ID and
@@ -1014,6 +1047,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
                 ret = docker_mod.compare_containers("container1", "container2")
                 self.assertEqual(ret, {})
 
+    @pytest.mark.slow_0_01
     def test_compare_container_ulimits_order(self):
         """
         Test comparing two containers when the order of the Ulimits HostConfig
@@ -1050,6 +1084,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             # pylint: enable=not-callable
             self.assertEqual(ret, {})
 
+    @pytest.mark.slow_0_01
     def test_compare_container_env_order(self):
         """
         Test comparing two containers when the order of the Env HostConfig
@@ -1076,6 +1111,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             # pylint: enable=not-callable
             self.assertEqual(ret, {})
 
+    @pytest.mark.slow_0_01
     def test_resolve_tag(self):
         """
         Test the resolve_tag function. It runs docker.insect_image on the image
@@ -1104,6 +1140,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             self.assertIs(docker_mod.resolve_tag("foo"), False)
             self.assertIs(docker_mod.resolve_tag("foo", all=True), False)
 
+    @pytest.mark.slow_0_01
     def test_prune(self):
         """
         Test the prune function
@@ -1329,6 +1366,7 @@ class DockerTestCase(TestCase, LoaderModuleMockMixin):
             ],
         )
 
+    @pytest.mark.slow_0_01
     def test_port(self):
         """
         Test docker.port function. Note that this test case does not test what

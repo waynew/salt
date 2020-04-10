@@ -6,13 +6,13 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
-import salt.modules.btrfs as btrfs
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.fsutils
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError
+from salt.modules import btrfs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -91,6 +91,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
                     with patch.object(salt.utils.files, "fopen", mock_file):
                         self.assertListEqual(btrfs.defragment("/dev/sda1"), ret)
 
+    @pytest.mark.slow_0_01
     def test_defragment_error(self):
         """
         Test if it gives device not mount error
@@ -121,6 +122,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'usage' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_usage(self):
         """
         Test if it shows in which disk the chunks are allocated.
@@ -156,6 +158,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'mkfs' function tests: 3
 
+    @pytest.mark.slow_0_01
     def test_mkfs(self):
         """
         Test if it create a file system on the specified device.
@@ -218,6 +221,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
                     CommandExecutionError, btrfs.resize, "/dev/sda1", "max"
                 )
 
+    @pytest.mark.slow_0_01
     def test_resize_mount_error(self):
         """
         Test if it gives mount point error
@@ -271,6 +275,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
                             btrfs.convert("/dev/sda3", permanent=True), ret
                         )
 
+    @pytest.mark.slow_0_01
     def test_convert_device_error(self):
         """
         Test if it gives device not found error
@@ -453,6 +458,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
             btrfs.subvolume_delete(name="var", commit="maybe")
 
     @patch("salt.modules.btrfs.subvolume_exists")
+    @pytest.mark.slow_0_01
     def test_subvolume_delete_already_missing(self, subvolume_exists):
         """
         Test btrfs subvolume delete
@@ -492,6 +498,7 @@ class BtrfsTestCase(TestCase, LoaderModuleMockMixin):
                 ["btrfs", "subvolume", "delete", "var", "tmp"]
             )
 
+    @pytest.mark.slow_0_01
     def test_subvolume_find_new_empty(self):
         """
         Test btrfs subvolume find-new
@@ -554,6 +561,7 @@ transid marker was 1024""",
                 ["btrfs", "subvolume", "get-default", "/mnt"]
             )
 
+    @pytest.mark.slow_0_01
     def test_subvolume_get_default(self):
         """
         Test btrfs subvolume get-default
@@ -588,6 +596,7 @@ transid marker was 1024""",
         with pytest.raises(CommandExecutionError):
             btrfs.subvolume_list("/mnt", sort=["-root"])
 
+    @pytest.mark.slow_0_01
     def test_subvolume_list_simple(self):
         """
         Test btrfs subvolume list

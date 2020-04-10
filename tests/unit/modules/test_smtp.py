@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.smtp as smtp
+from salt.modules import smtp
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -237,6 +239,7 @@ class SmtpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'send_msg' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_send_msg(self):
         """
         Tests if it send a message to an SMTP recipient.

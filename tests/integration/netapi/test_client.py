@@ -7,6 +7,8 @@ import logging
 import os
 import time
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.netapi
@@ -46,6 +48,9 @@ class NetapiClientTest(TestCase):
     def tearDown(self):
         del self.netapi
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_local(self):
         low = {"client": "local", "tgt": "*", "fun": "test.ping", "timeout": 300}
         low.update(self.eauth_creds)
@@ -58,6 +63,9 @@ class NetapiClientTest(TestCase):
         ret.pop("proxytest", None)
         self.assertEqual(ret, {"minion": True, "sub_minion": True})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_local_batch(self):
         low = {"client": "local_batch", "tgt": "*", "fun": "test.ping", "timeout": 300}
         low.update(self.eauth_creds)
@@ -69,6 +77,8 @@ class NetapiClientTest(TestCase):
         self.assertIn({"sub_minion": True}, rets)
         self.assertIn({"minion": True}, rets)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_local_async(self):
         low = {"client": "local_async", "tgt": "*", "fun": "test.ping"}
         low.update(self.eauth_creds)
@@ -89,12 +99,17 @@ class NetapiClientTest(TestCase):
             pass
         self.assertEqual(ret, {"minions": sorted(["minion", "sub_minion"])})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_local_unauthenticated(self):
         low = {"client": "local", "tgt": "*", "fun": "test.ping"}
 
         with self.assertRaises(EauthAuthenticationError) as excinfo:
             ret = self.netapi.run(low)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_wheel(self):
         low = {"client": "wheel", "fun": "key.list_all"}
         low.update(self.eauth_creds)
@@ -122,6 +137,9 @@ class NetapiClientTest(TestCase):
             )
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_wheel_async(self):
         # Give this test a little breathing room
         time.sleep(3)
@@ -132,6 +150,8 @@ class NetapiClientTest(TestCase):
         self.assertIn("jid", ret)
         self.assertIn("tag", ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_wheel_unauthenticated(self):
         low = {"client": "wheel", "tgt": "*", "fun": "test.ping"}
 
@@ -157,6 +177,7 @@ class NetapiClientTest(TestCase):
 
         ret = self.netapi.run(low)
 
+    @pytest.mark.slow_0_01
     def test_runner_unauthenticated(self):
         low = {"client": "runner", "tgt": "*", "fun": "test.ping"}
 
@@ -200,6 +221,11 @@ class NetapiSSHClientTest(SSHCase):
         cls.post_webserver.stop()
         del cls.post_webserver
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_ssh(self):
         low = {
             "client": "ssh",
@@ -221,12 +247,20 @@ class NetapiSSHClientTest(SSHCase):
         self.assertEqual(ret["localhost"]["id"], "localhost")
         self.assertEqual(ret["localhost"]["fun"], "test.ping")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_ssh_unauthenticated(self):
         low = {"client": "ssh", "tgt": "localhost", "fun": "test.ping"}
 
         with self.assertRaises(EauthAuthenticationError) as excinfo:
             ret = self.netapi.run(low)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_ssh_unauthenticated_raw_shell_curl(self):
 
         fun = "-o ProxyCommand curl {0}".format(self.post_web_root)
@@ -239,6 +273,10 @@ class NetapiSSHClientTest(SSHCase):
         self.assertEqual(self.post_web_handler.received_requests, [])
         self.assertEqual(ret, None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_ssh_unauthenticated_raw_shell_touch(self):
 
         badfile = os.path.join(TMP, "badfile.txt")
@@ -252,6 +290,10 @@ class NetapiSSHClientTest(SSHCase):
         self.assertEqual(ret, None)
         self.assertFalse(os.path.exists("badfile.txt"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_ssh_authenticated_raw_shell_disabled(self):
 
         badfile = os.path.join(TMP, "badfile.txt")

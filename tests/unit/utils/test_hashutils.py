@@ -3,6 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.hashutils
 
@@ -158,6 +160,7 @@ class HashutilsTestCase(TestCase):
             self.bytes_hmac_compute,
         )
 
+    @pytest.mark.slow_0_01
     def test_get_hash_exception(self):
         self.assertRaises(
             ValueError, salt.utils.hashutils.get_hash, "/tmp/foo/", form="INVALID"

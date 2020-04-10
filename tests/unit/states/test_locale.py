@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.locale as locale
+from salt.states import locale
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class LocaleTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {locale: {}}
 
+    @pytest.mark.slow_0_01
     def test_system(self):
         """
             Test to set the locale for the system

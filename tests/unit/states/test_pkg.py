@@ -3,11 +3,12 @@
 # Import Python libs
 from __future__ import absolute_import
 
-import salt.states.pkg as pkg
+import pytest
 
 # Import Salt Libs
 from salt.ext import six
 from salt.ext.six.moves import zip
+from salt.states import pkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -63,6 +64,7 @@ class PkgTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertIsNone(ret["result"])
                 self.assertDictEqual(ret["changes"], self.pkgs)
 
+    @pytest.mark.slow_0_01
     def test_uptodate_with_pkgs_with_changes(self):
         """
         Test pkg.uptodate with simulated changes
@@ -134,6 +136,7 @@ class PkgTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertTrue(ret["result"])
                 self.assertDictEqual(ret["changes"], {})
 
+    @pytest.mark.slow_0_01
     def test_uptodate_with_pkgs_no_changes(self):
         """
         Test pkg.uptodate with no changes
@@ -211,6 +214,7 @@ class PkgTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertIsNone(ret["result"])
                 self.assertDictEqual(ret["changes"], pkgs)
 
+    @pytest.mark.slow_0_01
     def test_parse_version_string(self):
         test_parameters = [
             (
@@ -269,6 +273,7 @@ class PkgTestCase(TestCase, LoaderModuleMockMixin):
                 msg,
             )
 
+    @pytest.mark.slow_0_01
     def test_fulfills_version_spec(self):
         test_parameters = [
             (["1.0.0", "14.0.1", "16.0.0", "2.0.0"], "==", "1.0.0", True),

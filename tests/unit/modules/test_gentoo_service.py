@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.gentoo_service as gentoo_service
+from salt.modules import gentoo_service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -30,6 +32,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(gentoo_service.get_enabled())
         mock.assert_called_once_with("rc-update -v show")
 
+    @pytest.mark.slow_0_01
     def test_get_enabled_single_runlevel(self):
         """
         Test for Return a list of service that are enabled on boot
@@ -86,6 +89,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(len(disabled_services), 1)
             self.assertTrue(disabled_service in disabled_services)
 
+    @pytest.mark.slow_0_01
     def test_available(self):
         """
         Test for Returns ``True`` if the specified service is
@@ -144,6 +148,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(disabled_service in all_services)
             self.assertTrue(enabled_service in all_services)
 
+    @pytest.mark.slow_0_01
     def test_start(self):
         """
         Test for Start the specified service
@@ -199,6 +204,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
             "/etc/init.d/name zap", ignore_retcode=False, python_shell=False
         )
 
+    @pytest.mark.slow_0_01
     def test_status(self):
         """
         Test for Return the status for a service
@@ -239,6 +245,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
             "/etc/init.d/name status", ignore_retcode=True, python_shell=False
         )
 
+    @pytest.mark.slow_0_01
     def test_enable(self):
         """
         Test for Enable the named service to start at boot
@@ -382,6 +389,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
         )
         rc_update_mock.reset_mock()
 
+    @pytest.mark.slow_0_01
     def test_disable(self):
         """
         Test for Disable the named service to start at boot
@@ -525,6 +533,7 @@ class GentooServicesTestCase(TestCase, LoaderModuleMockMixin):
                 gentoo_service.enabled("name", runlevels=["boot", "some-other-level"])
             )
 
+    @pytest.mark.slow_0_01
     def test_disabled(self):
         """
         Test for Return True if the named service is disabled, false otherwise

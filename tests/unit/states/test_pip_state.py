@@ -15,12 +15,13 @@ import os
 import subprocess
 import sys
 
-import salt.states.pip_state as pip_state
+import pytest
 import salt.utils.path
 
 # Import salt libs
 import salt.version
 from salt.modules.virtualenv_mod import KNOWN_BINARY_NAMES
+from salt.states import pip_state
 from tests.support.helpers import VirtualEnv, dedent
 
 # Import Salt Testing libs
@@ -52,6 +53,8 @@ class PipStateTest(TestCase, SaltReturnAssertsMixin, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_install_requirements_parsing(self):
         log.debug("Real pip version is %s", pip.__version__)
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -276,6 +279,7 @@ class PipStateTest(TestCase, SaltReturnAssertsMixin, LoaderModuleMockMixin):
                         "packages are already installed", {"test": ret}
                     )
 
+    @pytest.mark.slow_0_01
     def test_install_requirements_custom_pypi(self):
         """
         test requirement parsing for both when a custom
@@ -317,6 +321,7 @@ class PipStateTest(TestCase, SaltReturnAssertsMixin, LoaderModuleMockMixin):
                     self.assertSaltTrueReturn({"test": ret})
                     assert "Requirements were already installed." == ret["comment"]
 
+    @pytest.mark.slow_0_01
     def test_install_requirements_custom_pypi_changes(self):
         """
         test requirement parsing for both when a custom
@@ -401,6 +406,7 @@ class PipStateUtilsTest(TestCase):
         assert not pip_state.pip_has_exceptions_mod("0.1")
         assert not pip_state.pip_has_exceptions_mod("10.0")
 
+    @pytest.mark.slow_0_01
     def test_pip_purge_method_with_pip(self):
         mock_modules = sys.modules.copy()
         mock_modules.pop("pip", None)
@@ -420,6 +426,12 @@ class PipStateUtilsTest(TestCase):
     salt.utils.path.which_bin(KNOWN_BINARY_NAMES) is None, "virtualenv not installed"
 )
 class PipStateInstallationErrorTest(TestCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_importable_installation_error(self):
         extra_requirements = []
         for name, version in salt.version.dependency_information():

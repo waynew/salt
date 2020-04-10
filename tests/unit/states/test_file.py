@@ -8,11 +8,7 @@ import pprint
 import shutil
 from datetime import datetime
 
-import salt.modules.file as filemod
-import salt.serializers.json as jsonserializer
-import salt.serializers.python as pythonserializer
-import salt.serializers.yaml as yamlserializer
-import salt.states.file as filestate
+import pytest
 
 # Import salt libs
 import salt.utils.files
@@ -22,6 +18,11 @@ import salt.utils.win_functions
 import salt.utils.yaml
 from salt.exceptions import CommandExecutionError
 from salt.ext.six.moves import range
+from salt.modules import file as filemod
+from salt.serializers import json as jsonserializer
+from salt.serializers import python as pythonserializer
+from salt.serializers import yaml as yamlserializer
+from salt.states import file as filestate
 from tests.support.helpers import destructiveTest
 
 # Import Salt Testing libs
@@ -155,6 +156,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
             # likely as simple as updating the 2nd index below.
             self.assertEqual(expected, returner.call_args[0][-5])
 
+    @pytest.mark.slow_0_01
     def test_symlink(self):
         """
         Test to create a symlink.
@@ -508,6 +510,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
             )
 
     @skipIf(salt.utils.platform.is_windows(), "Do not run on Windows")
+    @pytest.mark.slow_0_01
     def test_hardlink(self):
         """
         Test to create a hardlink.
@@ -930,6 +933,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
             )
 
     # 'absent' function tests: 1
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to make sure that the named file or directory is absent.
@@ -1081,6 +1085,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'managed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_file_managed_should_fall_back_to_binary(self):
         expected_contents = b"\x8b"
         filename = "/tmp/blarg"
@@ -1103,6 +1108,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
                 actual_contents = mock_manage.call_args[0][14]
                 self.assertEqual(actual_contents, expected_contents)
 
+    @pytest.mark.slow_0_01
     def test_managed(self):
         """
         Test to manage a given file, this function allows for a file to be
@@ -1421,6 +1427,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'directory' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_directory(self):
         """
         Test to ensure that a named directory is present and has the right perms
@@ -1611,6 +1618,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'recurse' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_recurse(self):
         """
         Test to recurse through a subdirectory on the master
@@ -1706,6 +1714,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'replace' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_replace(self):
         """
         Test to maintain an edit in a file.
@@ -1775,6 +1784,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'comment' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_comment(self):
         """
         Test to comment out specified lines in a file.
@@ -1838,6 +1848,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'uncomment' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_uncomment(self):
         """
         Test to uncomment specified commented lines in a file
@@ -1898,6 +1909,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'prepend' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_prepend(self):
         """
         Test to ensure that some text appears at the beginning of a file.
@@ -1983,6 +1995,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'touch' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_touch(self):
         """
         Test to replicate the 'nix "touch" command to create a new empty
@@ -2028,6 +2041,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'copy' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_copy(self):
         """
         Test if the source file exists on the system, copy it to the named file.
@@ -2138,6 +2152,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'rename' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_rename(self):
         """
         Test if the source file exists on the system,
@@ -2254,6 +2269,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'accumulated' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_accumulated(self):
         """
         Test to prepare accumulator which can be used in template in file.
@@ -2389,6 +2405,7 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
 
     # 'mknod' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_mknod(self):
         """
         Test to create a special file similar to the 'nix mknod command.
@@ -2431,6 +2448,9 @@ class TestFileState(TestCase, LoaderModuleMockMixin):
             self.assertTrue(filestate.mod_run_check_cmd(cmd, filename))
 
     @skipIf(not HAS_DATEUTIL, NO_DATEUTIL_REASON)
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_retention_schedule(self):
         """
         Test to execute the retention_schedule logic.
@@ -2636,6 +2656,7 @@ class TestFindKeepFiles(TestCase):
         assert actual == expected, actual
 
     @skipIf(not salt.utils.platform.is_windows(), "Only run on Windows")
+    @pytest.mark.slow_0_01
     def test__find_keep_files_win32(self):
         """
         Test _find_keep_files. The `_find_keep_files` function is only called by
@@ -2668,6 +2689,7 @@ class TestFileTidied(TestCase):
         delattr(filestate, "__opts__")
         delattr(filestate, "__salt__")
 
+    @pytest.mark.slow_0_01
     def test__tidied(self):
         name = os.sep + "test"
         if salt.utils.platform.is_windows():
@@ -2740,6 +2762,7 @@ class TestFileTidied(TestCase):
         self.assertDictEqual(exp, ret)
         assert remove.call_count == 6
 
+    @pytest.mark.slow_0_01
     def test__bad_input(self):
         exp = {
             "name": "test/",
@@ -2765,6 +2788,7 @@ class TestFilePrivateFunctions(TestCase, LoaderModuleMockMixin):
 
     @destructiveTest
     @skipIf(salt.utils.platform.is_windows(), "File modes do not exist on windows")
+    @pytest.mark.slow_0_01
     def test__check_directory(self):
         """
         Test the _check_directory function

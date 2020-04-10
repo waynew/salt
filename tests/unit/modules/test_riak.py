@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.riak as riak
+from salt.modules import riak
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -40,6 +42,7 @@ class RiakTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(riak.stop(), {"success": True, "comment": "success"})
 
+    @pytest.mark.slow_0_01
     def test_cluster_join(self):
         """
         Test for Join a Riak cluster
@@ -82,6 +85,7 @@ class RiakTestCase(TestCase, LoaderModuleMockMixin):
                 riak.cluster_commit(), {"success": True, "comment": "success"}
             )
 
+    @pytest.mark.slow_0_01
     def test_member_status(self):
         """
         Test for Get cluster member status
@@ -119,6 +123,7 @@ class RiakTestCase(TestCase, LoaderModuleMockMixin):
                 {"vnode_map_update_time_95": "0", "vnode_map_update_time_99": "0"},
             )
 
+    @pytest.mark.slow_0_01
     def test_test(self):
         """
         Test the Riak test

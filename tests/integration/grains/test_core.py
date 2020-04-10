@@ -6,6 +6,8 @@ Test the core grains
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.loader
 import salt.utils.platform
@@ -63,6 +65,10 @@ class TestGrainsReg(ModuleCase, LoaderModuleMockMixin):
         return {salt.modules.reg: {"__opts__": opts, "__utils__": utils}}
 
     @skipIf(not salt.utils.platform.is_windows(), "Only run on Windows")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_win_cpu_model(self):
         """
         test grains['cpu_model']

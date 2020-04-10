@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.openstack_config as openstack_config
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import openstack_config
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -29,6 +31,7 @@ class OpenstackConfigTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test if it set a value in an OpenStack configuration file.
@@ -86,6 +89,7 @@ class OpenstackConfigTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
         Test if it delete a value from an OpenStack configuration file.

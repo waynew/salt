@@ -4,10 +4,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt libs
-import salt.states.jboss7 as jboss7
+import pytest
 from salt.exceptions import CommandExecutionError
 from salt.ext import six
+
+# Import Salt libs
+from salt.states import jboss7
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -37,6 +39,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_should_not_redeploy_unchanged(self):
         # given
         parameters = {
@@ -112,6 +115,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(jboss7_undeploy_mock.called)
             self.assertFalse(jboss7_deploy_mock.called)
 
+    @pytest.mark.slow_0_01
     def test_should_redeploy_changed(self):
         # given
         parameters = {
@@ -187,6 +191,8 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(jboss7_undeploy_mock.called)
             self.assertTrue(jboss7_deploy_mock.called)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_should_deploy_different_artifact(self):
         # given
         parameters = {
@@ -262,6 +268,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(jboss7_undeploy_mock.called)
             self.assertTrue(jboss7_deploy_mock.called)
 
+    @pytest.mark.slow_0_01
     def test_should_redploy_undeploy_force(self):
         # given
         parameters = {
@@ -383,6 +390,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(update_mock.called)
             self.assertEqual(result["comment"], "Datasource created.")
 
+    @pytest.mark.slow_0_01
     def test_should_update_the_datasource_if_exists(self):
         ds_status = {"updated": False}
 
@@ -540,6 +548,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(result["changes"], {"added": "env:DEV\n"})
             self.assertEqual(result["comment"], "Bindings changed.")
 
+    @pytest.mark.slow_0_01
     def test_should_update_bindings_if_exists_and_different(self):
         # given
         binding_status = {"updated": False}
@@ -637,6 +646,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             except CommandExecutionError as e:
                 self.assertEqual(six.text_type(e), "Incorrect binding name.")
 
+    @pytest.mark.slow_0_01
     def test_should_raise_exception_if_cannot_update_binding(self):
         def read_func(jboss_config, binding_name, profile):
             return {"success": True, "result": {"value": "DEV"}}
@@ -669,6 +679,7 @@ class JBoss7StateTestCase(TestCase, LoaderModuleMockMixin):
             except CommandExecutionError as e:
                 self.assertEqual(six.text_type(e), "Incorrect binding name.")
 
+    @pytest.mark.slow_0_01
     def test_datasource_exist_create_datasource_good_code(self):
         jboss_config = {
             "cli_path": "/home/ch44d/Desktop/wildfly-18.0.0.Final/bin/jboss-cli.sh",

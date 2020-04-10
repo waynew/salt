@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pecl as pecl
+from salt.modules import pecl
 from tests.support.mock import patch
 
 # Import Salt Testing Libs
@@ -45,6 +47,7 @@ class PeclTestCase(TestCase):
         with patch.object(pecl, "_pecl", return_value="A"):
             self.assertEqual(pecl.update("fuse"), "A")
 
+    @pytest.mark.slow_0_01
     def test_list_(self):
         """
         Test to list installed pecl extensions.

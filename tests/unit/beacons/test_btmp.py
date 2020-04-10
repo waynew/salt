@@ -6,8 +6,10 @@ from __future__ import absolute_import
 import datetime
 import logging
 
+import pytest
+
 # Salt libs
-import salt.beacons.btmp as btmp
+from salt.beacons import btmp
 from salt.ext import six
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, mock_open, patch
@@ -17,7 +19,7 @@ from tests.support.unit import TestCase, skipIf
 
 # pylint: disable=import-error
 try:
-    import dateutil.parser as dateutil_parser  # pylint: disable=unused-import
+    from dateutil import parser as dateutil_parser  # pylint: disable=unused-import
 
     _TIME_SUPPORTED = True
 except ImportError:
@@ -53,6 +55,7 @@ class BTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {btmp: {"__context__": {"btmp.loc": 2}, "__salt__": {}}}
 
+    @pytest.mark.slow_0_01
     def test_non_list_config(self):
         config = {}
         ret = btmp.validate(config)
@@ -134,6 +137,7 @@ class BTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ),
         )
 
+    @pytest.mark.slow_0_01
     def test_groups_invalid_time_range(self):
         config = [{"groups": {"docker": {"time_range": {"start": "3pm"}}}}]
 
@@ -147,6 +151,7 @@ class BTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ),
         )
 
+    @pytest.mark.slow_0_01
     def test_match(self):
         with patch("salt.utils.files.fopen", mock_open(read_data=raw)):
             with patch("struct.unpack", MagicMock(return_value=pack)):
@@ -215,6 +220,7 @@ class BTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
                     ret = btmp.beacon(config)
                     self.assertEqual(ret, _expected)
 
+    @pytest.mark.slow_0_01
     def test_match_group(self):
 
         for groupadd in (

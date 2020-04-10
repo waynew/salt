@@ -3,10 +3,11 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.uptime as uptime
+import pytest
 
 # Import salt libs
 from salt.exceptions import CommandExecutionError
+from salt.modules import uptime
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -67,6 +68,7 @@ class UptimeTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_checks_list(self):
         ret = uptime.checks_list()
         self.assertListEqual(ret, ["http://example.org"])
@@ -74,6 +76,7 @@ class UptimeTestCase(TestCase, LoaderModuleMockMixin):
     def test_checks_exists(self):
         self.assertTrue(uptime.check_exists("http://example.org") is True)
 
+    @pytest.mark.slow_0_01
     def test_checks_create(self):
         self.assertRaises(CommandExecutionError, uptime.create, "http://example.org")
         self.assertEqual(4321, uptime.create("http://example.com"))

@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.lxc as lxc
+import pytest
 import salt.utils.versions
+
+# Import Salt Libs
+from salt.states import lxc
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class LxcTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to verify the named container if it exist.
@@ -84,6 +87,7 @@ class LxcTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure a container is not present, destroying it if present.
@@ -113,6 +117,7 @@ class LxcTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'running' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_running(self):
         """
         Test to ensure that a container is running.

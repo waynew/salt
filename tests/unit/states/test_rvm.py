@@ -3,11 +3,13 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import salt libs
-import salt.states.rvm as rvm
+import pytest
 
 # Import 3rd-party libs
 from salt.ext import six
+
+# Import salt libs
+from salt.states import rvm
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class TestRvmState(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test__check_rvm(self):
         mock = MagicMock(return_value=True)
         with patch.dict(
@@ -72,6 +75,7 @@ class TestRvmState(TestCase, LoaderModuleMockMixin):
                 ret = rvm._check_ruby({"changes": {}, "result": False}, ruby)
                 self.assertEqual(result, ret["result"])
 
+    @pytest.mark.slow_0_01
     def test_gemset_present(self):
         with patch.object(rvm, "_check_rvm") as mock_method:
             mock_method.return_value = {"result": True, "changes": {}}

@@ -5,13 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.file as file_
-import salt.modules.heat as heat
-import salt.modules.win_file as win_file
+import pytest
 
 # Import Salt Libs
 import salt.utils.platform
-import salt.utils.win_dacl as dacl
+from salt.modules import file as file_
+from salt.modules import heat, win_file
+from salt.utils import win_dacl as dacl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -100,6 +100,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
                 "salt.modules.file.check_perms", win_file.check_perms
             )
 
+    @pytest.mark.slow_0_01
     def test_heat_create_stack(self):
         """
         Test salt.modules.heat.create_stack method
@@ -122,6 +123,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == {"result": True, "comment": "Created stack 'mystack'."}
 
+    @pytest.mark.slow_0_01
     def test_heat_create_stack_environment(self):
         """
         Test salt.modules.heat.create_stack method with environment set
@@ -146,6 +148,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == {"result": True, "comment": "Created stack 'mystack'."}
 
+    @pytest.mark.slow_0_01
     def test_heat_create_stack_environment_err(self):
         """
         Test salt.modules.heat.create_stack method with environment set
@@ -178,6 +181,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             "comment": "Can not open environment: {0}, ".format(env_file),
         }
 
+    @pytest.mark.slow_0_01
     def test_heat_update_stack(self):
         """
         Test salt.modules.heat.update_method method
@@ -199,6 +203,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == {"result": True, "comment": ("Updated stack 'mystack'.",)}
 
+    @pytest.mark.slow_0_01
     def test_heat_update_stack_env(self):
         """
         Test salt.modules.heat.update_method method
@@ -224,6 +229,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == {"result": True, "comment": ("Updated stack 'mystack'.",)}
 
+    @pytest.mark.slow_0_01
     def test_heat_update_stack_env_err(self):
         """
         Test salt.modules.heat.update_method method

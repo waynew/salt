@@ -6,6 +6,7 @@ from __future__ import absolute_import
 import os
 import textwrap
 
+import pytest
 import salt.utils.files
 
 # Import Salt Libs
@@ -30,6 +31,8 @@ class EnabledTest(ModuleCase):
     )
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_shell_default_enabled(self):
         """
         ensure that python_shell defaults to True for cmd.run
@@ -39,6 +42,8 @@ class EnabledTest(ModuleCase):
         self.assertEqual(ret.strip(), enabled_ret)
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_shell_disabled(self):
         """
         test shell disabled output for cmd.run
@@ -51,6 +56,8 @@ class EnabledTest(ModuleCase):
         self.assertEqual(ret, disabled_ret)
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_template_shell(self):
         """
         Test cmd.shell works correctly when using a template.
@@ -90,6 +97,8 @@ class EnabledTest(ModuleCase):
             os.remove(state_file)
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_template_default_disabled(self):
         """
         test shell disabled output for templates (python_shell=False is the default

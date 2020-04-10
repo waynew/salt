@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.iptables as iptables
+from salt.states import iptables
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {iptables: {}}
 
+    @pytest.mark.slow_0_01
     def test_chain_present(self):
         """
             Test to verify the chain is exist.
@@ -123,6 +126,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
                     )
                     self.assertDictEqual(iptables.chain_absent("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_append(self):
         """
             Test to append a rule to a chain
@@ -188,6 +192,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
                                 iptables.append("salt", table="", chain=""), ret
                             )
 
+    @pytest.mark.slow_0_01
     def test_insert(self):
         """
             Test to insert a rule into a chain
@@ -258,6 +263,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
                                 ret,
                             )
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
             Test to delete a rule to a chain
@@ -436,6 +442,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
                         iptables.flush("salt", table="", chain=""), ret
                     )
 
+    @pytest.mark.slow_0_01
     def test_mod_aggregate(self):
         """
             Test to mod_aggregate function

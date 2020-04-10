@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 import logging
 
+import pytest
+
 # Salt libs
-import salt.beacons.network_settings as network_settings
+from salt.beacons import network_settings
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -57,6 +59,8 @@ class NetworkSettingsBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret, (True, "Valid beacon configuration"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_interface(self):
         config = [{"interfaces": {"enp14s0u1u2": {"promiscuity": None}}}]
         LAST_STATS = network_settings._copy_interfaces_info(
@@ -89,6 +93,7 @@ class NetworkSettingsBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ]
             self.assertEqual(ret, _expected)
 
+    @pytest.mark.slow_0_01
     def test_interface_no_change(self):
         config = [{"interfaces": {"enp14s0u1u2": {"promiscuity": None}}}]
         LAST_STATS = network_settings._copy_interfaces_info(

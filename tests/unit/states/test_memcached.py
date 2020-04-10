@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import
 
-# Import Salt Libs
-import salt.states.memcached as memcached
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import memcached
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class MemcachedTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'managed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_managed(self):
         """
         Test to manage a memcached key.
@@ -63,6 +66,7 @@ class MemcachedTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure that a memcached key is not present.

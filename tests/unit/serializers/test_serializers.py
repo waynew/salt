@@ -7,18 +7,21 @@ from textwrap import dedent
 
 # Import 3rd party libs
 import jinja2
-
-# Import salt libs
-import salt.serializers.configparser as configparser
-import salt.serializers.json as json
-import salt.serializers.msgpack as msgpack
-import salt.serializers.python as python
-import salt.serializers.toml as toml
-import salt.serializers.yaml as yaml
-import salt.serializers.yamlex as yamlex
+import pytest
 import yaml as _yaml  # future lint: disable=blacklisted-import
 from salt.ext import six
-from salt.serializers import SerializationError
+
+# Import salt libs
+from salt.serializers import (
+    SerializationError,
+    configparser,
+    json,
+    msgpack,
+    python,
+    toml,
+    yaml,
+    yamlex,
+)
 from salt.serializers.yaml import EncryptedString
 from salt.utils.odict import OrderedDict
 
@@ -59,6 +62,7 @@ class TestSerializers(TestCase):
         assert deserialized == data, deserialized
 
     @skipIf(not yaml.available, SKIP_MESSAGE % "sls")
+    @pytest.mark.slow_0_01
     def test_serialize_sls(self):
         data = {"foo": "bar"}
         serialized = yamlex.serialize(data)
@@ -164,6 +168,7 @@ class TestSerializers(TestCase):
         assert obj != final_obj, "Objects matched! {} == {}".format(obj, final_obj)
 
     @skipIf(not yamlex.available, SKIP_MESSAGE % "sls")
+    @pytest.mark.slow_0_01
     def test_sls_aggregate(self):
         src = dedent(
             """
@@ -280,6 +285,7 @@ class TestSerializers(TestCase):
         assert sls_obj == {"placeholder": {"foo": {"baz": "inga"}}}, sls_obj
 
     @skipIf(not yamlex.available, SKIP_MESSAGE % "sls")
+    @pytest.mark.slow_0_01
     def test_sls_repr(self):
         """
         Ensure that obj __repr__ and __str__ methods are yaml friendly.

@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt libs
 import salt.utils.data
 import salt.utils.stringutils
@@ -64,6 +66,7 @@ class DataTestCase(TestCase):
         expected_list = ["bar", "Bar", "foo", "Foo"]
         self.assertEqual(salt.utils.data.sorted_ignorecase(test_list), expected_list)
 
+    @pytest.mark.slow_0_01
     def test_mysql_to_dict(self):
         test_mysql_output = [
             "+----+------+-----------+------+---------+------+-------+------------------+",
@@ -143,6 +146,7 @@ class DataTestCase(TestCase):
         # Test wildcard match
         self.assertTrue(salt.utils.data.subdict_match(test_three_level_dict, "a:*:c:v"))
 
+    @pytest.mark.slow_0_01
     def test_subdict_match_with_wildcards(self):
         """
         Tests subdict matching when wildcards are used in the expression
@@ -165,6 +169,7 @@ class DataTestCase(TestCase):
         assert salt.utils.data.subdict_match(data, "a:b:*:*:k")
         assert salt.utils.data.subdict_match(data, "a:b:*:*:*")
 
+    @pytest.mark.slow_0_01
     def test_traverse_dict(self):
         test_two_level_dict = {"foo": {"bar": "baz"}}
 
@@ -181,6 +186,7 @@ class DataTestCase(TestCase):
             ),
         )
 
+    @pytest.mark.slow_0_01
     def test_traverse_dict_and_list(self):
         test_two_level_dict = {"foo": {"bar": "baz"}}
         test_two_level_dict_and_list = {
@@ -254,11 +260,13 @@ class DataTestCase(TestCase):
         expected = {"new": ["x", "y", "z"]}
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_compare_lists_changes_old(self):
         ret = salt.utils.data.compare_lists(old=[1, 2, 3, "a", "b", "c"], new=[1, 2, 3])
         expected = {"old": ["a", "b", "c"]}
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_decode(self):
         """
         Companion to test_decode_to_str, they should both be kept up-to-date
@@ -345,6 +353,7 @@ class DataTestCase(TestCase):
         self.assertEqual(salt.utils.data.decode(BYTES, keep=True), BYTES)
         self.assertRaises(UnicodeDecodeError, salt.utils.data.decode, BYTES, keep=False)
 
+    @pytest.mark.slow_0_01
     def test_decode_to_str(self):
         """
         Companion to test_decode, they should both be kept up-to-date with one
@@ -468,6 +477,7 @@ class DataTestCase(TestCase):
         with patch.object(builtins, "__salt_system_encoding__", "ascii"):
             self.assertEqual(salt.utils.data.decode(_b("яйца")), "яйца")
 
+    @pytest.mark.slow_0_01
     def test_encode(self):
         """
         NOTE: This uses the lambda "_b" defined above in the global scope,
@@ -684,6 +694,7 @@ class FilterFalseyTestCase(TestCase):
     Test suite for salt.utils.data.filter_falsey
     """
 
+    @pytest.mark.slow_0_01
     def test_nop(self):
         """
         Test cases where nothing will be done.
@@ -780,6 +791,7 @@ class FilterFalseyTestCase(TestCase):
         self.assertEqual(expect_dict, new_dict)
         self.assertIs(type(expect_dict), type(new_dict))
 
+    @pytest.mark.slow_0_01
     def test_filter_list_no_recurse(self):
         """
         Test filtering a list without recursing.
@@ -927,6 +939,7 @@ class FilterFalseyTestCase(TestCase):
         new_dict = salt.utils.data.filter_falsey(old_dict, recurse_depth=2)
         self.assertEqual({"foo": {"bar": {"baz": {"four": None}}}}, new_dict)
 
+    @pytest.mark.slow_0_01
     def test_filter_exclude_types(self):
         """
         Test filtering a list recursively, but also ignoring (i.e. not filtering)
@@ -1057,6 +1070,7 @@ class FilterRecursiveDiff(TestCase):
         test_tuple = (0, 1, 2, 3, "foo")
         self.assertEqual({}, salt.utils.data.recursive_diff(test_tuple, test_tuple))
 
+    @pytest.mark.slow_0_01
     def test_list_inequality(self):
         """
         Test cases where two inequal lists are compared.
@@ -1120,6 +1134,7 @@ class FilterRecursiveDiff(TestCase):
             expected_result, salt.utils.data.recursive_diff(dict_two, dict_one)
         )
 
+    @pytest.mark.slow_0_01
     def test_ordereddict_inequality(self):
         """
         Test cases where two inequal OrderedDicts are compared.
@@ -1159,6 +1174,7 @@ class FilterRecursiveDiff(TestCase):
             expected_result, salt.utils.data.recursive_diff(set_one, set_two)
         )
 
+    @pytest.mark.slow_0_01
     def test_mixed_inequality(self):
         """
         Test cases where two mixed dicts/iterables that are different are compared.

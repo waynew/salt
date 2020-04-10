@@ -8,6 +8,8 @@ Linux and Solaris are supported
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
 import salt.utils.platform
 
@@ -34,6 +36,8 @@ class TimezoneLinuxModuleTest(ModuleCase):
             self.skipTest("For Linux only")
         super(TimezoneLinuxModuleTest, self).setUp()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_hwclock(self):
         timescale = ["UTC", "localtime"]
         ret = self.run_function("timezone.get_hwclock")
@@ -50,6 +54,8 @@ class TimezoneSolarisModuleTest(ModuleCase):
             self.skipTest("For Solaris only")
         super(TimezoneSolarisModuleTest, self).setUp()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_hwclock(self):
         timescale = ["UTC", "localtime"]
         ret = self.run_function("timezone.get_hwclock")
@@ -66,6 +72,8 @@ class TimezoneWindowsModuleTest(ModuleCase):
         if self.pre != post:
             self.run_function("timezone.set_zone", [self.pre])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_hwclock(self):
         timescale = ["UTC", "localtime"]
         ret = self.run_function("timezone.get_hwclock")

@@ -6,6 +6,8 @@ Test the RSA ANSI X9.31 signer and verifier
 # python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # salt libs
 from salt.utils.rsax931 import RSAX931Signer, RSAX931Verifier
 
@@ -81,6 +83,7 @@ class RSAX931Test(TestCase):
         b"\x4c\x9b\xf4\xee"
     )
 
+    @pytest.mark.slow_0_01
     def test_signer(self):
         with self.assertRaises(ValueError):
             signer = RSAX931Signer("bogus key data")

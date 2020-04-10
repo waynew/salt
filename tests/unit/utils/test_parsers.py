@@ -10,13 +10,14 @@ import os
 import shutil
 import tempfile
 
+import pytest
 import salt.config
-
-# Import Salt Libs
-import salt.log.setup as log
 import salt.syspaths
 import salt.utils.parsers
 import salt.utils.platform
+
+# Import Salt Libs
+from salt.log import setup as log
 from tests.support.mock import MagicMock, patch
 from tests.support.runtests import RUNTIME_VARS
 
@@ -168,6 +169,13 @@ class ParserBase(object):
 
     # log level configuration tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_cli(self):
         """
         Tests that log level match command-line specified value
@@ -198,6 +206,14 @@ class ParserBase(object):
         # Check log file logger log level
         self.assertEqual(self.log_setup.log_level_logfile, default_log_level)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_config(self):
         """
         Tests that log level match the configured value
@@ -228,6 +244,11 @@ class ParserBase(object):
         # Check log file logger log level
         self.assertEqual(self.log_setup.log_level_logfile, log_level)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_default(self):
         """
         Tests that log level match the default value
@@ -266,6 +287,13 @@ class ParserBase(object):
 
     # log file configuration tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_cli(self):
         """
         Tests that log file match command-line specified value
@@ -302,6 +330,13 @@ class ParserBase(object):
         # Check log file logger
         self.assertEqual(self.log_setup.log_file, log_file)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_config(self):
         """
         Tests that log file match the configured value
@@ -341,6 +376,13 @@ class ParserBase(object):
         # Check log file logger
         self.assertEqual(self.log_setup.log_file, log_file)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_default(self):
         """
         Tests that log file match the default value
@@ -384,6 +426,13 @@ class ParserBase(object):
 
     # log file log level configuration tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_level_cli(self):
         """
         Tests that file log level match command-line specified value
@@ -424,6 +473,13 @@ class ParserBase(object):
         # Check log file logger
         self.assertEqual(self.log_setup.log_level_logfile, log_level_logfile)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_level_config(self):
         """
         Tests that log file level match the configured value
@@ -466,6 +522,13 @@ class ParserBase(object):
         # Check log file logger
         self.assertEqual(self.log_setup.log_level_logfile, log_level_logfile)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_file_level_default(self):
         """
         Tests that log file level match the default value
@@ -511,6 +574,11 @@ class ParserBase(object):
             parser.get_option("--log-file-level").help,
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_console_log_level_with_file_log_level(
         self,
     ):  # pylint: disable=invalid-name
@@ -554,6 +622,7 @@ class ParserBase(object):
         self.assertEqual(self.log_setup.log_level_logfile, log_level_logfile)
 
     @skipIf(salt.utils.platform.is_windows(), "Windows uses a logging listener")
+    @pytest.mark.slow_0_01
     def test_log_created(self):
         """
         Tests that log file is created
@@ -578,6 +647,15 @@ class ParserBase(object):
         else:
             self.assertEqual(os.path.getsize(getattr(self, log_file_name)), 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_callbacks_uniqueness(self):
         """
         Test that the callbacks are only added once, no matter
@@ -833,6 +911,13 @@ class SaltKeyOptionParserTestCase(ParserBase, TestCase):
 
     # log level configuration tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_cli(self):
         """
         Tests that console log level option is not recognized
@@ -859,6 +944,14 @@ class SaltKeyOptionParserTestCase(ParserBase, TestCase):
         # Check log file logger log level
         self.assertEqual(self.log_setup.log_level_logfile, default_log_level)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_config(self):
         """
         Tests that log level set in config is ignored
@@ -892,6 +985,11 @@ class SaltKeyOptionParserTestCase(ParserBase, TestCase):
         # Check log file logger log level
         self.assertEqual(self.log_setup.log_level_logfile, log_level)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_log_level_default(self):
         """
         Tests that log level default value is ignored
@@ -1171,6 +1269,7 @@ class DaemonMixInTestCase(TestCase):
     @patch("os.unlink", MagicMock())
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("salt.utils.parsers.logger", MagicMock())
+    @pytest.mark.slow_0_01
     def test_pid_file_deletion(self):
         """
         PIDfile deletion without exception.
@@ -1207,6 +1306,7 @@ class DaemonMixInTestCase(TestCase):
     @patch("os.unlink", MagicMock(side_effect=OSError()))
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("salt.utils.parsers.logger", MagicMock())
+    @pytest.mark.slow_0_01
     def test_pid_deleted_oserror_as_non_root(self):
         """
         PIDfile deletion with exception, running as non-root.

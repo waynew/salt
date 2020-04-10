@@ -6,14 +6,16 @@ Integration Tests for restcherry salt-api with pam eauth
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
-import tests.support.cherrypy_testclasses as cptc
 
 # Import 3rd-party libs
 from salt.ext.six.moves.urllib.parse import (  # pylint: disable=no-name-in-module,import-error
     urlencode,
 )
+from tests.support import cherrypy_testclasses as cptc
 
 # Import test support libs
 from tests.support.case import ModuleCase
@@ -57,6 +59,10 @@ class TestAuthPAM(cptc.BaseRestCherryPyTest, ModuleCase):
             self.run_function("user.delete", [USERA], remove=True)
             self.skipTest("Could not add user or password, skipping test")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_bad_pwd_pam_chsh_service(self):
         """
         Test login while specifying chsh service with bad passwd
@@ -75,6 +81,9 @@ class TestAuthPAM(cptc.BaseRestCherryPyTest, ModuleCase):
         )
         self.assertEqual(response.status, "401 Unauthorized")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_bad_pwd_pam_login_service(self):
         """
         Test login while specifying login service with bad passwd
@@ -93,6 +102,9 @@ class TestAuthPAM(cptc.BaseRestCherryPyTest, ModuleCase):
         )
         self.assertEqual(response.status, "401 Unauthorized")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_good_pwd_pam_chsh_service(self):
         """
         Test login while specifying chsh service with good passwd
@@ -110,6 +122,9 @@ class TestAuthPAM(cptc.BaseRestCherryPyTest, ModuleCase):
         )
         self.assertEqual(response.status, "200 OK")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_good_pwd_pam_login_service(self):
         """
         Test login while specifying login service with good passwd

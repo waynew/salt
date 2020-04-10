@@ -9,11 +9,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.win_iis as win_iis
+import pytest
 import salt.utils.json
 
 # Import Salt Libs
 from salt.exceptions import SaltInvocationError
+from salt.modules import win_iis
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -117,6 +118,7 @@ class WinIisTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {win_iis: {}}
 
+    @pytest.mark.slow_0_01
     def test_create_apppool(self):
         """
         Test - Create an IIS application pool.
@@ -293,6 +295,7 @@ class WinIisTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertRaises(SaltInvocationError, win_iis.create_binding, **kwargs)
 
+    @pytest.mark.slow_0_01
     def test_list_bindings(self):
         """
         Test - Get all configured IIS bindings for the specified site.
@@ -319,6 +322,7 @@ class WinIisTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(win_iis.remove_binding(**kwargs))
 
+    @pytest.mark.slow_0_01
     def test_create_vdir(self):
         """
         Test - Create an IIS virtual directory.
@@ -399,6 +403,7 @@ class WinIisTestCase(TestCase, LoaderModuleMockMixin):
                 win_iis.list_cert_bindings("MyTestSite"), {key: BINDING_LIST[key]}
             )
 
+    @pytest.mark.slow_0_01
     def test_remove_cert_binding(self):
         """
         Test - Remove a certificate from an IIS binding.
@@ -437,6 +442,7 @@ class WinIisTestCase(TestCase, LoaderModuleMockMixin):
                 {"managedPipelineMode": "Integrated"},
             )
 
+    @pytest.mark.slow_0_01
     def test_set_container_setting(self):
         """
         Test - Set the value of the setting for an IIS container.

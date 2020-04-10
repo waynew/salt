@@ -4,7 +4,8 @@
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.states.postgres_initdb as postgres_initdb
+import pytest
+from salt.states import postgres_initdb
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase
@@ -43,6 +44,7 @@ class PostgresInitdbTestCase(TestCase, LoaderModuleMockMixin):
             self.ret.update({"comment": _comt, "result": True})
             self.assertDictEqual(postgres_initdb.present(self.name), self.ret)
 
+    @pytest.mark.slow_0_01
     def test_present_non_existing_pass(self):
         """
         Test non existing data directory ok

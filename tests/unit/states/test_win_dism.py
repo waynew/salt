@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_dism as dism
+from salt.states import win_dism as dism
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -136,6 +138,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                 mock_remove.assert_called_once_with("Capa2", None, False)
                 self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_capability_removed_failure(self):
         """
             Test removing a capability which fails with DISM
@@ -274,6 +277,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
             assert not mock_add.called
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_feature_removed(self):
         """
             Test removing a feature with DISM
@@ -392,6 +396,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                     mock_add.assert_called_once_with("Pack2", False, False, None, False)
                     self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_package_installed_failure(self):
         """
             Test installing a package which fails with DISM
@@ -520,6 +525,7 @@ class WinDismTestCase(TestCase, LoaderModuleMockMixin):
                     mock_remove.assert_called_once_with("Pack2", None, False)
                     self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_package_removed_removed(self):
         """
             Test removing a package already removed

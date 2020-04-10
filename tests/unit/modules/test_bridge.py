@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.bridge as bridge
+from salt.modules import bridge
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -32,6 +34,7 @@ class BridgeTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(bridge, "_os_dispatch", mock):
             self.assertTrue(bridge.show("br"))
 
+    @pytest.mark.slow_0_01
     def test_list_(self):
         """
         Test for Returns the machine's bridges list

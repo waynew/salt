@@ -9,12 +9,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 import errno
 import os
 
-import salt.modules.puppet as puppet
+import pytest
 
 # Import Salt Libs
 import salt.utils.args
 import salt.utils.files
 from salt.exceptions import CommandExecutionError
+from salt.modules import puppet
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -43,6 +44,7 @@ class PuppetTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 self.assertTrue(puppet.run())
 
+    @pytest.mark.slow_0_01
     def test_noop(self):
         """
         Test to execute a puppet noop run
@@ -87,6 +89,7 @@ class PuppetTestCase(TestCase, LoaderModuleMockMixin):
                 except StopIteration:
                     pass
 
+    @pytest.mark.slow_0_01
     def test_status(self):
         """
         Test to display puppet agent status
@@ -129,6 +132,7 @@ class PuppetTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(os.path, "isfile", mock):
                 self.assertEqual(puppet.status(), "Stopped")
 
+    @pytest.mark.slow_0_01
     def test_summary(self):
         """
         Test to show a summary of the last puppet agent run
@@ -144,6 +148,8 @@ class PuppetTestCase(TestCase, LoaderModuleMockMixin):
             ) as m_open:
                 self.assertRaises(CommandExecutionError, puppet.summary)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_plugin_sync(self):
         """
         Test to runs a plugin synch between the puppet master and agent
@@ -156,6 +162,7 @@ class PuppetTestCase(TestCase, LoaderModuleMockMixin):
 
                 self.assertTrue(puppet.plugin_sync())
 
+    @pytest.mark.slow_0_01
     def test_facts(self):
         """
         Test to run facter and return the results

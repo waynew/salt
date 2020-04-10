@@ -7,9 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-# Import Salt Libs
-import salt.beacons as beacons
+import pytest
 import salt.config
+
+# Import Salt Libs
+from salt import beacons
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {beacons: {}}
 
+    @pytest.mark.slow_0_01
     def test_beacon_module(self):
         """
         Test that beacon_module parameter for beacon configuration

@@ -6,10 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.nftables as nftables
+import pytest
 import salt.utils.files
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import nftables
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -37,6 +39,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'build_rule' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_build_rule(self):
         """
         Test if it build a well-formatted nftables rule based on kwargs.
@@ -175,6 +178,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_rule_handle' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_rule_handle(self):
         """
         Test if it get the handle for a particular rule
@@ -323,6 +327,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'check_table' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_check_table(self):
         """
         Test if it check for the existence of a table
@@ -434,6 +439,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(nftables.__salt__, {"cmd.run": mock}):
             self.assertEqual(nftables.new_chain(chain="input"), ret)
 
+    @pytest.mark.slow_0_01
     def test_new_chain_variable(self):
         """
         Test if it create new chain to the specified table.
@@ -594,6 +600,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'insert' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_insert(self):
         """
         Test if it insert a rule into the specified table & chain,
@@ -667,6 +674,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
         Test if it delete a rule from the specified table & chain,
@@ -703,6 +711,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(nftables.__salt__, {"cmd.run": mock}):
             self.assertTrue(nftables.delete(table="filter", chain="input", rule=_ru))
 
+    @pytest.mark.slow_0_01
     def test_delete_rule(self):
         """
         Test if it delete a rule from the specified table & chain,

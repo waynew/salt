@@ -6,12 +6,13 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.config
 import salt.loader
-import salt.states.service as service
 
 # Import Salt Libs
 import salt.utils.platform
+from salt.states import service
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest
@@ -35,6 +36,7 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {service: {}}
 
+    @pytest.mark.slow_0_01
     def test_running(self):
         """
             Test to verify that the service is running
@@ -182,6 +184,7 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
                     ):
                         self.assertDictEqual(service.running("salt", True), ret[6])
 
+    @pytest.mark.slow_0_01
     def test_dead(self):
         """
             Test to ensure that the named service is dead
@@ -337,6 +340,7 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(service, "_disable", mock):
             self.assertDictEqual(service.disabled("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_mod_watch(self):
         """
             Test to the service watcher, called to invoke the watch command.
@@ -438,6 +442,9 @@ class ServiceTestCaseFunctional(TestCase, LoaderModuleMockMixin):
         if self.post_srv_disable:
             self.modules["service.disable"](self.service_name)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_running_with_reload(self):
         with patch.dict(service.__opts__, {"test": False}):
             service.dead(self.service_name, enable=False)

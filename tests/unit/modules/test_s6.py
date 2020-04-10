@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.s6 as s6
+from salt.modules import s6
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -37,6 +39,7 @@ class S6TestCase(TestCase, LoaderModuleMockMixin):
 
     # 'stop' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_stop(self):
         """
         Test if it stops service via s6.
@@ -57,6 +60,7 @@ class S6TestCase(TestCase, LoaderModuleMockMixin):
 
     # 'reload_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_reload(self):
         """
         Test if it send a HUP to service via s6.
@@ -98,6 +102,7 @@ class S6TestCase(TestCase, LoaderModuleMockMixin):
 
     # 'available' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_available(self):
         """
         Test if it returns ``True`` if the specified service is available,

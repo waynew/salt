@@ -8,13 +8,15 @@ import random
 import string
 from copy import deepcopy
 
+import pytest
+
 # Import Salt libs
 import salt.loader
-import salt.modules.boto_s3_bucket as boto_s3_bucket
 
 # Import 3rd-party libs
 from salt.ext import six
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.modules import boto_s3_bucket
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -207,6 +209,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
     TestCase for salt.modules.boto_s3_bucket module
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_bucket_exists_and_a_bucket_exists_the_bucket_exists_method_returns_true(
         self,
     ):
@@ -218,6 +221,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_bucket_exists_and_a_bucket_does_not_exist_the_bucket_exists_method_returns_false(
         self,
     ):
@@ -229,6 +233,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertFalse(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_bucket_exists_and_boto3_returns_an_error_the_bucket_exists_method_returns_error(
         self,
     ):
@@ -242,6 +247,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             result.get("error", {}).get("message"), error_message.format("head_bucket")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_bucket_succeeds_the_create_bucket_method_returns_true(
         self,
     ):
@@ -255,6 +261,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_bucket_fails_the_create_bucket_method_returns_error(
         self,
     ):
@@ -272,6 +279,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("create_bucket"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_bucket_succeeds_the_delete_bucket_method_returns_true(
         self,
     ):
@@ -282,6 +290,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_bucket_fails_the_delete_bucket_method_returns_false(
         self,
     ):
@@ -294,6 +303,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
         result = boto_s3_bucket.delete(Bucket="mybucket", **conn_parameters)
         self.assertFalse(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_bucket_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -307,6 +317,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["bucket"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_bucket_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -318,6 +329,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertFalse(result["bucket"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_bucket_on_client_error_it_returns_error(self):
         """
         Tests describing parameters failure
@@ -328,6 +340,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
         result = boto_s3_bucket.describe(Bucket="mybucket", **conn_parameters)
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_buckets_succeeds_the_list_buckets_method_returns_true(
         self,
     ):
@@ -339,6 +352,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["Buckets"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_bucket_fails_the_list_bucket_method_returns_false(self):
         """
         tests False no bucket listed.
@@ -350,6 +364,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
         result = boto_s3_bucket.list(**conn_parameters)
         self.assertFalse(result["Buckets"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_bucket_fails_the_list_bucket_method_returns_error(self):
         """
         tests False bucket error.
@@ -360,6 +375,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             result.get("error", {}).get("message"), error_message.format("list_buckets")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_acl_succeeds_the_put_acl_method_returns_true(self):
         """
         tests True bucket updated.
@@ -368,6 +384,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_acl_fails_the_put_acl_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -381,6 +398,8 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_acl"),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_that_when_putting_cors_succeeds_the_put_cors_method_returns_true(self):
         """
         tests True bucket updated.
@@ -391,6 +410,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_cors_fails_the_put_cors_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -406,6 +426,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_cors"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_lifecycle_configuration_succeeds_the_put_lifecycle_configuration_method_returns_true(
         self,
     ):
@@ -418,6 +439,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_lifecycle_configuration_fails_the_put_lifecycle_configuration_method_returns_error(
         self,
     ):
@@ -435,6 +457,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_lifecycle_configuration"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_logging_succeeds_the_put_logging_method_returns_true(
         self,
     ):
@@ -451,6 +474,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_logging_fails_the_put_logging_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -470,6 +494,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_logging"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_notification_configuration_succeeds_the_put_notification_configuration_method_returns_true(
         self,
     ):
@@ -482,6 +507,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_notification_configuration_fails_the_put_notification_configuration_method_returns_error(
         self,
     ):
@@ -499,6 +525,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_notification_configuration"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_policy_succeeds_the_put_policy_method_returns_true(self):
         """
         tests True bucket updated.
@@ -509,6 +536,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_policy_fails_the_put_policy_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -524,6 +552,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_policy"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_replication_succeeds_the_put_replication_method_returns_true(
         self,
     ):
@@ -536,6 +565,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_replication_fails_the_put_replication_method_returns_error(
         self,
     ):
@@ -553,6 +583,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_replication"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_request_payment_succeeds_the_put_request_payment_method_returns_true(
         self,
     ):
@@ -565,6 +596,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_request_payment_fails_the_put_request_payment_method_returns_error(
         self,
     ):
@@ -582,6 +614,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_request_payment"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_tagging_succeeds_the_put_tagging_method_returns_true(
         self,
     ):
@@ -592,6 +625,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_tagging_fails_the_put_tagging_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -605,6 +639,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_tagging"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_versioning_succeeds_the_put_versioning_method_returns_true(
         self,
     ):
@@ -617,6 +652,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_versioning_fails_the_put_versioning_method_returns_error(
         self,
     ):
@@ -634,6 +670,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_versioning"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_website_succeeds_the_put_website_method_returns_true(
         self,
     ):
@@ -644,6 +681,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_website_fails_the_put_website_method_returns_error(self):
         """
         tests False bucket not updated.
@@ -657,6 +695,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("put_bucket_website"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_cors_succeeds_the_delete_cors_method_returns_true(self):
         """
         tests True bucket attribute deleted.
@@ -665,6 +704,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_cors_fails_the_delete_cors_method_returns_error(self):
         """
         tests False bucket attribute not deleted.
@@ -678,6 +718,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("delete_bucket_cors"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_lifecycle_configuration_succeeds_the_delete_lifecycle_configuration_method_returns_true(
         self,
     ):
@@ -690,6 +731,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_lifecycle_configuration_fails_the_delete_lifecycle_configuration_method_returns_error(
         self,
     ):
@@ -707,6 +749,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("delete_bucket_lifecycle_configuration"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_policy_succeeds_the_delete_policy_method_returns_true(
         self,
     ):
@@ -717,6 +760,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_policy_fails_the_delete_policy_method_returns_error(
         self,
     ):
@@ -732,6 +776,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("delete_bucket_policy"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_replication_succeeds_the_delete_replication_method_returns_true(
         self,
     ):
@@ -742,6 +787,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_replication_fails_the_delete_replication_method_returns_error(
         self,
     ):
@@ -757,6 +803,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("delete_bucket_replication"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_tagging_succeeds_the_delete_tagging_method_returns_true(
         self,
     ):
@@ -767,6 +814,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_tagging_fails_the_delete_tagging_method_returns_error(
         self,
     ):
@@ -782,6 +830,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
             error_message.format("delete_bucket_tagging"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_website_succeeds_the_delete_website_method_returns_true(
         self,
     ):
@@ -792,6 +841,7 @@ class BotoS3BucketTestCase(BotoS3BucketTestCaseBase, BotoS3BucketTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_website_fails_the_delete_website_method_returns_error(
         self,
     ):

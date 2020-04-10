@@ -8,6 +8,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
 import salt.utils.files
 
 # Import Salt libs
@@ -32,12 +33,16 @@ class TestModulesJinja(ModuleCase):
         else:
             return path
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_import_json(self):
         json_file = "osarchmap.json"
         ret = self.run_function("jinja.import_json", [self._path(json_file)])
         with salt.utils.files.fopen(self._path(json_file, absolute=True)) as fh_:
             self.assertDictEqual(salt.utils.json.load(fh_), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_import_yaml(self):
         yaml_file = "defaults.yaml"
         ret = self.run_function("jinja.import_yaml", [self._path(yaml_file)])
@@ -45,6 +50,8 @@ class TestModulesJinja(ModuleCase):
             self.assertDictEqual(salt.utils.yaml.safe_load(fh_), ret)
 
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_load_map(self, grains):
         ret = self.run_function("jinja.load_map", [self._path("map.jinja"), "template"])
 

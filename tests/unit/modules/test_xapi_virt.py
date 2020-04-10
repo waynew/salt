@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.xapi_virt as xapi
+from salt.modules import xapi_virt as xapi
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -86,6 +88,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(xapi, "_get_record_by_label", mock):
                 self.assertDictEqual(xapi.vm_info(True), {True: False})
 
+    @pytest.mark.slow_0_01
     def test_vm_state(self):
         """
             Test to return list of all the vms and their state.
@@ -97,6 +100,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
 
                 self.assertDictEqual(xapi.vm_state(), {})
 
+    @pytest.mark.slow_0_01
     def test_get_nics(self):
         """
             Test to return info about the network interfaces of a named vm
@@ -151,6 +155,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.setmem("salt", "1"))
 
+    @pytest.mark.slow_0_01
     def test_setvcpus(self):
         """
             Test to changes the amount of vcpus allocated to VM.
@@ -168,6 +173,8 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.setvcpus("salt", "1"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_vcpu_pin(self):
         """
             Test to Set which CPUs a VCPU can use.
@@ -216,6 +223,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                     xapi.full_info(), {"node_info": "salt", "vm_info": "stack"}
                 )
 
+    @pytest.mark.slow_0_01
     def test_shutdown(self):
         """
             Test to send a soft shutdown signal to the named vm
@@ -233,6 +241,8 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.shutdown("salt"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pause(self):
         """
             Test to pause the named vm
@@ -250,6 +260,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.pause("salt"))
 
+    @pytest.mark.slow_0_01
     def test_resume(self):
         """
             Test to resume the named vm
@@ -292,6 +303,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.reboot("salt"))
 
+    @pytest.mark.slow_0_01
     def test_reset(self):
         """
             Test to reset a VM by emulating the
@@ -310,6 +322,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(xapi, "_get_label_uuid", mock):
                     self.assertFalse(xapi.reset("salt"))
 
+    @pytest.mark.slow_0_01
     def test_migrate(self):
         """
             Test to migrates the virtual machine to another hypervisor
@@ -370,6 +383,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
                     with patch.dict(xapi.__salt__, {"cmd.run": mock}):
                         self.assertTrue(xapi.is_hyper())
 
+    @pytest.mark.slow_0_01
     def test_vm_cputime(self):
         """
             Test to Return cputime used by the vms
@@ -388,6 +402,7 @@ class XapiTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(xapi, "list_domains", mock):
                 self.assertDictEqual(xapi.vm_cputime(""), {})
 
+    @pytest.mark.slow_0_01
     def test_vm_netstats(self):
         """
             Test to return combined network counters used by the vms

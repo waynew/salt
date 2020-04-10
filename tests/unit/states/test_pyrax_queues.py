@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.pyrax_queues as pyrax_queues
+from salt.states import pyrax_queues
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -58,6 +60,7 @@ class PyraxQueuesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure the named Rackspace queue is deleted.

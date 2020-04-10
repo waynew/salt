@@ -6,6 +6,7 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.utils.platform
 
 # Import Salt libs
@@ -24,6 +25,8 @@ from tests.support.unit import TestCase, skipIf
 
 
 class LocalClientTestCase(TestCase, SaltClientTestCaseMixin):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_job_result_return_success(self):
         """
         Should return the `expected_return`, since there is a job with the right jid.
@@ -39,6 +42,8 @@ class LocalClientTestCase(TestCase, SaltClientTestCaseMixin):
         val = next(ret)
         self.assertEqual(val, expected_return)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_job_result_return_failure(self):
         """
         We are _not_ getting a job return, because the jid is different. Instead we should
@@ -60,6 +65,8 @@ class LocalClientTestCase(TestCase, SaltClientTestCaseMixin):
         with self.assertRaises(StopIteration):
             next(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_local_client(self):
         local_client = client.LocalClient(mopts=self.get_temp_config("master"))
         self.assertIsInstance(
@@ -68,6 +75,7 @@ class LocalClientTestCase(TestCase, SaltClientTestCaseMixin):
             "LocalClient did not create a LocalClient instance",
         )
 
+    @pytest.mark.slow_0_01
     def test_check_pub_data(self):
         just_minions = {"minions": ["m1", "m2"]}
         jid_no_minions = {"jid": "1234", "minions": []}
@@ -210,6 +218,10 @@ class LocalClientTestCase(TestCase, SaltClientTestCaseMixin):
                 )
 
     @skipIf(not salt.utils.platform.is_windows(), "Windows only test")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_pub_win32(self):
         """
         Tests that the client raises a timeout error when using ZeroMQ's TCP

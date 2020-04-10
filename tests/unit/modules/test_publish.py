@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.publish as publish
+import pytest
 from salt.exceptions import SaltReqTimeoutError
+
+# Import Salt Libs
+from salt.modules import publish
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -94,6 +96,7 @@ class PublishTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'publish' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_publish(self):
         """
         Test if it publish a command from the minion out to other minions.
@@ -110,6 +113,7 @@ class PublishTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'runner' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_runner(self):
         """
         Test if it execute a runner on the master and return the data

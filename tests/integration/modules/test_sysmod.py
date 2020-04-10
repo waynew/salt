@@ -3,6 +3,7 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 from salt.ext import six
 
 # Import Salt Testing libs
@@ -14,6 +15,10 @@ class SysModuleTest(ModuleCase):
     Validate the sys module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_valid_docs(self):
         """
         Make sure no functions are exposed that don't have valid docstrings

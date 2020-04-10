@@ -6,10 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.win_network as win_network
+import pytest
 
 # Import Salt Libs
 import salt.utils.network
+from salt.modules import win_network
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -118,6 +119,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'traceroute' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_traceroute(self):
         """
         Test if it performs a traceroute to a 3rd party host
@@ -198,6 +200,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
     # 'interfaces_names' function tests: 1
 
     @skipIf(not HAS_WMI, "WMI only available on Windows")
+    @pytest.mark.slow_0_01
     def test_interfaces_names(self):
         """
         Test if it return a list of all the interfaces names
@@ -212,6 +215,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'interfaces' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_interfaces(self):
         """
         Test if it return information about all the interfaces on the minion

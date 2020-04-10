@@ -10,6 +10,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import re
 
+import pytest
+
 # Import salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -31,6 +33,12 @@ class BdistSetupTest(ModuleCase):
     Tests for building and installing bdist_wheel packages
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_wheel_build(self):
         """
         test building a bdist_wheel package

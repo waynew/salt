@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.macdefaults as macdefaults
+from salt.modules import macdefaults
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -42,6 +44,7 @@ class MacDefaultsTestCase(TestCase, LoaderModuleMockMixin):
                 runas="frank",
             )
 
+    @pytest.mark.slow_0_01
     def test_write_default_boolean(self):
         """
             Test writing a default setting
@@ -54,6 +57,7 @@ class MacDefaultsTestCase(TestCase, LoaderModuleMockMixin):
                 runas=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_read_default(self):
         """
             Test reading a default setting

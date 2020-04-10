@@ -7,10 +7,11 @@ import copy
 import logging
 import os
 
-import dateutil.parser as dateutil_parser
+import pytest
 
 # Import Salt libs
 import salt.utils.schedule
+from dateutil import parser as dateutil_parser
 from salt.modules.test import ping
 
 # Import Salt Testing libs
@@ -58,6 +59,7 @@ class SchedulerErrorTest(ModuleCase, SaltReturnAssertsMixin):
         self.schedule.reset()
 
     @skipIf(not HAS_CRONITER, "Cannot find croniter python module")
+    @pytest.mark.slow_0_01
     def test_eval_cron_invalid(self):
         """
         verify that scheduled job runs

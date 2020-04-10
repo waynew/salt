@@ -3,6 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.wheel
 from tests.support.mixins import AdaptedConfigurationTestCaseMixin
@@ -18,11 +20,17 @@ class KeyWheelModuleTest(TestCase, AdaptedConfigurationTestCaseMixin):
     def tearDown(self):
         del self.wheel
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list_all(self):
         ret = self.wheel.cmd("key.list_all", print_event=False)
         for host in ["minion", "sub_minion"]:
             self.assertIn(host, ret["minions"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_gen(self):
         ret = self.wheel.cmd(
             "key.gen", kwarg={"id_": "soundtechniciansrock"}, print_event=False

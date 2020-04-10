@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.smf_service as smf
+from salt.modules import smf_service as smf
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -78,6 +80,7 @@ class SmfTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertFalse(smf.start("name"))
 
+    @pytest.mark.slow_0_01
     def test_stop(self):
         """
         Test to stop the specified service
@@ -98,6 +101,7 @@ class SmfTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertFalse(smf.restart("name"))
 
+    @pytest.mark.slow_0_01
     def test_reload_(self):
         """
         Test to reload the named service
@@ -130,6 +134,7 @@ class SmfTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(smf.__salt__, {"cmd.retcode": MagicMock(return_value=False)}):
             self.assertTrue(smf.enable("name"))
 
+    @pytest.mark.slow_0_01
     def test_disable(self):
         """
         Test to disable the named service to start at boot
@@ -137,6 +142,7 @@ class SmfTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(smf.__salt__, {"cmd.retcode": MagicMock(return_value=False)}):
             self.assertTrue(smf.disable("name"))
 
+    @pytest.mark.slow_0_01
     def test_enabled(self):
         """
         Test to check to see if the named service is enabled to start on boot

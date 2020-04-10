@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.boto_lc as boto_lc
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Libs
+from salt.states import boto_lc
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class BotoLcTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensure the launch configuration exists.

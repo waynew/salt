@@ -6,6 +6,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import pprint
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.pkg
@@ -48,6 +50,10 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
             self.ctx["refresh"] = True
 
     @requires_salt_modules("pkg.list_pkgs")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_list(self):
         """
         verify that packages are installed
@@ -57,6 +63,9 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
 
     @requires_salt_modules("pkg.version_cmp")
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_version_cmp(self, grains):
         """
         test package version comparison on supported platforms
@@ -83,6 +92,10 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
     @requires_salt_modules("pkg.mod_repo", "pkg.del_repo", "pkg.get_repo")
     @requires_network()
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_mod_del_repo(self, grains):
         """
         test modifying and deleting a software repository
@@ -144,6 +157,10 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
             if repo is not None:
                 self.run_function("pkg.del_repo", [repo])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_mod_del_repo_multiline_values(self):
         """
         test modifying and deleting a software repository defined with multiline values
@@ -196,6 +213,8 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
                 self.run_function("pkg.del_repo", [repo])
 
     @requires_salt_modules("pkg.owner")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_owner(self):
         """
         test finding the package owning a file
@@ -217,6 +236,12 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
     @destructiveTest
     @requires_salt_modules("pkg.version", "pkg.install", "pkg.remove")
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_install_remove(self):
         """
         successfully install and uninstall a package
@@ -253,6 +278,12 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
     @requires_salt_states("pkg.installed")
     @requires_network()
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_hold_unhold(self, grains):
         """
         test holding and unholding a package
@@ -299,6 +330,11 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
     @requires_salt_modules("pkg.refresh_db")
     @requires_network()
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_refresh_db(self, grains):
         """
         test refreshing the package database
@@ -330,6 +366,9 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
 
     @requires_salt_modules("pkg.info_installed")
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pkg_info(self, grains):
         """
         Test returning useful information on Ubuntu systems.
@@ -366,6 +405,12 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
         "pkg.list_upgrades",
     )
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_pkg_upgrade_has_pending_upgrades(self, grains):
         """
         Test running a system upgrade when there are packages that need upgrading
@@ -444,6 +489,11 @@ class PkgModuleTest(ModuleCase, SaltReturnAssertsMixin):
     @requires_salt_modules("pkg.remove", "pkg.latest_version")
     @requires_salt_states("pkg.removed")
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_pkg_latest_version(self, grains):
         """
         Check that pkg.latest_version returns the latest version of the uninstalled package.

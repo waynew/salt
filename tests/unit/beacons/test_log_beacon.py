@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 import logging
 
+import pytest
+
 # Salt libs
-import salt.beacons.log_beacon as log_beacon
+from salt.beacons import log_beacon
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import mock_open, patch
 
@@ -31,6 +33,7 @@ class LogBeaconTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {log_beacon: {"__context__": {"log.loc": 2}, "__salt__": {}}}
 
+    @pytest.mark.slow_0_01
     def test_non_list_config(self):
         config = {}
 

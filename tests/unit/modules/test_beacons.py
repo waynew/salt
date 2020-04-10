@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.beacons as beacons
+from salt.modules import beacons
 from salt.utils.event import SaltEvent
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
@@ -31,6 +33,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {beacons: {}}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete(self):
         """
         Test deleting a beacon.
@@ -62,6 +67,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         beacons.delete("ps"), {"comment": comm1, "result": True}
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_add(self):
         """
         Test adding a beacon
@@ -114,6 +122,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         {"comment": comm1, "result": True},
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_save(self):
         """
         Test saving beacons.
@@ -137,6 +148,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         beacons.save(), {"comment": comm1, "result": True}
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_disable(self):
         """
         Test disabling beacons
@@ -163,6 +177,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         beacons.disable(), {"comment": comm1, "result": True}
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_enable(self):
         """
         Test enabling beacons
@@ -189,6 +206,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         beacons.enable(), {"comment": comm1, "result": True}
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_add_beacon_module(self):
         """
         Test adding a beacon
@@ -238,6 +258,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         {"comment": comm1, "result": True},
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_enable_beacon_module(self):
         """
         Test enabling beacons
@@ -265,6 +288,9 @@ class BeaconsTestCase(TestCase, LoaderModuleMockMixin):
                         beacons.enable(), {"comment": comm1, "result": True}
                     )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete_beacon_module(self):
         """
         Test deleting a beacon.

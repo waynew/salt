@@ -3,10 +3,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.kapacitor as kapacitor
+import pytest
 
 # Import Salt libs
 import salt.utils.json
+from salt.modules import kapacitor
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -46,6 +47,7 @@ class KapacitorTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertEqual("test", task["script"])
 
+    @pytest.mark.slow_0_01
     def test_get_task_not_found(self):
         query_ret = {"body": '{"Error":"unknown task taskname"}', "status": 404}
         with patch("salt.utils.http.query", return_value=query_ret) as http_mock:
@@ -74,6 +76,7 @@ class KapacitorTestCase(TestCase, LoaderModuleMockMixin):
             "kapacitor enable taskname", env=self.__class__.env
         )
 
+    @pytest.mark.slow_0_01
     def test_disable_task(self):
         cmd_mock = Mock(return_value={"retcode": 0})
         with patch.dict(kapacitor.__salt__, {"cmd.run_all": cmd_mock}):

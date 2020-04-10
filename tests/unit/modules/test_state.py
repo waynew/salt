@@ -13,11 +13,11 @@ import tempfile
 import textwrap
 import time
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 import salt.loader
-import salt.modules.config as config
-import salt.modules.state as state
 import salt.state
 import salt.utils.args
 import salt.utils.files
@@ -28,6 +28,7 @@ import salt.utils.platform
 import salt.utils.state
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.ext import six
+from salt.modules import config, state
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, Mock, mock_open, patch
 
@@ -332,6 +333,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             config: {"__opts__": {}, "__pillar__": {}},
         }
 
+    @pytest.mark.slow_0_01
     def test_running(self):
         """
             Test of checking i fthe state function is already running
@@ -363,6 +365,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertListEqual(state.running(), [])
 
+    @pytest.mark.slow_0_01
     def test_low(self):
         """
             Test of executing a single low data call
@@ -383,6 +386,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                 state.low({"state": "pkg", "fun": "installed", "name": "vi"})
             )
 
+    @pytest.mark.slow_0_01
     def test_high(self):
         """
             Test for checking the state system
@@ -395,6 +399,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(salt.utils.state, "get_sls_opts", mock):
                 self.assertTrue(state.high({"vim": {"pkg": ["installed"]}}))
 
+    @pytest.mark.slow_0_01
     def test_template(self):
         """
             Test of executing the information
@@ -410,6 +415,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             MockState.HighState.flag = False
             self.assertTrue(state.template("/home/salt/salt.sls"))
 
+    @pytest.mark.slow_0_01
     def test_template_str(self):
         """
             Test for Executing the information
@@ -421,6 +427,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertTrue(state.template_str("Template String"))
 
+    @pytest.mark.slow_0_01
     def test_apply_(self):
         """
             Test to apply states
@@ -432,6 +439,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(state, "highstate", mock):
             self.assertTrue(state.apply_(None))
 
+    @pytest.mark.slow_0_01
     def test_list_disabled(self):
         """
             Test to list disabled states
@@ -440,6 +448,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(state.__salt__, {"grains.get": mock}):
             self.assertListEqual(state.list_disabled(), ["A", "B", "C"])
 
+    @pytest.mark.slow_0_01
     def test_enable(self):
         """
             Test to Enable state function or sls run
@@ -460,6 +469,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         {"msg": "Info: Z state already " "enabled.", "res": True},
                     )
 
+    @pytest.mark.slow_0_01
     def test_disable(self):
         """
             Test to disable state run
@@ -480,6 +490,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         {"msg": "Info: Z state " "disabled.", "res": True},
                     )
 
+    @pytest.mark.slow_0_01
     def test_clear_cache(self):
         """
             Test to clear out cached state file
@@ -492,6 +503,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(os, "remove", mock):
                     self.assertEqual(state.clear_cache(), ["A.cache.p", "B.cache.p"])
 
+    @pytest.mark.slow_0_01
     def test_single(self):
         """
             Test to execute single state function
@@ -524,6 +536,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                             state.single("pkg.installed", "name=vim"), ret
                         )
 
+    @pytest.mark.slow_0_01
     def test_show_top(self):
         """
             Test to return the top data that the minion will use for a highstate
@@ -538,6 +551,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             MockState.HighState.flag = False
             self.assertListEqual(state.show_top(), ["a", "b", "c"])
 
+    @pytest.mark.slow_0_01
     def test_run_request(self):
         """
             Test to Execute the pending state request
@@ -556,6 +570,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(os, "remove", mock):
                     self.assertListEqual(state.run_request("name"), ["True"])
 
+    @pytest.mark.slow_0_01
     def test_show_highstate(self):
         """
             Test to retrieve the highstate data from the salt master
@@ -568,6 +583,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual(state.show_highstate(), "A")
 
+    @pytest.mark.slow_0_01
     def test_show_lowstate(self):
         """
             Test to list out the low data that will be applied to this minion
@@ -578,6 +594,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertTrue(state.show_lowstate())
 
+    @pytest.mark.slow_0_01
     def test_show_state_usage(self):
         """
             Test to list out the state usage that will be applied to this minion
@@ -591,6 +608,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual(state.show_state_usage(), "A")
 
+    @pytest.mark.slow_0_01
     def test_show_states(self):
         """
             Test to display the low data from a specific sls
@@ -601,6 +619,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(state.show_low_sls("foo"), "A")
             self.assertListEqual(state.show_states("foo"), ["abc"])
 
+    @pytest.mark.slow_0_01
     def test_show_states_missing_sls(self):
         """
         Test state.show_states when a sls file defined
@@ -615,6 +634,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(state.show_low_sls("foo"), "A")
             self.assertListEqual(state.show_states("foo"), [msg[0]])
 
+    @pytest.mark.slow_0_01
     def test_sls_id(self):
         """
             Test to call a single ID from the
@@ -639,6 +659,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                             SaltInvocationError, state.sls_id, "DEF", "http"
                         )
 
+    @pytest.mark.slow_0_01
     def test_show_low_sls(self):
         """
             Test to display the low data from a specific sls
@@ -657,6 +678,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                     MockState.State.flag = False
                     self.assertListEqual(state.show_low_sls("foo"), [{"__id__": "ABC"}])
 
+    @pytest.mark.slow_0_01
     def test_show_sls(self):
         """
             Test to display the state data from a specific sls
@@ -680,6 +702,8 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         MockState.State.flag = False
                         self.assertListEqual(state.show_sls("foo"), ["a", "b"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_sls_exists(self):
         """
             Test of sls_exists
@@ -694,6 +718,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(state, "show_sls", mock):
             self.assertFalse(state.sls_exists("missing_state"))
 
+    @pytest.mark.slow_0_01
     def test_id_exists(self):
         """
             Test of id_exists
@@ -725,6 +750,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(state.id_exists("state_id1,state_id2", "test-sls"))
             self.assertFalse(state.id_exists("invalid", "state_name"))
 
+    @pytest.mark.slow_0_01
     def test_top(self):
         """
             Test to execute a specific top file
@@ -761,6 +787,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                                         )
                                     )
 
+    @pytest.mark.slow_0_01
     def test_highstate(self):
         """
             Test to retrieve the state data from the
@@ -805,6 +832,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                                         ):
                                             self.assertTrue(state.highstate(arg))
 
+    @pytest.mark.slow_0_01
     def test_clear_request(self):
         """
             Test to clear out the state execution request without executing it
@@ -823,6 +851,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(state, "check_request", mock):
                     self.assertFalse(state.clear_request("A"))
 
+    @pytest.mark.slow_0_01
     def test_check_request(self):
         """
             Test to return the state request information
@@ -838,6 +867,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
 
                 self.assertDictEqual(state.check_request(), {})
 
+    @pytest.mark.slow_0_01
     def test_request(self):
         """
             Test to request the local admin execute a state run
@@ -859,6 +889,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                                     with patch.object(os, "umask", mock):
                                         self.assertTrue(state.request("A"))
 
+    @pytest.mark.slow_0_01
     def test_sls(self):
         """
             Test to execute a set list of state files from an environment
@@ -929,6 +960,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                                     ):
                                         self.sub_test_sls()
 
+    @pytest.mark.slow_0_01
     def test_get_test_value(self):
         """
         Test _get_test_value when opts contains different values
@@ -1039,6 +1071,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                                         )
                                     )
 
+    @pytest.mark.slow_0_01
     def test_sls_sync(self):
         """
         Test test.sls with the sync argument
@@ -1112,6 +1145,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                     key, call_count, expected
                 )
 
+    @pytest.mark.slow_0_01
     def test_pkg(self):
         """
             Test to execute a packaged state run
@@ -1164,6 +1198,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                     with patch("salt.utils.files.fopen", mock_open()):
                         self.assertTrue(state.pkg(tar_file, 0, "md5"))
 
+    @pytest.mark.slow_0_01
     def test_lock_saltenv(self):
         """
         Tests lock_saltenv in each function which accepts saltenv on the CLI
@@ -1243,6 +1278,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                     saltenv="base",
                 )
 
+    @pytest.mark.slow_0_01
     def test_get_pillar_errors_CC(self):
         """
         Test _get_pillar_errors function.
@@ -1264,6 +1300,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         kwargs=opts, pillar=ext_pillar
                     )
 
+    @pytest.mark.slow_0_01
     def test_get_pillar_errors_EC(self):
         """
         Test _get_pillar_errors function.
@@ -1285,6 +1322,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         kwargs=opts, pillar=ext_pillar
                     )
 
+    @pytest.mark.slow_0_01
     def test_get_pillar_errors_EE(self):
         """
         Test _get_pillar_errors function.
@@ -1305,6 +1343,7 @@ class StateTestCase(TestCase, LoaderModuleMockMixin):
                         kwargs=opts, pillar=ext_pillar
                     )
 
+    @pytest.mark.slow_0_01
     def test_get_pillar_errors_CE(self):
         """
         Test _get_pillar_errors function.
@@ -1426,6 +1465,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             )
         time.sleep(1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge(self):
         """
         Base overrides everything
@@ -1438,6 +1480,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_limited_base(self):
         """
         Test with a "base" top file containing only a "base" section. The "baz"
@@ -1476,6 +1521,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_state_top_saltenv_base(self):
         """
         This tests with state_top_saltenv=base, which should pull states *only*
@@ -1489,6 +1537,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_state_top_saltenv_foo(self):
         """
         This tests with state_top_saltenv=foo, which should pull states *only*
@@ -1499,6 +1550,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
         ret = self.show_top(top_file_merging_strategy="merge", state_top_saltenv="foo")
         assert ret == {"foo": ["foo_foo"]}, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_all(self):
         """
         Include everything in every top file
@@ -1511,6 +1565,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz", "foo_baz", "bar_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_all_alternate_env_order(self):
         """
         Use an alternate env_order. This should change the order in which the
@@ -1526,6 +1583,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["bar_baz", "foo_baz", "base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_all_state_top_saltenv_base(self):
         """
         This tests with state_top_saltenv=base, which should pull states *only*
@@ -1542,6 +1602,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_merge_all_state_top_saltenv_foo(self):
         """
         This tests with state_top_saltenv=foo, which should pull states *only*
@@ -1558,6 +1621,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["foo_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same(self):
         """
         Each env should get its SLS targets from its own top file, with the
@@ -1572,6 +1638,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["base_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same_limited_base(self):
         """
         Each env should get its SLS targets from its own top file, with the
@@ -1586,6 +1655,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "bar": ["bar_bar"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same_default_top_foo(self):
         """
         Each env should get its SLS targets from its own top file, with the
@@ -1600,6 +1672,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
             "baz": ["foo_baz"],
         }, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same_state_top_saltenv_base(self):
         """
         Test the state_top_saltenv parameter to load states exclusively from
@@ -1610,6 +1685,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
         ret = self.show_top(top_file_merging_strategy="same", state_top_saltenv="base")
         assert ret == {"base": ["base_base"]}, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same_state_top_saltenv_foo(self):
         """
         Test the state_top_saltenv parameter to load states exclusively from
@@ -1620,6 +1698,9 @@ class TopFileMergingCase(TestCase, LoaderModuleMockMixin):
         ret = self.show_top(top_file_merging_strategy="same", state_top_saltenv="foo")
         assert ret == {"foo": ["foo_foo"]}, ret
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_merge_strategy_same_state_top_saltenv_baz(self):
         """
         Test the state_top_saltenv parameter to load states exclusively from

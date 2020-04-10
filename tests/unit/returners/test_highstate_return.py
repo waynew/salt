@@ -13,10 +13,11 @@ import json
 import logging
 import os
 
-import salt.returners.highstate_return as highstate
+import pytest
 
 # Import Salt libs
 import salt.utils.files
+from salt.returners import highstate_return as highstate
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -48,6 +49,7 @@ class HighstateReturnerTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_pipe_in_name(self):
         ret = {
             "fun_args": ["test"],

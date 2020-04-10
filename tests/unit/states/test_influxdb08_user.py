@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.influxdb08_user as influxdb08_user
+from salt.states import influxdb08_user
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class InfluxdbUserTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensure that the cluster admin or database user is present.
@@ -72,6 +75,7 @@ class InfluxdbUserTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure that the named cluster admin or database user is absent.

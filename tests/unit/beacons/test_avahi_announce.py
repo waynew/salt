@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.avahi_announce as avahi_announce
+from salt.beacons import avahi_announce
 from tests.support.mixins import LoaderModuleMockMixin
 
 # Salt testing libs
@@ -33,6 +35,7 @@ class AvahiAnnounceBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret, (False, "Configuration for avahi_announce beacon must be a list.")
         )
 
+    @pytest.mark.slow_0_01
     def test_empty_config(self):
         config = [{}]
 

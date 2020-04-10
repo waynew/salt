@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.rpm_lowpkg as rpm
+from salt.modules import rpm_lowpkg as rpm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class RpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'verify' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_verify(self):
         """
         Test if it runs an rpm -Va on a system,
@@ -58,6 +61,7 @@ class RpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'file_dict' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_file_dict(self):
         """
         Test if it list the files that belong to a package
@@ -123,6 +127,7 @@ class RpmTestCase(TestCase, LoaderModuleMockMixin):
                 0, rpm.version_cmp("1", "2")
             )  # mock returns 0, which means RPM was called
 
+    @pytest.mark.slow_0_01
     def test_version_cmp_fallback(self):
         """
         Test package version is called RPM version if RPM-Python is installed

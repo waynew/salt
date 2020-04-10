@@ -6,8 +6,10 @@ unittests for yaml outputter
 # Import Python Libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.output.yaml_out as yaml
+from salt.output import yaml_out as yaml
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class YamlTestCase(TestCase, LoaderModuleMockMixin):
         self.data = {"test": "two", "example": "one"}
         self.addCleanup(delattr, self, "data")
 
+    @pytest.mark.slow_0_01
     def test_default_output(self):
         ret = yaml.output(self.data)
         expect = "example: one\ntest: two\n"

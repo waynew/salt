@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.nova as nova
+from salt.modules import nova
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -43,6 +45,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "volume_list", MagicMock(return_value="A")):
             self.assertTrue(nova.volume_list())
 
+    @pytest.mark.slow_0_01
     def test_volume_show(self):
         """
         Test for Create a block storage volume
@@ -67,6 +70,8 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "volume_delete", MagicMock(return_value="A")):
             self.assertTrue(nova.volume_delete("name"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_volume_detach(self):
         """
         Test for Attach a block storage volume
@@ -75,6 +80,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "volume_detach", MagicMock(return_value="A")):
             self.assertTrue(nova.volume_detach("name"))
 
+    @pytest.mark.slow_0_01
     def test_volume_attach(self):
         """
         Test for Attach a block storage volume
@@ -99,6 +105,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "resume", MagicMock(return_value="A")):
             self.assertTrue(nova.resume("instance_id"))
 
+    @pytest.mark.slow_0_01
     def test_lock(self):
         """
         Test for Lock an instance
@@ -115,6 +122,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "delete", MagicMock(return_value="A")):
             self.assertTrue(nova.delete("instance_id"))
 
+    @pytest.mark.slow_0_01
     def test_flavor_list(self):
         """
         Test for Return a list of available flavors (nova flavor-list)
@@ -174,6 +182,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "image_list", MagicMock(return_value="A")):
             self.assertTrue(nova.image_list())
 
+    @pytest.mark.slow_0_01
     def test_image_meta_set(self):
         """
         Test for Sets a key=value pair in the
@@ -205,6 +214,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(nova, "server_list", return_value=["A"]):
             self.assertEqual(nova.list_(), ["A"])
 
+    @pytest.mark.slow_0_01
     def test_server_list(self):
         """
         Test for Return list of active servers
@@ -213,6 +223,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "server_list", MagicMock(return_value="A")):
             self.assertTrue(nova.server_list())
 
+    @pytest.mark.slow_0_01
     def test_show(self):
         """
         Test for To maintain the feel of the nova command line,
@@ -240,6 +251,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(self.mock_auth, "server_show", MagicMock(return_value="A")):
             self.assertTrue(nova.server_show("serv_id"))
 
+    @pytest.mark.slow_0_01
     def test_secgroup_create(self):
         """
         Test for Add a secgroup to nova (nova secgroup-create)
@@ -260,6 +272,7 @@ class NovaTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(nova.secgroup_delete("name"))
 
+    @pytest.mark.slow_0_01
     def test_secgroup_list(self):
         """
         Test for Return a list of available security groups (nova items-list)

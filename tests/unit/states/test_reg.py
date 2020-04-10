@@ -7,13 +7,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
 import salt.config
 import salt.loader
-
-# Import Salt Libs
-import salt.states.reg as reg
 import salt.utils.platform
 import salt.utils.win_reg
+
+# Import Salt Libs
+from salt.states import reg
 from tests.support.helpers import destructiveTest
 
 # Import Salt Testing Libs
@@ -46,6 +47,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         salt.utils.win_reg.delete_key_recursive(hive=self.hive, key=self.key)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to set a registry entry.
@@ -72,6 +74,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(ret, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_present_string_dword(self):
         """
         Test to set a registry entry.
@@ -102,6 +105,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(ret, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_present_string_dword_existing(self):
         """
         Test to set a registry entry.
@@ -121,6 +125,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         ret = reg.present(self.name, vname=vname, vdata=vdata, vtype=vtype)
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_present_test_true(self):
         expected = {
             "comment": "",
@@ -144,6 +149,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
             ret = reg.present(self.name, vname=self.vname, vdata=self.vdata)
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_present_existing(self):
         # Create the reg key for testing
         salt.utils.win_reg.set_value(
@@ -160,6 +166,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         ret = reg.present(self.name, vname=self.vname, vdata=self.vdata)
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_present_existing_test_true(self):
         # Create the reg key for testing
         salt.utils.win_reg.set_value(
@@ -178,6 +185,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(ret, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to remove a registry entry.
@@ -196,6 +204,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(ret, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_absent_test_true(self):
         # Create the reg key for testing
         salt.utils.win_reg.set_value(
@@ -213,6 +222,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
             ret = reg.absent(self.name, self.vname)
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_absent_already_absent(self):
         """
         Test to remove a registry entry.
@@ -226,6 +236,7 @@ class RegTestCase(TestCase, LoaderModuleMockMixin):
         ret = reg.absent(self.name, self.vname)
         self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_absent_already_absent_test_true(self):
         """
         Test to remove a registry entry.

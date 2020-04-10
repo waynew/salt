@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -36,6 +37,7 @@ class NapalmNetworkModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_network.connected()
         assert ret["out"] is True
 
+    @pytest.mark.slow_0_01
     def test_facts(self):
         ret = napalm_network.facts()
         assert ret["out"] == napalm_test_support.TEST_FACTS
@@ -44,6 +46,7 @@ class NapalmNetworkModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_network.environment()
         assert ret["out"] == napalm_test_support.TEST_ENVIRONMENT
 
+    @pytest.mark.slow_0_01
     def test_cli_single_command(self):
         """
         Test that CLI works with 1 arg
@@ -90,6 +93,7 @@ class NapalmNetworkModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_network.config("running")
         assert ret["out"] == napalm_test_support.TEST_RUNNING_CONFIG
 
+    @pytest.mark.slow_0_01
     def test_optics(self):
         ret = napalm_network.optics()
         assert ret["out"] == napalm_test_support.TEST_OPTICS
@@ -98,6 +102,7 @@ class NapalmNetworkModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_network.load_config(text="new config")
         assert ret["result"]
 
+    @pytest.mark.slow_0_01
     def test_load_config_replace(self):
         ret = napalm_network.load_config(text="new config", replace=True)
         assert ret["result"]
@@ -126,6 +131,7 @@ class NapalmNetworkModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_network.config_changed()
         assert ret == (True, "")
 
+    @pytest.mark.slow_0_01
     def test_config_control(self):
         ret = napalm_network.config_control()
         assert ret == (True, "")

@@ -16,10 +16,12 @@ import os
 import shutil
 import tempfile
 
-# Import salt libs
-import salt.utils.cloud as cloud
+import pytest
 import salt.utils.platform
 from salt.ext import six
+
+# Import salt libs
+from salt.utils import cloud
 
 # Import Salt Testing libs
 from tests.support.runtests import RUNTIME_VARS
@@ -139,6 +141,7 @@ class CloudUtilsTestCase(TestCase):
         )
         self.assertEqual(pw_in_keyring, "fake_password_c8231")
 
+    @pytest.mark.slow_0_01
     def test_sftp_file_with_content_under_python3(self):
         with self.assertRaises(Exception) as context:
             cloud.sftp_file("/tmp/test", "ТЕСТ test content")

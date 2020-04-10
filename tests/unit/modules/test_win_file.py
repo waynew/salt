@@ -8,15 +8,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import sys
 
-import salt.modules.cmdmod as cmdmod
-
-# Import Salt Libs
-import salt.modules.temp as temp
-import salt.modules.win_file as win_file
+import pytest
 import salt.utils.platform
-import salt.utils.win_dacl as win_dacl
 import salt.utils.win_functions
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import cmdmod, temp, win_file
+from salt.utils import win_dacl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -82,6 +81,7 @@ class WinFileTestCase(TestCase, LoaderModuleMockMixin):
 
     @skipIf(not salt.utils.platform.is_windows(), "Skip on Non-Windows systems")
     @skipIf(WIN_VER < 6, "Symlinks not supported on Vista an lower")
+    @pytest.mark.slow_0_01
     def test_issue_52002_check_file_remove_symlink(self):
         """
         Make sure that directories including symlinks or symlinks can be removed
@@ -167,6 +167,7 @@ class WinFileCheckPermsTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertDictEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_check_perms_deny_test_true(self):
         """
         Test setting deny perms on a file with test=True
@@ -202,6 +203,7 @@ class WinFileCheckPermsTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertDictEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_check_perms_grant_test_true(self):
         """
         Test setting grant perms on a file with test=True
@@ -264,6 +266,7 @@ class WinFileCheckPermsTestCase(TestCase, LoaderModuleMockMixin):
         ret = win_file.check_perms(path=self.temp_file, inheritance=False)
         self.assertDictEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_check_perms_inheritance_true(self):
         """
         Test setting inheritance to true when it's already true (default)
@@ -277,6 +280,7 @@ class WinFileCheckPermsTestCase(TestCase, LoaderModuleMockMixin):
         ret = win_file.check_perms(path=self.temp_file, inheritance=True)
         self.assertDictEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_check_perms_reset_test_true(self):
         """
         Test resetting perms with test=True. This shows minimal changes
@@ -362,6 +366,7 @@ class WinFileCheckPermsTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertDictEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_stat(self):
         with patch("os.path.exists", MagicMock(return_value=True)), patch(
             "salt.modules.win_file._resolve_symlink",

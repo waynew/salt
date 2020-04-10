@@ -3,9 +3,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
-import salt.utils.win_functions as win_functions
+from salt.utils import win_functions
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing Libs
@@ -38,6 +40,7 @@ class WinFunctionsTestCase(TestCase):
 
         self.assertEqual(encoded, "simple")
 
+    @pytest.mark.slow_0_01
     def test_escape_argument_with_space(self):
         """
         Test to make sure we encode arguments containing spaces correctly
@@ -93,6 +96,7 @@ class WinFunctionsTestCase(TestCase):
 
     @skipIf(not salt.utils.platform.is_windows(), "WinDLL only available on Windows")
     @skipIf(not HAS_WIN32, "Requires pywin32 libraries")
+    @pytest.mark.slow_0_01
     def test_get_user_groups_unavailable_dc(self):
         groups = ["Administrators", "Users"]
         win_error = WinError()

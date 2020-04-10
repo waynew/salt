@@ -8,6 +8,8 @@ Tests for the salt-run command
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.platform
@@ -60,6 +62,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
             if USERA in user:
                 self.run_call("user.delete {0} remove=True".format(USERA))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_in_docs(self):
         """
         test the salt-run docs system
@@ -74,6 +79,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         self.assertIn("network.wol:", data)
         self.assertIn("network.wollist:", data)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_notin_docs(self):
         """
         Verify that hidden methods are not in run docs
@@ -82,6 +90,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         data = "\n".join(data)
         self.assertNotIn("jobs.SaltException:", data)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_salt_documentation_too_many_arguments(self):
         """
         Test to see if passing additional arguments shows an error
@@ -92,6 +103,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
             "\n".join(data[1]),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_exit_status_unknown_argument(self):
         """
         Ensure correct exit status when an unknown argument is passed to salt-run.
@@ -110,6 +124,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         )
         # runner.shutdown() should be unnecessary since the start-up should fail
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_exit_status_correct_usage(self):
         """
         Ensure correct exit status when salt-run starts correctly.
@@ -126,6 +143,12 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         )
 
     @skip_if_not_root
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_salt_run_with_eauth_all_args(self):
         """
         test salt-run with eauth
@@ -152,6 +175,11 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         self._remove_user()
 
     @skip_if_not_root
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_salt_run_with_eauth_bad_passwd(self):
         """
         test salt-run with eauth and bad password
@@ -167,6 +195,9 @@ class RunTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin)
         self.assertEqual(expect, run_cmd)
         self._remove_user()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_salt_run_with_wrong_eauth(self):
         """
         test salt-run with wrong eauth parameter

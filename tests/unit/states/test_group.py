@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.group as group
+from salt.states import group
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing Libs
@@ -24,6 +26,7 @@ class GroupTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {group: {}}
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
             Test to ensure that a group is present
@@ -86,6 +89,7 @@ class GroupTestCase(TestCase, LoaderModuleMockMixin):
                         ret.update({"comment": "Failed to create new group salt"})
                         self.assertDictEqual(group.present("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
             Test to ensure that the named group is absent

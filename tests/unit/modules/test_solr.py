@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.solr as solr
+from salt.modules import solr
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -180,6 +182,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                                     {"A": "a", "errors": [error], "success": False},
                                 )
 
+    @pytest.mark.slow_0_01
     def test_match_index_versions(self):
         """
         Test to verifies that the master and the slave versions are in sync by
@@ -235,6 +238,8 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                     ):
                         self.assertDictEqual(solr.replication_details(), tempdict1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_backup(self):
         """
         Test to tell solr make a backup.
@@ -276,6 +281,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
 
                                 self.assertDictEqual(solr.backup(), tempdict)
 
+    @pytest.mark.slow_0_01
     def test_set_is_polling(self):
         """
         Test to prevent the slaves from polling the master for updates.
@@ -316,6 +322,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                         ):
                             self.assertEqual(solr.set_is_polling("p"), "A")
 
+    @pytest.mark.slow_0_01
     def test_set_replication_enabled(self):
         """
         Test to sets the master to ignore poll requests from the slaves.
@@ -373,6 +380,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                                 )
                                 self.assertEqual(solr.reload_core(), "A")
 
+    @pytest.mark.slow_0_01
     def test_core_status(self):
         """
         Test to get the status for a given core or all cores
@@ -398,6 +406,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
 
                                 self.assertEqual(solr.core_status(), "A")
 
+    @pytest.mark.slow_0_01
     def test_reload_import_config(self):
         """
         Test to re-loads the handler config XML file.
@@ -420,6 +429,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                                 )
                                 self.assertEqual(solr.reload_import_config("h"), "A")
 
+    @pytest.mark.slow_0_01
     def test_abort_import(self):
         """
         Test to aborts an existing import command to the specified handler.
@@ -438,6 +448,8 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
                                 self.assertDictEqual(solr.abort_import("h"), {"A": "a"})
                                 self.assertEqual(solr.abort_import("h"), "A")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_full_import(self):
         """
         Test to submits an import command to the specified handler using
@@ -508,6 +520,7 @@ class SolrTestCase(TestCase, LoaderModuleMockMixin):
             self.assertDictEqual(solr.delta_import("h"), {"A": "a"})
             self.assertEqual(solr.delta_import("h"), "A")
 
+    @pytest.mark.slow_0_01
     def test_import_status(self):
         """
         Test to submits an import command to the specified handler using

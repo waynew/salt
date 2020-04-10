@@ -7,6 +7,8 @@ Tests for the salt runner
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ShellCase
 
@@ -16,6 +18,9 @@ class SaltRunnerTest(ShellCase):
     Test the salt runner
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_salt_cmd(self):
         """
         test return values of salt.cmd
@@ -27,6 +32,9 @@ class SaltRunnerTest(ShellCase):
         self.assertEqual(out_ret, "True")
         self.assertTrue(return_ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_salt_cmd_invalid(self):
         """
         test return values of salt.cmd invalid parameters

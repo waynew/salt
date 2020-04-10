@@ -5,11 +5,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import re
 
-import salt.modules.jboss7_cli as jboss7_cli
+import pytest
 from salt.exceptions import CommandExecutionError
 
 # Import Salt libs
 from salt.ext import six
+from salt.modules import jboss7_cli
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -85,6 +86,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.addCleanup(delattr, self, "cmd")
         return {jboss7_cli: {"__salt__": {"cmd.run_all": self.cmd.run_all}}}
 
+    @pytest.mark.slow_0_01
     def test_controller_authentication(self):
         jboss7_cli.run_operation(self.jboss_config, "some cli operation")
 
@@ -114,6 +116,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
             r'/opt/jboss/jboss-eap-6.0.1/bin/jboss-cli.sh --connect --controller="123.234.345.456:9999" --user="jbossadm" --password="jbossadm" --command="sample_operation"',
         )
 
+    @pytest.mark.slow_0_01
     def test_handling_jboss_error(self):
         def command_response(command):
             return {
@@ -200,6 +203,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(result["key1"], "value1")
         self.assertEqual(result["key2"], "value2")
 
+    @pytest.mark.slow_0_01
     def test_parse_nested_dictionary(self):
         text = """{
             "key1" => "value1",
@@ -215,6 +219,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(len(result["key2"]), 1)
         self.assertEqual(result["key2"]["nested_key1"], "nested_value1")
 
+    @pytest.mark.slow_0_01
     def test_parse_string_after_dict(self):
         text = """{
             "result" => {
@@ -228,6 +233,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(result["result"]["jta"])
         self.assertEqual(result["response-headers"]["process-state"], "reload-required")
 
+    @pytest.mark.slow_0_01
     def test_parse_all_datatypes(self):
         text = """{
             "outcome" => "success",
@@ -253,6 +259,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(result["result"]["jta"])
         self.assertEqual(result["response-headers"]["process-state"], "reload-required")
 
+    @pytest.mark.slow_0_01
     def test_multiline_strings_with_escaped_quotes(self):
         text = r"""{
             "outcome" => "failed",
@@ -277,6 +284,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         ]' not found""",
         )
 
+    @pytest.mark.slow_0_01
     def test_handling_double_backslash_in_return_values(self):
         text = r"""{
                  "outcome" => "success",
@@ -307,6 +315,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(result["result"]["min-pool-size"], 1233)
         self.assertIsNone(result["result"]["new-connection-sql"])
 
+    @pytest.mark.slow_0_01
     def test_all_datasource_properties(self):
         text = r"""{
             "outcome" => "success",
@@ -374,6 +383,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertIsNone(result["result"]["url-delimiter"])
         self.assertFalse(result["result"]["validate-on-match"])
 
+    @pytest.mark.slow_0_01
     def test_datasource_resource_one_attribute_description(self):
         cli_output = """{
             "outcome" => "success",
@@ -414,6 +424,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(conn_url_attributes["storage"], "configuration")
         self.assertEqual(conn_url_attributes["restart-required"], "no-services")
 
+    @pytest.mark.slow_0_01
     def test_datasource_complete_resource_description(self):
         cli_output = """{
             "outcome" => "success",
@@ -464,6 +475,7 @@ class JBoss7CliTestCase(TestCase, LoaderModuleMockMixin):
             r'/opt/jboss/jboss-eap-6.0.1/bin/jboss-cli.sh --connect --controller="123.234.345.456:9999" --user="jbossadm" --password="jbossadm" --command="/subsystem=naming/binding=\"java:/sampleapp/web-module/ldap/username\":add(binding-type=simple, value=\"DOMAIN\\\\\\\\user\")"',
         )
 
+    @pytest.mark.slow_0_01
     def test_run_operation_wflyctl_error(self):
         call_cli_ret = {
             "retcode": 1,

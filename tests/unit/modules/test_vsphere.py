@@ -9,7 +9,7 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.vsphere as vsphere
+import pytest
 import salt.utils.args
 import salt.utils.vmware
 from salt.exceptions import (
@@ -21,6 +21,7 @@ from salt.exceptions import (
 
 # Import Salt Libs
 from salt.ext.six import text_type
+from salt.modules import vsphere
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -111,6 +112,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                     ),
                 )
 
+    @pytest.mark.slow_0_01
     def test_get_coredump_network_config_bad_retcode(self):
         """
         Tests error message given for a single ESXi host.
@@ -195,6 +197,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                     ),
                 )
 
+    @pytest.mark.slow_0_01
     def test_coredump_network_enable_bad_retcode(self):
         """
         Tests error message given for a single ESXi host.
@@ -257,6 +260,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                 ),
             )
 
+    @pytest.mark.slow_0_01
     def test_set_coredump_network_config_host_list_success(self):
         """
         Tests successful function return when an esxi_host is provided.
@@ -296,6 +300,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
 
     # Tests for get_firewall_status function
 
+    @pytest.mark.slow_0_01
     def test_get_firewall_status_esxi_hosts_not_list(self):
         """
         Tests CommandExecutionError is raised when esxi_hosts is provided,
@@ -384,6 +389,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
 
     # Tests for syslog_service_reload function
 
+    @pytest.mark.slow_0_01
     def test_syslog_service_reload_esxi_hosts_not_list(self):
         """
         Tests CommandExecutionError is raised when esxi_hosts is provided,
@@ -506,6 +512,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                     ),
                 )
 
+    @pytest.mark.slow_0_01
     def test_set_syslog_config_firewall_success(self):
         """
         Tests successful function return for a single ESXi host with 'loghost' as syslog_config.
@@ -541,6 +548,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
             esxi_hosts="foo",
         )
 
+    @pytest.mark.slow_0_01
     def test_get_syslog_config_host_list_bad_retcode(self):
         """
         Tests error message returned with list of esxi_hosts.
@@ -657,6 +665,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                 ),
             )
 
+    @pytest.mark.slow_0_01
     def test_reset_syslog_config_host_list_success(self):
         """
         Tests successful function return when an esxi_host is provided.
@@ -693,6 +702,7 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                 ),
             )
 
+    @pytest.mark.slow_0_01
     def test_reset_syslog_config_success(self):
         """
         Tests successful function return for a single ESXi host.
@@ -1028,6 +1038,7 @@ class _GetProxyConnectionDetailsTestCase(TestCase, LoaderModuleMockMixin):
             ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_esxcluster_proxy_details(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type", MagicMock(return_value="esxcluster")
@@ -1101,6 +1112,7 @@ class _GetProxyConnectionDetailsTestCase(TestCase, LoaderModuleMockMixin):
             ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_unsupported_proxy_details(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type", MagicMock(return_value="unsupported")
@@ -1144,6 +1156,7 @@ class GetsServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             except AttributeError:
                 continue
 
+    @pytest.mark.slow_0_01
     def test_no_service_instance_or_kwargs_parameters(self):
         @vsphere.gets_service_instance_via_proxy
         def mock_function():
@@ -1172,6 +1185,7 @@ class GetsServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             mock_function()
         mock__get_proxy_connection_details.assert_called_once_with()
 
+    @pytest.mark.slow_0_01
     def test_service_instance_named_parameter_no_value(self):
         mock_get_service_instance = MagicMock(return_value=self.mock_si)
         mock_disconnect = MagicMock()
@@ -1195,6 +1209,7 @@ class GetsServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
         mock_disconnect.assert_called_once_with(self.mock_si)
         self.assertEqual(ret, self.mock_si)
 
+    @pytest.mark.slow_0_01
     def test_service_instance_kwargs_parameter_no_value(self):
         mock_get_service_instance = MagicMock(return_value=self.mock_si)
         mock_disconnect = MagicMock()
@@ -1239,6 +1254,7 @@ class GetsServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(mock_disconnect.call_count, 0)
         self.assertEqual(ret, self.mock_si)
 
+    @pytest.mark.slow_0_01
     def test_service_instance_positional_parameter_with_default_value(self):
         mock_get_service_instance = MagicMock()
         mock_disconnect = MagicMock()
@@ -1260,6 +1276,7 @@ class GetsServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(mock_disconnect.call_count, 0)
         self.assertEqual(ret, self.mock_si)
 
+    @pytest.mark.slow_0_01
     def test_service_instance_named_parameter_with_default_value(self):
         mock_get_service_instance = MagicMock()
         mock_disconnect = MagicMock()
@@ -1320,6 +1337,10 @@ class GetServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxi", "esxcluster", "esxdatacenter", "vcenter", "esxvm"]
         for proxy_type in supported_proxies:
@@ -1329,6 +1350,7 @@ class GetServiceInstanceViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.get_service_instance_via_proxy()
 
+    @pytest.mark.slow_0_01
     def test_get_service_instance_call(self):
         mock_connection_details = [MagicMock(), MagicMock(), MagicMock()]
         mock_get_service_instance = MagicMock()
@@ -1370,6 +1392,10 @@ class DisconnectTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxi", "esxcluster", "esxdatacenter", "vcenter", "esxvm"]
         for proxy_type in supported_proxies:
@@ -1418,6 +1444,10 @@ class TestVcenterConnectionTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxi", "esxcluster", "esxdatacenter", "vcenter", "esxvm"]
         for proxy_type in supported_proxies:
@@ -1427,6 +1457,7 @@ class TestVcenterConnectionTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.test_vcenter_connection()
 
+    @pytest.mark.slow_0_01
     def test_is_connection_to_a_vcenter_call_default_service_instance(self):
         mock_is_connection_to_a_vcenter = MagicMock()
         with patch(
@@ -1436,6 +1467,7 @@ class TestVcenterConnectionTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.test_vcenter_connection()
         mock_is_connection_to_a_vcenter.assert_called_once_with(self.mock_si)
 
+    @pytest.mark.slow_0_01
     def test_is_connection_to_a_vcenter_call_explicit_service_instance(self):
         expl_mock_si = MagicMock()
         mock_is_connection_to_a_vcenter = MagicMock()
@@ -1470,6 +1502,7 @@ class TestVcenterConnectionTestCase(TestCase, LoaderModuleMockMixin):
             res = vsphere.test_vcenter_connection()
         self.assertEqual(res, True)
 
+    @pytest.mark.slow_0_01
     def test_output_false(self):
         with patch(
             "salt.utils.vmware.is_connection_to_a_vcenter",
@@ -1508,6 +1541,10 @@ class ListDatacentersViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxcluster", "esxdatacenter", "vcenter", "esxvm"]
         for proxy_type in supported_proxies:
@@ -1517,6 +1554,7 @@ class ListDatacentersViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.list_datacenters_via_proxy()
 
+    @pytest.mark.slow_0_01
     def test_default_params(self):
         mock_get_datacenters = MagicMock()
         with patch("salt.utils.vmware.get_datacenters", mock_get_datacenters):
@@ -1525,6 +1563,8 @@ class ListDatacentersViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_si, get_all_datacenters=True
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_defined_service_instance(self):
         mock_si = MagicMock()
         mock_get_datacenters = MagicMock()
@@ -1532,6 +1572,7 @@ class ListDatacentersViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.list_datacenters_via_proxy(service_instance=mock_si)
         mock_get_datacenters.assert_called_once_with(mock_si, get_all_datacenters=True)
 
+    @pytest.mark.slow_0_01
     def test_defined_datacenter_names(self):
         mock_datacenters = MagicMock()
         mock_get_datacenters = MagicMock()
@@ -1539,6 +1580,7 @@ class ListDatacentersViaProxyTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.list_datacenters_via_proxy(mock_datacenters)
         mock_get_datacenters.assert_called_once_with(self.mock_si, mock_datacenters)
 
+    @pytest.mark.slow_0_01
     def test_get_managed_object_name_calls(self):
         mock_get_managed_object_name = MagicMock()
         mock_dcs = [MagicMock(), MagicMock()]
@@ -1597,6 +1639,10 @@ class CreateDatacenterTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxdatacenter", "vcenter"]
         for proxy_type in supported_proxies:
@@ -1606,12 +1652,15 @@ class CreateDatacenterTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.create_datacenter("fake_dc1")
 
+    @pytest.mark.slow_0_01
     def test_default_service_instance(self):
         mock_create_datacenter = MagicMock()
         with patch("salt.utils.vmware.create_datacenter", mock_create_datacenter):
             vsphere.create_datacenter("fake_dc1")
         mock_create_datacenter.assert_called_once_with(self.mock_si, "fake_dc1")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_defined_service_instance(self):
         mock_si = MagicMock()
         mock_create_datacenter = MagicMock()
@@ -1619,6 +1668,7 @@ class CreateDatacenterTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.create_datacenter("fake_dc1", service_instance=mock_si)
         mock_create_datacenter.assert_called_once_with(mock_si, "fake_dc1")
 
+    @pytest.mark.slow_0_01
     def test_returned_value(self):
         res = vsphere.create_datacenter("fake_dc1")
         self.assertEqual(res, {"create_datacenter": True})
@@ -1676,6 +1726,10 @@ class EraseDiskPartitionsTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxi"]
         for proxy_type in supported_proxies:
@@ -1685,6 +1739,8 @@ class EraseDiskPartitionsTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.erase_disk_partitions(disk_id="fake_disk")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_no_disk_id_or_scsi_address(self):
         with self.assertRaises(ArgumentValueError) as excinfo:
             vsphere.erase_disk_partitions()
@@ -1710,6 +1766,8 @@ class EraseDiskPartitionsTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror,
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_scsi_address_to_disk_id_map(self):
         mock_disk_id = MagicMock(canonicalName="fake_scsi_disk_id")
         mock_get_scsi_addr_to_lun = MagicMock(
@@ -1780,6 +1838,9 @@ class RemoveDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_supported_proxes(self):
         supported_proxies = ["esxi", "esxcluster", "esxdatacenter"]
         for proxy_type in supported_proxies:
@@ -1789,6 +1850,7 @@ class RemoveDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.remove_datastore(datastore="fake_ds_name")
 
+    @pytest.mark.slow_0_01
     def test__get_proxy_target_call(self):
         mock__get_proxy_target = MagicMock(return_value=self.mock_target)
         with patch("salt.modules.vsphere._get_proxy_target", mock__get_proxy_target):
@@ -1803,6 +1865,7 @@ class RemoveDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_si, reference=self.mock_target, datastore_names=["fake_ds"]
         )
 
+    @pytest.mark.slow_0_01
     def test_datastore_not_found(self):
         with patch("salt.utils.vmware.get_datastores", MagicMock(return_value=[])):
             with self.assertRaises(VMwareObjectRetrievalError) as excinfo:
@@ -1811,6 +1874,7 @@ class RemoveDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             "Datastore 'fake_ds' was not found", excinfo.exception.strerror
         )
 
+    @pytest.mark.slow_0_01
     def test_multiple_datastores_found(self):
         with patch(
             "salt.utils.vmware.get_datastores",
@@ -1828,6 +1892,7 @@ class RemoveDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.remove_datastore(datastore="fake_ds")
         mock_remove_datastore.assert_called_once_with(self.mock_si, self.mock_ds)
 
+    @pytest.mark.slow_0_01
     def test_success_output(self):
         res = vsphere.remove_datastore(datastore="fake_ds")
         self.assertTrue(res)
@@ -1883,6 +1948,9 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_supported_proxes(self):
         supported_proxies = ["esxi"]
         for proxy_type in supported_proxies:
@@ -1892,12 +1960,14 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.remove_diskgroup(cache_disk_id="fake_disk_id")
 
+    @pytest.mark.slow_0_01
     def test__get_proxy_target_call(self):
         mock__get_proxy_target = MagicMock(return_value=self.mock_host)
         with patch("salt.modules.vsphere._get_proxy_target", mock__get_proxy_target):
             vsphere.remove_diskgroup(cache_disk_id="fake_disk_id")
         mock__get_proxy_target.assert_called_once_with(self.mock_si)
 
+    @pytest.mark.slow_0_01
     def test_get_disk_groups(self):
         mock_get_diskgroups = MagicMock(return_value=[self.mock_diskgroup])
         with patch("salt.utils.vmware.get_diskgroups", mock_get_diskgroups):
@@ -1906,6 +1976,7 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_host, cache_disk_ids=["fake_disk_id"]
         )
 
+    @pytest.mark.slow_0_01
     def test_disk_group_not_found_safety_checks_set(self):
         with patch("salt.utils.vmware.get_diskgroups", MagicMock(return_value=[])):
             with self.assertRaises(VMwareObjectRetrievalError) as excinfo:
@@ -1917,6 +1988,7 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror,
         )
 
+    @pytest.mark.slow_0_01
     def test_remove_disk_group(self):
         mock_remove_diskgroup = MagicMock(return_value=None)
         with patch("salt.utils.vsan.remove_diskgroup", mock_remove_diskgroup):
@@ -1925,6 +1997,8 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_si, self.mock_host, self.mock_diskgroup, data_accessibility=True
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_remove_disk_group_data_accessibility_false(self):
         mock_remove_diskgroup = MagicMock(return_value=None)
         with patch("salt.utils.vsan.remove_diskgroup", mock_remove_diskgroup):
@@ -1935,6 +2009,7 @@ class RemoveDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_si, self.mock_host, self.mock_diskgroup, data_accessibility=False
         )
 
+    @pytest.mark.slow_0_01
     def test_success_output(self):
         res = vsphere.remove_diskgroup(cache_disk_id="fake_disk_id")
         self.assertTrue(res)
@@ -2006,6 +2081,8 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_validate(self):
         mock_schema_validate = MagicMock()
         with patch("salt.modules.vsphere.jsonschema.validate", mock_schema_validate):
@@ -2037,6 +2114,9 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
                 )
         self.assertEqual("err", excinfo.exception.strerror)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_supported_proxes(self):
         supported_proxies = ["esxi"]
         for proxy_type in supported_proxies:
@@ -2049,6 +2129,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
                     capacity_disk_ids=["fake_disk1", "fake_disk2"],
                 )
 
+    @pytest.mark.slow_0_01
     def test__get_proxy_target_call(self):
         mock__get_proxy_target = MagicMock(return_value=self.mock_host)
         with patch("salt.modules.vsphere._get_proxy_target", mock__get_proxy_target):
@@ -2058,6 +2139,8 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             )
         mock__get_proxy_target.assert_called_once_with(self.mock_si)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_disks(self):
         mock_get_disks = MagicMock(
             return_value=[self.mock_disk1, self.mock_disk2, self.mock_disk3]
@@ -2071,6 +2154,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_host, disk_ids=["fake_disk1", "fake_disk2"]
         )
 
+    @pytest.mark.slow_0_01
     def test_disk_not_found_safety_checks_set(self):
         mock_get_disks = MagicMock(
             return_value=[self.mock_disk1, self.mock_disk2, self.mock_disk3]
@@ -2087,6 +2171,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror,
         )
 
+    @pytest.mark.slow_0_01
     def test_get_diskgroups(self):
         mock_get_diskgroups = MagicMock(return_value=[self.mock_diskgroup])
         with patch("salt.utils.vmware.get_diskgroups", mock_get_diskgroups):
@@ -2098,6 +2183,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_host, cache_disk_ids=["fake_cache_disk_id"]
         )
 
+    @pytest.mark.slow_0_01
     def test_diskgroup_not_found(self):
         with patch("salt.utils.vmware.get_diskgroups", MagicMock(return_value=[])):
             with self.assertRaises(VMwareObjectRetrievalError) as excinfo:
@@ -2112,6 +2198,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror,
         )
 
+    @pytest.mark.slow_0_01
     def test_remove_capacity_from_diskgroup(self):
         mock_remove_capacity_from_diskgroup = MagicMock()
         with patch(
@@ -2149,6 +2236,7 @@ class RemoveCapacityFromDiskgroupTestCase(TestCase, LoaderModuleMockMixin):
             data_evacuation=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_success_output(self):
         res = vsphere.remove_capacity_from_diskgroup(
             cache_disk_id="fake_cache_disk_id",
@@ -2214,6 +2302,10 @@ class ListClusterTestCase(TestCase, LoaderModuleMockMixin):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxcluster", "esxdatacenter"]
         for proxy_type in supported_proxies:
@@ -2223,12 +2315,15 @@ class ListClusterTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.list_cluster(cluster="cl")
 
+    @pytest.mark.slow_0_01
     def test_default_service_instance(self):
         mock__get_proxy_target = MagicMock()
         with patch("salt.modules.vsphere._get_proxy_target", mock__get_proxy_target):
             vsphere.list_cluster()
         mock__get_proxy_target.assert_called_once_with(self.mock_si)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_defined_service_instance(self):
         mock_si = MagicMock()
         mock__get_proxy_target = MagicMock()
@@ -2236,6 +2331,7 @@ class ListClusterTestCase(TestCase, LoaderModuleMockMixin):
             vsphere.list_cluster(service_instance=mock_si)
         mock__get_proxy_target.assert_called_once_with(mock_si)
 
+    @pytest.mark.slow_0_01
     def test_no_cluster_raises_argument_value_error(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type",
@@ -2246,6 +2342,8 @@ class ListClusterTestCase(TestCase, LoaderModuleMockMixin):
                     vsphere.list_cluster()
         self.assertEqual(excinfo.exception.strerror, "'cluster' needs to be specified")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_cluster_call(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type",
@@ -2258,6 +2356,7 @@ class ListClusterTestCase(TestCase, LoaderModuleMockMixin):
                 vsphere.list_cluster(cluster="cl")
         self.mock_get_cluster.assert_called_once_with(self.mock_dc, "cl")
 
+    @pytest.mark.slow_0_01
     def test__get_cluster_dict_call(self):
         vsphere.list_cluster()
         self.mock__get_cluster_dict.assert_called_once_with("cl", self.mock_cl)
@@ -2311,6 +2410,9 @@ class RenameDatastoreTestCase(TestCase, LoaderModuleMockMixin):
         ):
             delattr(self, attr)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_supported_proxes(self):
         supported_proxies = ["esxi", "esxcluster", "esxdatacenter"]
         for proxy_type in supported_proxies:
@@ -2320,12 +2422,15 @@ class RenameDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 vsphere.rename_datastore("current_ds_name", "new_ds_name")
 
+    @pytest.mark.slow_0_01
     def test_default_service_instance(self):
         mock__get_proxy_target = MagicMock()
         with patch("salt.modules.vsphere._get_proxy_target", mock__get_proxy_target):
             vsphere.rename_datastore("current_ds_name", "new_ds_name")
         mock__get_proxy_target.assert_called_once_with(self.mock_si)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_defined_service_instance(self):
         mock_si = MagicMock()
         mock__get_proxy_target = MagicMock()
@@ -2342,6 +2447,7 @@ class RenameDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_si, self.mock_target, datastore_names=["current_ds_name"]
         )
 
+    @pytest.mark.slow_0_01
     def test_get_no_datastores(self):
         with patch("salt.utils.vmware.get_datastores", MagicMock(return_value=[])):
             with self.assertRaises(VMwareObjectRetrievalError) as excinfo:
@@ -2350,6 +2456,7 @@ class RenameDatastoreTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror, "Datastore 'current_ds_name' was not found"
         )
 
+    @pytest.mark.slow_0_01
     def test_rename_datastore_call(self):
         vsphere.rename_datastore("current_ds_name", "new_ds_name")
         self.mock_rename_datastore.assert_called_once_with(
@@ -2440,6 +2547,10 @@ class _GetProxyTargetTestCase(TestCase, LoaderModuleMockMixin):
             patcher.start()
             self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_supported_proxies(self):
         supported_proxies = ["esxcluster", "esxdatacenter"]
         for proxy_type in supported_proxies:
@@ -2461,6 +2572,8 @@ class _GetProxyTargetTestCase(TestCase, LoaderModuleMockMixin):
                 "'_get_proxy_target' not supported when " "connected via the ESXi host",
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_cluster_call(self):
         vsphere._get_proxy_target(self.mock_si)
         self.mock_get_datacenter.assert_called_once_with(self.mock_si, "datacenter")
@@ -2482,6 +2595,7 @@ class _GetProxyTargetTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_get_datacenter.assert_called_once_with(self.mock_si, "datacenter")
         self.assertEqual(self.mock_get_cluster.call_count, 0)
 
+    @pytest.mark.slow_0_01
     def test_esxdatacenter_proxy_return(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type",
@@ -2490,6 +2604,7 @@ class _GetProxyTargetTestCase(TestCase, LoaderModuleMockMixin):
             ret = vsphere._get_proxy_target(self.mock_si)
         self.assertEqual(ret, self.mock_dc)
 
+    @pytest.mark.slow_0_01
     def test_vcenter_proxy_return(self):
         with patch(
             "salt.modules.vsphere.get_proxy_type", MagicMock(return_value="vcenter")

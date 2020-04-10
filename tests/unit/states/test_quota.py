@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.quota as quota
+from salt.states import quota
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class QuotaTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'mode' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_mode(self):
         """
         Test to set the quota for the system.

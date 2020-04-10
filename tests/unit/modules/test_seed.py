@@ -9,11 +9,12 @@ import os
 import shutil
 import uuid
 
-import salt.modules.seed as seed
+import pytest
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.odict
+from salt.modules import seed
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -29,6 +30,9 @@ class SeedTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {seed: {}}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_mkconfig_odict(self):
         with patch.dict(seed.__opts__, {"master": "foo"}):
             ddd = salt.utils.odict.OrderedDict()
@@ -39,6 +43,7 @@ class SeedTestCase(TestCase, LoaderModuleMockMixin):
                 fdata = fic.read()
                 self.assertEqual(fdata, "b: b\na: b\nmaster: foo\n")
 
+    @pytest.mark.slow_0_01
     def test_prep_bootstrap(self):
         """
         Test to update and get the random script to a random place
@@ -70,6 +75,7 @@ class SeedTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(seed.prep_bootstrap(os.sep + "MPT"), expect)
 
+    @pytest.mark.slow_0_01
     def test_apply_(self):
         """
         Test to seed a location (disk image, directory, or block device)

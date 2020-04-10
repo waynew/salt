@@ -12,8 +12,10 @@
 # Import Python libs
 from __future__ import absolute_import, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.utils.immutabletypes as immutabletypes
+from salt.utils import immutabletypes
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -28,6 +30,7 @@ class ImmutableTypesTestCase(TestCase):
         __radd__ = lst + imt
         self.assertEqual(__radd__, [4, 5, 6, 1, 2, 3])
 
+    @pytest.mark.slow_0_01
     def test_freeze_list_sum(self):
         lst = [4, 5, 6]
         imt = immutabletypes.freeze([1, 2, 3])

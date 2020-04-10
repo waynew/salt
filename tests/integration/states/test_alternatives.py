@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ModuleCase
 from tests.support.helpers import destructiveTest
@@ -23,6 +25,9 @@ if not os.path.exists("/etc/alternatives"):
 @skipIf(NO_ALTERNATIVES, "/etc/alternatives does not exist on the system")
 class AlterantivesStateTest(ModuleCase, SaltReturnAssertsMixin):
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_install_set_and_remove(self):
         ret = self.run_state(
             "alternatives.set", name="alt-test", path=RUNTIME_VARS.SHELL_TRUE_PATH

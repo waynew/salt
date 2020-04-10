@@ -10,7 +10,7 @@ import os
 import sys
 import tempfile
 
-import salt.modules.cmdmod as cmdmod
+import pytest
 
 # Import Salt Libs
 import salt.utils.files
@@ -19,6 +19,7 @@ import salt.utils.stringutils
 from salt.exceptions import CommandExecutionError
 from salt.ext.six.moves import builtins  # pylint: disable=import-error
 from salt.log import LOG_LEVELS
+from salt.modules import cmdmod
 from tests.support.helpers import TstSuiteLoggingHandler
 
 # Import Salt Testing Libs
@@ -170,6 +171,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                             CommandExecutionError, cmdmod._run, "foo", "bar"
                         )
 
+    @pytest.mark.slow_0_01
     def test_run_runas_with_windows(self):
         """
         Tests error raised when runas is passed on windows
@@ -233,6 +235,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                             CommandExecutionError, cmdmod._run, "foo", "bar"
                         )
 
+    @pytest.mark.slow_0_01
     def test_run_invalid_cwd_not_dir(self):
         """
         Tests error raised when cwd is not a dir
@@ -265,6 +268,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                                 expected_error
                             ), repr(error.exception.args[0])
 
+    @pytest.mark.slow_0_01
     def test_run_no_vt_io_error(self):
         """
         Tests error raised when not useing vt and IOError is provided
@@ -367,6 +371,8 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                         getpwnam_mock.assert_called_with("foobar")
 
     @skipIf(not salt.utils.platform.is_darwin(), "applicable to macOS only")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_shell_properly_handled_on_macOS(self):
         """
         cmd.run should invoke a new bash login only
@@ -437,6 +443,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                         "cmd does not invoke user shell on macOS",
                     )
 
+    @pytest.mark.slow_0_01
     def test_run_cwd_doesnt_exist_issue_7154(self):
         """
         cmd.run should fail and raise
@@ -452,6 +459,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
         else:
             raise RuntimeError
 
+    @pytest.mark.slow_0_01
     def test_run_all_binary_replace(self):
         """
         Test for failed decoding of binary data, for instance when doing
@@ -507,6 +515,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(ret["stdout"], "")
         self.assertEqual(ret["stderr"], "")
 
+    @pytest.mark.slow_0_01
     def test_run_all_unicode(self):
         """
         Ensure that unicode stdout and stderr are decoded properly
@@ -560,6 +569,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret["stdout"], salt.utils.stringutils.to_unicode(stdout))
 
+    @pytest.mark.slow_0_01
     def test_run_all_output_loglevel_debug(self):
         """
         Test that specifying debug for loglevel
@@ -576,6 +586,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret["stdout"], salt.utils.stringutils.to_unicode(stdout))
 
+    @pytest.mark.slow_0_01
     def test_run_chroot_mount(self):
         """
         Test cmdmod.run_chroot mount / umount balance
@@ -591,6 +602,7 @@ class CMDMODTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(mock_mount.call_count, 3)
                 self.assertEqual(mock_umount.call_count, 3)
 
+    @pytest.mark.slow_0_01
     def test_run_chroot_mount_bind(self):
         """
         Test cmdmod.run_chroot mount / umount balance with bind mount

@@ -5,8 +5,10 @@ unit tests for the sqs_events engine
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.engines.sqs_events as sqs_events
+from salt.engines import sqs_events
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +49,8 @@ class EngineSqsEventTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertTrue(mock_logging.warning.called)
                 self.assertFalse(self.mock_sqs.queue.Queue().get_messages.called)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_minion_message_fires(self):
         """
         Test SQS engine correctly gets and fires messages on minion
@@ -62,6 +66,8 @@ class EngineSqsEventTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(self.mock_sqs.queue.Queue().get_messages.called)
             self.assertTrue(all(x.delete.called for x in msgs))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_master_message_fires(self):
         """
         Test SQS engine correctly gets and fires messages on master

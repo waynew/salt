@@ -7,6 +7,8 @@ any remotes.
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
 import salt.utils.gitfs
 from salt.exceptions import FileserverConfigError
@@ -20,6 +22,7 @@ OPTS = {"cachedir": "/tmp/gitfs-test-cache"}
 
 
 class TestGitFSProvider(TestCase):
+    @pytest.mark.slow_0_01
     def test_provider_case_insensitive(self):
         """
         Ensure that both lowercase and non-lowercase values are supported
@@ -52,6 +55,7 @@ class TestGitFSProvider(TestCase):
                     # letters. Again, no need for an assert here.
                     role_class(*args, **kwargs)
 
+    @pytest.mark.slow_0_01
     def test_valid_provider(self):
         """
         Ensure that an invalid provider is not accepted, raising a

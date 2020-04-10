@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import os
 from contextlib import contextmanager
 
+import pytest
 import salt.utils.files
 import salt.utils.platform
 from salt.modules import kubernetesmod as kubernetes
@@ -43,6 +44,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {kubernetes: {"__salt__": {}}}
 
+    @pytest.mark.slow_0_01
     def test_nodes(self):
         """
         Test node listing.
@@ -114,6 +116,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 # pylint: enable=E1120
 
+    @pytest.mark.slow_0_01
     def test_pods(self):
         """
         Tests pods listing.
@@ -139,6 +142,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 # pylint: enable=E1120
 
+    @pytest.mark.slow_0_01
     def test_delete_deployments(self):
         """
         Tests deployment deletion
@@ -171,6 +175,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     )
                     # pylint: enable=E1120
 
+    @pytest.mark.slow_0_01
     def test_create_deployments(self):
         """
         Tests deployment creation.
@@ -226,6 +231,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     self.settings("kubernetes.kubeconfig"), config["kubeconfig"],
                 )
 
+    @pytest.mark.slow_0_01
     def test_setup_kubeconfig_data_overwrite(self):
         """
         Test that provided `kubernetes.kubeconfig` configuration is overwritten

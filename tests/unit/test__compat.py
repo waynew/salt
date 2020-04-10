@@ -9,8 +9,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import sys
 
+import pytest
+
 # Import Salt libs
-import salt._compat as compat
+from salt import _compat as compat
 
 # Import 3rd Party libs
 from salt.ext.six import binary_type, text_type
@@ -23,6 +25,7 @@ PY3 = sys.version_info.major == 3
 
 
 class CompatTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_text(self):
         ret = compat.text_("test string")
         self.assertTrue(isinstance(ret, text_type))
@@ -39,6 +42,7 @@ class CompatTestCase(TestCase):
         ret = compat.bytes_(b"test string")
         self.assertTrue(isinstance(ret, binary_type))
 
+    @pytest.mark.slow_0_01
     def test_ascii_native(self):
         ret = compat.ascii_native_("test string")
         self.assertTrue(isinstance(ret, str))

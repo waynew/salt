@@ -10,6 +10,8 @@ import os
 import shutil
 import sys
 
+import pytest
+
 # Import 3rd-party libs
 from salt.ext import six
 
@@ -38,6 +40,9 @@ class SSHKnownHostsStateTest(ModuleCase, SaltReturnAssertsMixin):
             os.remove(self.known_hosts)
         super(SSHKnownHostsStateTest, self).tearDown()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_present(self):
         """
         ssh_known_hosts.present
@@ -109,6 +114,9 @@ class SSHKnownHostsStateTest(ModuleCase, SaltReturnAssertsMixin):
                 "Salt return '{0}' is in ('', None,".format(ret) + " {})"
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_present_fail(self):
         # save something wrong
         ret = self.run_state(
@@ -120,6 +128,9 @@ class SSHKnownHostsStateTest(ModuleCase, SaltReturnAssertsMixin):
         )
         self.assertSaltFalseReturn(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_absent(self):
         """
         ssh_known_hosts.absent

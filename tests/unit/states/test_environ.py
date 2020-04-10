@@ -5,12 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.environ as envmodule
+import pytest
 import salt.modules.reg
+import salt.utils.platform
+from salt.modules import environ as envmodule
 
 # Import salt libs
-import salt.states.environ as envstate
-import salt.utils.platform
+from salt.states import environ as envstate
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -54,6 +55,7 @@ class TestEnvironState(TestCase, LoaderModuleMockMixin):
         self.assertEqual(ret["changes"], {})
 
     @skipIf(not salt.utils.platform.is_windows(), "Windows only")
+    @pytest.mark.slow_0_01
     def test_setenv_permanent(self):
         """
         test that we can set perminent environment variables (requires pywin32)
@@ -81,6 +83,7 @@ class TestEnvironState(TestCase, LoaderModuleMockMixin):
         ret = envstate.setenv("notimportant", {"test": "value"})
         self.assertEqual(ret["changes"], {"test": "value"})
 
+    @pytest.mark.slow_0_01
     def test_setenv_int(self):
         """
         test that setenv can not be invoked with int
@@ -123,6 +126,7 @@ class TestEnvironState(TestCase, LoaderModuleMockMixin):
         else:
             self.assertEqual(envstate.os.environ, {"test": "value"})
 
+    @pytest.mark.slow_0_01
     def test_setenv_unset_multi(self):
         """
         test basically same things that above tests but with multiple values passed

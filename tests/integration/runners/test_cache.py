@@ -7,6 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ShellCase
 
@@ -18,6 +20,9 @@ class ManageTest(ShellCase):
     Test the manage runner
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_cache(self):
         """
         Store, list, fetch, then flush data
@@ -44,6 +49,9 @@ class ManageTest(ShellCase):
         ret = self.run_run_plus("cache.list", bank="cachetest/runner")
         self.assertNotIn("test_cache", ret["return"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_cache_invalid(self):
         """
         Store, list, fetch, then flush data
@@ -54,6 +62,9 @@ class ManageTest(ShellCase):
         expected = "Passed invalid arguments:"
         self.assertIn(expected, ret["return"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_grains(self):
         """
         Test cache.grains
@@ -63,6 +74,9 @@ class ManageTest(ShellCase):
 
         self.assertIn("minion", ret["return"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pillar(self):
         """
         Test cache.pillar
@@ -73,6 +87,9 @@ class ManageTest(ShellCase):
         assert "minion" in ret["return"]
         assert "sub_minion" not in ret["return"]
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pillar_no_tgt(self):
         """
         Test cache.pillar when no tgt is
@@ -84,6 +101,9 @@ class ManageTest(ShellCase):
 
         assert all(x in ret["return"] for x in ["minion", "sub_minion"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pillar_minion_noexist(self):
         """
         Test cache.pillar when the target does not exist
@@ -93,6 +113,9 @@ class ManageTest(ShellCase):
         assert "minion" not in ret["return"]
         assert "sub_minion" not in ret["return"]
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pillar_minion_tgt_type_pillar(self):
         """
         Test cache.pillar when the target exists
@@ -102,6 +125,9 @@ class ManageTest(ShellCase):
 
         assert all(x in ret["return"] for x in ["minion", "sub_minion"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_mine(self):
         """
         Test cache.mine

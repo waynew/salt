@@ -9,9 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import types
 from datetime import datetime
 
-# Import Salt Libs
-import salt.modules.win_system as win_system
+import pytest
 import salt.utils.platform
+
+# Import Salt Libs
+from salt.modules import win_system
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -54,6 +56,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
 
         return {win_system: modules_globals}
 
+    @pytest.mark.slow_0_01
     def test_halt(self):
         """
             Test to halt a running system
@@ -62,6 +65,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(win_system, "shutdown", mock):
             self.assertEqual(win_system.halt(), "salt")
 
+    @pytest.mark.slow_0_01
     def test_init(self):
         """
             Test to change the system runlevel on sysV compatible systems
@@ -114,6 +118,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
     def test_reboot_with_wait(self):
         """
             Test to reboot the system with a timeout and
@@ -126,6 +131,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             time.assert_called_with(330)
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
     def test_shutdown(self):
         """
             Test to shutdown a running system
@@ -175,6 +181,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(win_system.set_computer_name("salt"))
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
     def test_get_pending_computer_name(self):
         """
             Test to get a pending computer name.
@@ -203,6 +210,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(win_system.get_computer_name())
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
     def test_set_computer_desc(self):
         """
             Test to set the Windows computer description
@@ -275,6 +283,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(re.search(r"^\d{2}:\d{2} \w{2}$", win_tm))
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
     def test_set_system_time(self):
         """
             Test to set system time
@@ -335,6 +344,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
             cmd="wmic computersystem where name='MINION' call rename name='NEW'"
         )
 
+    @pytest.mark.slow_0_01
     def test_get_hostname(self):
         """
             Test setting a new hostname
@@ -346,6 +356,9 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
         cmd_run_mock.assert_called_once_with(cmd="hostname")
 
     @skipIf(not win_system.HAS_WIN32NET_MODS, "Missing win32 libraries")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_system_info(self):
         fields = [
             "bios_caption",

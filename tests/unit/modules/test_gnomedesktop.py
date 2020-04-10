@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.gnomedesktop as gnomedesktop
+from salt.modules import gnomedesktop
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -52,6 +54,7 @@ class GnomedesktopTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(gsettings_mock, "_get", return_value=True):
                 self.assertTrue(gnomedesktop.getClockFormat())
 
+    @pytest.mark.slow_0_01
     def test_setclockformat(self):
         """
         Test for Set the clock format, either 12h or 24h format..
@@ -70,6 +73,7 @@ class GnomedesktopTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(gsettings_mock, "_get", return_value=True):
                 self.assertTrue(gnomedesktop.getClockShowDate())
 
+    @pytest.mark.slow_0_01
     def test_setclockshowdate(self):
         """
         Test for Set whether the date is visible in the clock

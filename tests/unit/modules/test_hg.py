@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.hg as hg
+from salt.modules import hg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class HgTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(hg.update("cwd", "rev"), "A")
 
+    @pytest.mark.slow_0_01
     def test_clone(self):
         """
         Test for Clone a new repository
@@ -97,6 +100,7 @@ class HgTestCase(TestCase, LoaderModuleMockMixin):
                 {"added": ["added 0", "added 1"], "modified": ["modified"]},
             )
 
+    @pytest.mark.slow_0_01
     def test_status_multiple(self):
         """
         Test for Status to a given repository (cwd is list)

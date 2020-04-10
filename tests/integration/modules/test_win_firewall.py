@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
 
@@ -31,6 +33,11 @@ class FirewallTest(ModuleCase):
                     self.assertTrue(self.run_function("firewall.disable", profile=net))
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_firewall_get_config(self):
         """
         test firewall.get_config
@@ -45,6 +52,12 @@ class FirewallTest(ModuleCase):
         self._pre_firewall_status(pre_run)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_firewall_disable(self):
         """
         test firewall.disable
@@ -62,6 +75,12 @@ class FirewallTest(ModuleCase):
         self._pre_firewall_status(pre_run)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_firewall_enable(self):
         """
         test firewall.enable
@@ -78,6 +97,10 @@ class FirewallTest(ModuleCase):
         self.assertTrue(ret)
         self._pre_firewall_status(pre_run)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_firewall_get_rule(self):
         """
         test firewall.get_rule
@@ -90,6 +113,11 @@ class FirewallTest(ModuleCase):
             self.assertIn(check, ret[rule])
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_firewall_add_delete_rule(self):
         """
         test firewall.add_rule and delete_rule

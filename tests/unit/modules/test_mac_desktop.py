@@ -6,9 +6,11 @@ Unit Tests for the mac_desktop execution module.
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.mac_desktop as mac_desktop
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import mac_desktop
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -44,6 +46,7 @@ class MacDesktopTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_output_volume' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_set_output_volume(self):
         """
         Test if it set the volume of sound (range 0 to 100)
@@ -110,6 +113,7 @@ class MacDesktopTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(mac_desktop.__salt__, {"cmd.run_all": mock}):
             self.assertTrue(mac_desktop.say())
 
+    @pytest.mark.slow_0_01
     def test_say_error(self):
         """
         Tests that an error is raised when cmd.run_all errors

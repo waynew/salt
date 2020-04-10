@@ -9,10 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import tempfile
 
+import pytest
 import salt.modules.file
 
 # Import Salt Libs
-import salt.modules.ilo as ilo
+from salt.modules import ilo
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -49,6 +50,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'global_settings' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_global_settings(self):
         """
         Test if it shows global_settings
@@ -105,6 +107,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'enable_ssh' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_enable_ssh(self):
         """
         Test if it enable the SSH daemon
@@ -126,6 +129,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'disable_ssh' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_disable_ssh(self):
         """
         Test if it disable the SSH daemon
@@ -147,6 +151,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_ssh_port' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_ssh_port(self):
         """
         Test if it enable SSH on a user defined port
@@ -221,6 +226,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_user' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_user(self):
         """
         Test if it create user
@@ -299,6 +305,7 @@ class IloTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'configure_network' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_configure_network(self):
         """
         Test if it configure Network Interface

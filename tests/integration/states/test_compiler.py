@@ -6,6 +6,8 @@ tests for host state
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -25,6 +27,9 @@ class CompileTest(ModuleCase):
     Validate the state compiler
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_multi_state(self):
         """
         Test the error with multiple states of the same type
@@ -33,6 +38,8 @@ class CompileTest(ModuleCase):
         # Verify that the return is a list, aka, an error
         self.assertIsInstance(ret, list)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_jinja_deep_error(self):
         """
         Test when we have an error in a execution module

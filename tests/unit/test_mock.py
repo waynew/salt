@@ -9,6 +9,8 @@ import errno
 import logging
 import textwrap
 
+import pytest
+
 # Import Salt libs
 import salt.utils.data
 import salt.utils.files
@@ -423,6 +425,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
         )
         self._test_read_explicit_size_larger_than_file_size(binary=True, multifile=True)
 
+    @pytest.mark.slow_0_01
     def test_read_for_loop(self):
         """
         Test reading the contents of the file line by line in a for loop
@@ -442,6 +445,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
         self._test_read_readline(binary=False, multifile=True)
         self._test_read_readline(binary=True, multifile=True)
 
+    @pytest.mark.slow_0_01
     def test_readline_readlines(self):
         """
         Test reading the first line using .readline(), then reading the rest of
@@ -452,6 +456,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
         self._test_readline_readlines(binary=False, multifile=True)
         self._test_readline_readlines(binary=True, multifile=True)
 
+    @pytest.mark.slow_0_01
     def test_readlines(self):
         """
         Test reading the entire file using .readlines
@@ -478,6 +483,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
                 "*": self.normalized_read_data_as_list,
             }, m_open.read_data
 
+    @pytest.mark.slow_0_01
     def test_read_data_list(self):
         """
         Test read_data when it is a list
@@ -496,6 +502,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
                     if not isinstance(value, IOError):
                         raise
 
+    @pytest.mark.slow_0_01
     def test_read_data_list_bytes(self):
         """
         Test read_data when it is a list and the value is a bytestring
@@ -567,6 +574,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
                         len(x) for x in self.questions_str_lines[:index]
                     ), loc
 
+    @pytest.mark.slow_0_01
     def test_write(self):
         """
         Test writing to a filehandle using .write()
@@ -673,6 +681,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
                             "unicode to a binary filehandle"
                         )
 
+    @pytest.mark.slow_0_01
     def test_writelines(self):
         """
         Test writing to a filehandle using .writelines()
@@ -775,6 +784,7 @@ class MockOpenTestCase(TestCase, MockOpenMixin):
                             "unicode to a binary filehandle"
                         )
 
+    @pytest.mark.slow_0_01
     def test_open(self):
         """
         Test that opening a file for binary reading with string read_data

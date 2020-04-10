@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -34,6 +35,7 @@ class NapalmSnmpModuleTestCase(TestCase, LoaderModuleMockMixin):
 
         return {napalm_snmp: module_globals, napalm_network: module_globals}
 
+    @pytest.mark.slow_0_01
     def test_config(self):
         ret = napalm_snmp.config()
         assert ret["out"] == napalm_test_support.TEST_SNMP_INFO

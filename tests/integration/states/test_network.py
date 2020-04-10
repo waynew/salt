@@ -8,6 +8,8 @@
 # Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt testing libs
 from tests.support.case import ModuleCase
 from tests.support.helpers import destructiveTest
@@ -27,6 +29,9 @@ class NetworkTest(ModuleCase, SaltReturnAssertsMixin):
                 "Network state only supported on RedHat and Debian based systems"
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_managed(self):
         """
         network.managed
@@ -38,6 +43,9 @@ class NetworkTest(ModuleCase, SaltReturnAssertsMixin):
             "Interface dummy0 is set to be added.", ret[state_key]["comment"]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_routes(self):
         """
         network.routes
@@ -51,6 +59,9 @@ class NetworkTest(ModuleCase, SaltReturnAssertsMixin):
             ret[state_key]["comment"], "Interface dummy0 routes are set to be added."
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_system(self):
         """
         network.system

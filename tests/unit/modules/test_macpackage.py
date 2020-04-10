@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.macpackage as macpackage
+from salt.modules import macpackage
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -62,6 +64,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
                 'rsync -a --delete "/path/to/file.app/" ' '"/Applications/file.app"'
             )
 
+    @pytest.mark.slow_0_01
     def test_install_app_specify_target(self):
         """
             Test installing an APP package with a specific target
@@ -109,6 +112,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
                 'dmg-ABCDEF "/path/to/file.dmg"'
             )
 
+    @pytest.mark.slow_0_01
     def test_unmount(self):
         """
             Test Unmounting an dmg file to a temporary location
@@ -118,6 +122,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
             macpackage.unmount("/path/to/file.dmg")
             mock.assert_called_once_with('hdiutil detach "/path/to/file.dmg"')
 
+    @pytest.mark.slow_0_01
     def test_installed_pkgs(self):
         """
             Test getting a list of the installed packages
@@ -129,6 +134,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with("pkgutil --pkgs")
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_pkg_id_with_files(self):
         """
             Test getting a the id for a package
@@ -250,6 +256,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with(cmd, python_shell=True)
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_pkg_id_from_pkginfo_no_file(self):
         """
             Test getting a package id from pkginfo file when it doesn't exist
@@ -265,6 +272,7 @@ class MacPackageTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with(cmd, python_shell=True)
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_pkg_id_dir(self):
         """
             Test getting a package id from a directory

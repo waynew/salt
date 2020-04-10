@@ -6,6 +6,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import shutil
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -34,6 +36,8 @@ class DiskModuleVirtualizationTest(ModuleCase):
         if os.path.isfile("/etc/mtab"):
             shutil.move("/etc/mtab", "/tmp/mtab")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_no_mtab(self):
         ret = self.run_function("disk.usage")
         self.assertDictEqual(ret, {})
@@ -48,6 +52,10 @@ class DiskModuleTest(ModuleCase):
     Validate the disk module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_usage(self):
         """
         disk.usage
@@ -75,6 +83,8 @@ class DiskModuleTest(ModuleCase):
                 self.assertTrue("capacity" in val)
 
     @skipIf(salt.utils.platform.is_windows(), "inode info not available on Windows")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_inodeusage(self):
         """
         disk.inodeusage

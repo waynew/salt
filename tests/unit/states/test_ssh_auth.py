@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.ssh_auth as ssh_auth
+from salt.states import ssh_auth
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -59,6 +61,7 @@ class SshAuthTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to verifies that the specified SSH key is absent.
@@ -96,6 +99,7 @@ class SshAuthTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(ssh_auth.absent(name, user, source), ret)
 
+    @pytest.mark.slow_0_01
     def test_manage(self):
         """
         Test to verifies that the specified SSH key is absent.

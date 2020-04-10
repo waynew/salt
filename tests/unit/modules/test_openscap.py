@@ -5,11 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from subprocess import PIPE
 
-# Import salt libs
-import salt.modules.openscap as openscap
+import pytest
 
 # Import 3rd-party libs
 from salt.ext import six
+
+# Import salt libs
+from salt.modules import openscap
 from tests.support.mock import MagicMock, Mock, patch
 
 # Import salt test libs
@@ -40,6 +42,7 @@ class OpenscapTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    @pytest.mark.slow_0_01
     def test_openscap_xccdf_eval_success(self):
         with patch(
             "salt.modules.openscap.Popen",
@@ -134,6 +137,7 @@ class OpenscapTestCase(TestCase):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_openscap_xccdf_eval_fail_no_profile(self):
         response = openscap.xccdf("eval --param Default /unknown/param")
         if six.PY2:
@@ -145,6 +149,7 @@ class OpenscapTestCase(TestCase):
             {"error": error, "upload_dir": None, "success": False, "returncode": None},
         )
 
+    @pytest.mark.slow_0_01
     def test_openscap_xccdf_eval_success_ignore_unknown_params(self):
         with patch(
             "salt.modules.openscap.Popen",
@@ -186,6 +191,7 @@ class OpenscapTestCase(TestCase):
                 stdout=PIPE,
             )
 
+    @pytest.mark.slow_0_01
     def test_openscap_xccdf_eval_evaluation_error(self):
         with patch(
             "salt.modules.openscap.Popen",

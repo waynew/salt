@@ -7,9 +7,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.glusterfs as glusterfs
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Libs
+from salt.modules import glusterfs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -488,6 +490,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'peer_status' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_peer_status(self):
         """
         Test gluster peer status
@@ -688,6 +691,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'stop_volume' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_stop_volume(self):
         """
         Test if it stop a gluster volume.
@@ -717,6 +721,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete_volume' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete_volume(self):
         """
         Test if it deletes a gluster volume.
@@ -751,6 +756,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'add_volume_bricks' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_add_volume_bricks(self):
         """
         Test if it add brick(s) to an existing volume
@@ -811,6 +817,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_max_op_version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_max_op_version(self):
         """
         Test retrieving the glusterfs max-op-version.
@@ -828,6 +835,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_op_version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_op_version(self):
         """
         Test setting the glusterfs op-version

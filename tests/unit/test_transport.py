@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import logging
 
+import pytest
 from salt.transport import MessageClientPool
 
 # Import Salt Testing libs
@@ -46,6 +47,7 @@ class MessageClientPoolTest(TestCase):
             self.assertEqual(message_client.args, args)
             self.assertEqual(message_client.kwargs, kwargs)
 
+    @pytest.mark.slow_0_01
     def test_init_less_than_one(self):
         opts = {"sock_pool_size": -1}
         args = (0,)

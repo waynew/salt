@@ -11,7 +11,8 @@ import logging
 import os
 import subprocess
 
-import salt.modules.git as git_mod  # Don't potentially shadow GitPython
+import pytest
+from salt.modules import git as git_mod  # Don't potentially shadow GitPython
 
 # Import Salt Libs
 from salt.utils.versions import LooseVersion
@@ -79,6 +80,7 @@ class GitTestCase(TestCase, LoaderModuleMockMixin):
             git_mod: {"__utils__": {"ssh.key_is_encrypted": Mock(return_value=False)}}
         }
 
+    @pytest.mark.slow_0_01
     def test_list_worktrees(self):
         """
         This tests git.list_worktrees
@@ -170,6 +172,7 @@ class GitTestCase(TestCase, LoaderModuleMockMixin):
                     ),
                 )
 
+    @pytest.mark.slow_0_01
     def test__git_run_tmp_wrapper(self):
         """
         When an identity file is specified, make sure we don't attempt to

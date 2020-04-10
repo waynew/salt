@@ -21,6 +21,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import tempfile
 
+import pytest
 import salt.utils.files
 import salt.utils.stringutils
 from salt.modules import x509
@@ -128,6 +129,7 @@ c9bcgp7D7xD+TxWWNj4CSXEccJgGr91StV+gFg4ARQ==
         self.assertEqual(ret, 1024)
 
     @skipIf(not HAS_M2CRYPTO, "Skipping, M2Crypto is unavailble")
+    @pytest.mark.slow_0_01
     def test_create_key(self):
         """
         Test that x509.create_key returns a private key
@@ -179,6 +181,7 @@ c9bcgp7D7xD+TxWWNj4CSXEccJgGr91StV+gFg4ARQ==
         self.assertIn("BEGIN CERTIFICATE", ret)
 
     @skipIf(not HAS_M2CRYPTO, "Skipping, M2Crypto is unavailble")
+    @pytest.mark.slow_0_01
     def test_create_crl(self):
         ca_key = """
 -----BEGIN RSA PRIVATE KEY-----
@@ -247,6 +250,7 @@ c9bcgp7D7xD+TxWWNj4CSXEccJgGr91StV+gFg4ARQ==
         self.assertIn("BEGIN X509 CRL", crl)
 
     @skipIf(not HAS_M2CRYPTO, "Skipping, M2Crypto is unavailble")
+    @pytest.mark.slow_0_01
     def test_revoke_certificate_with_crl(self):
         ca_key = """
 -----BEGIN RSA PRIVATE KEY-----

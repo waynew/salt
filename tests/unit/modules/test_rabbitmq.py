@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.rabbitmq as rabbitmq
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import rabbitmq
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -66,6 +68,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_users_with_warning_rabbitmq2' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_users_with_warning_rabbitmq2(self):
         """
         Test if having a leading WARNING returns the user_list anyway.
@@ -171,6 +174,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'vhost_exists' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_vhost_exists(self):
         """
         Test if it return whether the vhost exists based
@@ -377,6 +381,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'cluster_status' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_cluster_status(self):
         """
         Test if it return rabbitmq cluster_status.
@@ -416,6 +421,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'start_app' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_start_app(self):
         """
         Test if it start the RabbitMQ application.
@@ -452,6 +458,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_queues' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_queues(self):
         """
         Test if it returns queue details of the / virtual host
@@ -562,6 +569,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'policy_exists' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_policy_exists(self):
         """
         Test if it return whether the policy exists
@@ -614,6 +622,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_enabled_plugins' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_list_enabled_plugins(self):
         """
         Test if it returns a list of plugins.
@@ -703,6 +712,7 @@ class RabbitmqTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'disable_plugin' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_disable_plugin(self):
         """
         Test if it disable a RabbitMQ plugin via the rabbitmq-plugins command.

@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.svn as svn
+from salt.modules import svn
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -40,6 +42,7 @@ class SvnTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertListEqual(svn.info("cwd", fmt="dict"), [{}, {}])
 
+    @pytest.mark.slow_0_01
     def test_checkout(self):
         """
         Test to download a working copy of the remote Subversion repository
@@ -49,6 +52,7 @@ class SvnTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(svn.__salt__, {"cmd.run_all": mock}):
             self.assertTrue(svn.checkout("cwd", "remote"))
 
+    @pytest.mark.slow_0_01
     def test_switch(self):
         """
         Test to switch a working copy of a remote Subversion repository
@@ -58,6 +62,7 @@ class SvnTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(svn.__salt__, {"cmd.run_all": mock}):
             self.assertTrue(svn.switch("cwd", "remote"))
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         """
         Test to update the current directory, files, or directories from

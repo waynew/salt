@@ -9,9 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import ssl
 
-# Import salt libs
-import salt.modules.cassandra_cql as cassandra_cql
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import salt libs
+from salt.modules import cassandra_cql
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -38,6 +40,7 @@ class CassandraCQLReturnerTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {cassandra_cql: {}}
 
+    @pytest.mark.slow_0_01
     def test_returns_opts_if_specified(self):
         """
         If ssl options are present then check that they are parsed and returned

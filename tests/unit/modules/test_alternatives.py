@@ -10,8 +10,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.alternatives as alternatives
+from salt.modules import alternatives
 from tests.support.helpers import TstSuiteLoggingHandler
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
@@ -24,6 +26,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {alternatives: {}}
 
+    @pytest.mark.slow_0_01
     def test_display(self):
         with patch.dict(alternatives.__grains__, {"os_family": "RedHat"}):
             mock = MagicMock(return_value={"retcode": 0, "stdout": "salt"})
@@ -55,6 +58,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
                     ["alternatives", "--display", "better-world"], python_shell=False
                 )
 
+    @pytest.mark.slow_0_01
     def test_show_current(self):
         mock = MagicMock(return_value="/etc/alternatives/salt")
         with patch("salt.utils.path.readlink", mock):
@@ -70,6 +74,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
                     "ERROR:alternative: hell does not exist", handler.messages
                 )
 
+    @pytest.mark.slow_0_01
     def test_check_installed(self):
         mock = MagicMock(return_value="/etc/alternatives/salt")
         with patch("salt.utils.path.readlink", mock):
@@ -141,6 +146,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_remove(self):
         with patch.dict(alternatives.__grains__, {"os_family": "RedHat"}):
             mock = MagicMock(return_value={"retcode": 0, "stdout": "salt"})

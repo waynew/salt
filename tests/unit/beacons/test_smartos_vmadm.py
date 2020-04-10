@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.smartos_vmadm as vmadm
+from salt.beacons import smartos_vmadm as vmadm
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -101,6 +103,7 @@ class SmartOSImgAdmBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ]
             self.assertEqual(ret, res)
 
+    @pytest.mark.slow_0_01
     def test_created_nostartup(self):
         """
         Test with one image and startup_import_event unset/false
@@ -127,6 +130,7 @@ class SmartOSImgAdmBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual(ret, res)
 
+    @pytest.mark.slow_0_01
     def test_created(self):
         """
         Test with one vm, create a 2nd one

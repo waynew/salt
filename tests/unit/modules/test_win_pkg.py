@@ -6,16 +6,16 @@ Tests for the win_pkg module
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.config as config
-import salt.modules.pkg_resource as pkg_resource
-import salt.modules.win_pkg as win_pkg
+import pytest
 import salt.utils.data
 import salt.utils.platform
-import salt.utils.win_reg as win_reg
 
 # Import 3rd Party Libs
 from salt.ext import six
+
+# Import Salt Libs
+from salt.modules import config, pkg_resource, win_pkg
+from salt.utils import win_reg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -72,6 +72,7 @@ class WinPkgInstallTestCase(TestCase, LoaderModuleMockMixin):
             pkg_resource: {"__grains__": {"os": "Windows"}},
         }
 
+    @pytest.mark.slow_0_01
     def test_pkg__get_reg_software(self):
         result = win_pkg._get_reg_software()
         self.assertTrue(isinstance(result, dict))
@@ -82,6 +83,7 @@ class WinPkgInstallTestCase(TestCase, LoaderModuleMockMixin):
                 found_python = True
         self.assertTrue(found_python)
 
+    @pytest.mark.slow_0_01
     def test_pkg_install_not_found(self):
         """
         Test pkg.install when the Version is NOT FOUND in the Software
@@ -97,6 +99,7 @@ class WinPkgInstallTestCase(TestCase, LoaderModuleMockMixin):
             result = win_pkg.install(name="nsis", version="3.01")
             self.assertDictEqual(expected, result)
 
+    @pytest.mark.slow_0_01
     def test_pkg_install_rollback(self):
         """
         test pkg.install rolling back to a previous version
@@ -140,6 +143,7 @@ class WinPkgInstallTestCase(TestCase, LoaderModuleMockMixin):
             result = win_pkg.install(name="nsis")
             self.assertDictEqual(expected, result)
 
+    @pytest.mark.slow_0_01
     def test_pkg_install_existing_with_version(self):
         """
         test pkg.install when the package is already installed
@@ -245,6 +249,7 @@ class WinPkgInstallTestCase(TestCase, LoaderModuleMockMixin):
                 "-e True -test_flag True" in str(mock_cmd_run_all.call_args[0])
             )
 
+    @pytest.mark.slow_0_01
     def test_pkg_install_multiple_pkgs(self):
         """
         test pkg.install pkg with extra_install_flags

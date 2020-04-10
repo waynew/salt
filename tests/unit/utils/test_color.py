@@ -6,6 +6,8 @@ Unit tests for salt.utils.color.py
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.color
 from salt.ext import six
@@ -15,6 +17,7 @@ from tests.support.unit import TestCase
 
 
 class ColorUtilsTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_get_colors(self):
         ret = salt.utils.color.get_colors()
         self.assertEqual("\x1b[0;37m", six.text_type(ret["LIGHT_GRAY"]))

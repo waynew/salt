@@ -8,12 +8,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.json
-import salt.utils.schema as schema
 import salt.utils.stringutils
 import salt.utils.yaml
 from salt.ext import six
+from salt.utils import schema
 from salt.utils.versions import LooseVersion as _LooseVersion
 
 # Import Salt Testing Libs
@@ -119,6 +121,7 @@ class ConfigTestCase(TestCase):
         )
         self.assertDictContainsSubset(expected, MergedConfigClass.serialize())
 
+    @pytest.mark.slow_0_01
     def test_configuration_items_order(self):
         class One(schema.Schema):
             one = schema.BooleanItem()
@@ -132,6 +135,7 @@ class ConfigTestCase(TestCase):
 
         self.assertEqual(Final.serialize()["x-ordering"], ["one", "two", "three"])
 
+    @pytest.mark.slow_0_01
     def test_optional_requirements_config(self):
         class BaseRequirements(schema.Schema):
             driver = schema.StringItem(default="digitalocean", format="hidden")
@@ -426,6 +430,7 @@ class ConfigTestCase(TestCase):
         self.assertDictContainsSubset(expected, Requirements4.serialize())
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_optional_requirements_config_validation(self):
         class BaseRequirements(schema.Schema):
             driver = schema.StringItem(default="digitalocean", format="hidden")
@@ -553,6 +558,7 @@ class ConfigTestCase(TestCase):
             jsonschema.validate({"item": 1}, TestConf.serialize())
         self.assertIn("is not of type", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_string_config(self):
         item = schema.StringItem(title="Foo", description="Foo Item")
         self.assertDictEqual(
@@ -647,6 +653,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_string_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.StringItem(title="Foo", description="Foo Item")
@@ -737,6 +744,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_email_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.EMailItem(title="Item", description="Item description")
@@ -829,6 +837,7 @@ class ConfigTestCase(TestCase):
             )
         self.assertIn("is not a", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_hostname_config(self):
         item = schema.HostnameItem(title="Foo", description="Foo Item")
         self.assertDictEqual(
@@ -880,6 +889,7 @@ class ConfigTestCase(TestCase):
         any([HAS_ISODATE, HAS_STRICT_RFC3339]) is False,
         "The 'strict_rfc3339' or 'isodate' library is missing",
     )
+    @pytest.mark.slow_0_01
     def test_datetime_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.DateTimeItem(title="Item", description="Item description")
@@ -927,6 +937,8 @@ class ConfigTestCase(TestCase):
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
     @skipIf(HAS_RFC3987 is False, "The 'rfc3987' library is missing")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_uri_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.UriItem(title="Item", description="Item description")
@@ -1044,6 +1056,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_number_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.NumberItem(title="How many dogs", description="Question")
@@ -1135,6 +1148,7 @@ class ConfigTestCase(TestCase):
             jsonschema.validate({"item": 3}, TestConf.serialize())
         self.assertIn("is not one of", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_integer_config(self):
         item = schema.IntegerItem(title="How many dogs", description="Question")
         self.assertDictEqual(
@@ -1231,6 +1245,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_integer_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.IntegerItem(title="How many dogs", description="Question")
@@ -1322,6 +1337,7 @@ class ConfigTestCase(TestCase):
             jsonschema.validate({"item": 3}, TestConf.serialize())
         self.assertIn("is not one of", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_array_config(self):
         string_item = schema.StringItem(title="Dog Name", description="The dog name")
         item = schema.ArrayItem(
@@ -1429,6 +1445,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_array_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.ArrayItem(
@@ -1576,6 +1593,7 @@ class ConfigTestCase(TestCase):
             )
         self.assertIn("is not one of", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_dict_config(self):
         item = schema.DictItem(
             title="Poligon",
@@ -1731,6 +1749,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_dict_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.DictItem(
@@ -1972,6 +1991,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_anyof_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.ArrayItem(
@@ -2021,6 +2041,7 @@ class ConfigTestCase(TestCase):
             jsonschema.validate({"item": 2}, TestConf.serialize())
         self.assertIn("is not of type", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_allof_config(self):
         item = schema.AllOfItem(
             items=(schema.StringItem(min_length=2), schema.StringItem(max_length=3))
@@ -2031,6 +2052,7 @@ class ConfigTestCase(TestCase):
         )
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_allof_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.ArrayItem(
@@ -2071,6 +2093,7 @@ class ConfigTestCase(TestCase):
         self.assertEqual(item.serialize(), {"not": item.item.serialize()})
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_not_config_validation(self):
         class TestConf(schema.Schema):
             item = schema.ArrayItem(
@@ -2097,6 +2120,7 @@ class ConfigTestCase(TestCase):
             jsonschema.validate({"item": [False]}, TestConf.serialize())
         self.assertIn("is not allowed for", excinfo.exception.message)
 
+    @pytest.mark.slow_0_01
     def test_item_name_override_class_attrname(self):
         class TestConf(schema.Schema):
             item = schema.BooleanItem(
@@ -2118,6 +2142,7 @@ class ConfigTestCase(TestCase):
         }
         self.assertDictEqual(TestConf.serialize(), expected)
 
+    @pytest.mark.slow_0_01
     def test_config_name_override_class_attrname(self):
         class TestConf(schema.Schema):
             item = schema.BooleanItem(title="Hungry", description="Are you hungry?")
@@ -2202,6 +2227,7 @@ class ComplexSchemaTestCase(TestCase):
     dict_schema = TestDictComplexDefinitionsSchema()
     complex_schema = TestComplexComplexDefinitionsSchema()
 
+    @pytest.mark.slow_0_01
     def test_complex_schema_item_serialize(self):
         obj = copy.deepcopy(self.obj)
         expected_serialized = {"$ref": "#/definitions/ComplexSchemaItem"}
@@ -2303,6 +2329,7 @@ class ComplexSchemaTestCase(TestCase):
         }
         self.assertDictEqual(serialized, expected)
 
+    @pytest.mark.slow_0_01
     def test_array_complex_definition_schema(self):
         serialized = salt.utils.yaml.safe_load(
             salt.utils.json.dumps(self.array_schema.serialize())
@@ -2373,6 +2400,7 @@ class ComplexSchemaTestCase(TestCase):
         }
         self.assertDictEqual(serialized, expected)
 
+    @pytest.mark.slow_0_01
     def test_complex_complex_definition_schema(self):
         serialized = salt.utils.yaml.safe_load(
             salt.utils.json.dumps(self.complex_schema.serialize())
@@ -2430,6 +2458,7 @@ class ComplexSchemaTestCase(TestCase):
             self.fail("ValidationError raised: {0}".format(exc))
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_complex_schema_item_thirsty_invalid(self):
         serialized = self.schema.serialize()
         with self.assertRaises(jsonschema.exceptions.ValidationError) as excinfo:
@@ -2442,6 +2471,7 @@ class ComplexSchemaTestCase(TestCase):
         self.assertIn(expected, excinfo.exception.message)
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_complex_complex_schema_item_hungry_valid(self):
         serialized = self.complex_schema.serialize()
 
@@ -2467,6 +2497,7 @@ class ComplexSchemaTestCase(TestCase):
             self.fail("ValidationError raised: {0}".format(exc))
 
     @skipIf(HAS_JSONSCHEMA is False, "The 'jsonschema' library is missing")
+    @pytest.mark.slow_0_01
     def test_complex_complex_schema_item_hungry_invalid(self):
         serialized = self.complex_schema.serialize()
         with self.assertRaises(jsonschema.exceptions.ValidationError) as excinfo:

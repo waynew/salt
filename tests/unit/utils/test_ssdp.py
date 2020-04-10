@@ -6,10 +6,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
 
-import salt.utils.ssdp as ssdp
+import pytest
 import salt.utils.stringutils
 from salt.ext import six
 from salt.ext.six.moves import zip
+from salt.utils import ssdp
 from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase, skipIf
 
@@ -94,6 +95,7 @@ class SSDPBaseTestCase(TestCase, Mocks):
 
     @patch("salt.utils.ssdp._json", None)
     @patch("salt.utils.ssdp.asyncio", None)
+    @pytest.mark.slow_0_01
     def test_base_avail(self):
         """
         Test SSDP base class availability method.
@@ -155,6 +157,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
     Test socket protocol
     """
 
+    @pytest.mark.slow_0_01
     def test_attr_check(self):
         """
         Tests attributes are set to the base class
@@ -173,6 +176,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
         assert not factory.disable_hidden
         assert factory.my_ip == expected_ip
 
+    @pytest.mark.slow_0_01
     def test_transport_sendto_success(self):
         """
         Test transport send_to.
@@ -239,6 +243,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
             assert factory.log.debug.call_args[0][1] == addr[0]
             assert factory.log.debug.call_args[0][2] == addr[1]
 
+    @pytest.mark.slow_0_01
     def test_datagram_signature_wrong_timestamp_quiet(self):
         """
         Test datagram receives a wrong timestamp (no reply).
@@ -285,6 +290,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
                 == factory._sendto.call_args[0][0]
             )
 
+    @pytest.mark.slow_0_01
     def test_datagram_signature_outdated_timestamp_quiet(self):
         """
         Test if datagram processing reacts on outdated message (more than 20 seconds). Quiet mode.
@@ -314,6 +320,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
             assert not factory._sendto.called
             assert "Received outdated package" in factory.log.debug.call_args[0][0]
 
+    @pytest.mark.slow_0_01
     def test_datagram_signature_outdated_timestamp_reply(self):
         """
         Test if datagram processing reacts on outdated message (more than 20 seconds). Reply mode.
@@ -347,6 +354,7 @@ class SSDPFactoryTestCase(TestCase, Mocks):
             ] == "{}:E:Timestamp is too old".format(signature)
             assert "Received outdated package" in factory.log.debug.call_args[0][0]
 
+    @pytest.mark.slow_0_01
     def test_datagram_signature_correct_timestamp_reply(self):
         """
         Test if datagram processing sends out correct reply within 20 seconds.
@@ -403,6 +411,7 @@ class SSDPServerTestCase(TestCase, Mocks):
             assert srv._config["answer"]["master"] == new_ip
             assert config["answer"]["master"] == old_ip
 
+    @pytest.mark.slow_0_01
     def test_run(self):
         """
         Test server runner.
@@ -478,6 +487,7 @@ class SSDPClientTestCase(TestCase, Mocks):
         def read(self, *args, **kwargs):
             return self.pool.pop(0)
 
+    @pytest.mark.slow_0_01
     def test_config_passed(self):
         """
         Test if the configuration is passed.
@@ -506,6 +516,7 @@ class SSDPClientTestCase(TestCase, Mocks):
         assert "foo" in clnt._config
         assert "foo" not in config
 
+    @pytest.mark.slow_0_01
     def test_query(self):
         """
         Test if client queries the broadcast
@@ -547,6 +558,7 @@ class SSDPClientTestCase(TestCase, Mocks):
             assert response["10.10.10.10"] == ["some", "data"]
             assert response["20.20.20.20"] == ["data"]
 
+    @pytest.mark.slow_0_01
     def test_get_masters_map_error_handling(self):
         """
         Test getting map handles timeout network exception
@@ -567,6 +579,7 @@ class SSDPClientTestCase(TestCase, Mocks):
             assert error_msg == six.text_type(clnt.log.error.call_args[0][1])
             assert not response
 
+    @pytest.mark.slow_0_01
     def test_discover_no_masters(self):
         """
         Test discover available master on the network (none found).
@@ -582,6 +595,7 @@ class SSDPClientTestCase(TestCase, Mocks):
         assert clnt.log.info.called
         assert clnt.log.info.call_args[0][0] == "No master has been discovered."
 
+    @pytest.mark.slow_0_01
     def test_discover_general_error(self):
         """
         Test discover available master on the network (erroneous found)
@@ -612,6 +626,7 @@ class SSDPClientTestCase(TestCase, Mocks):
             assert clnt.log.error.call_args[1] == {}
             assert clnt.log.error.call_args[0][2] == error
 
+    @pytest.mark.slow_0_01
     def test_discover_timestamp_error(self):
         """
         Test discover available master on the network (outdated timestamp)

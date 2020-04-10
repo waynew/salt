@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.haproxyconn as haproxyconn
+from salt.modules import haproxyconn
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -110,6 +112,7 @@ class HaproxyConnTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_servers' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_servers(self):
         """
         Test list_servers
@@ -173,6 +176,7 @@ class HaproxyConnTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertTrue(haproxyconn.show_backends())
 
+    @pytest.mark.slow_0_01
     def test_list_backends(self):
         """
         Test listing of all backends

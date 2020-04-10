@@ -3,10 +3,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.mac_assistive as assistive
+import pytest
 
 # Import Salt Libs
 from salt.exceptions import CommandExecutionError
+from salt.modules import mac_assistive as assistive
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -46,6 +47,7 @@ class AssistiveTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(assistive.installed("foo"))
 
+    @pytest.mark.slow_0_01
     def test_installed_bundle_not(self):
         """
         Test checking to see if a bundle id is installed as being able to use assistive access
@@ -98,6 +100,7 @@ class AssistiveTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(assistive.enabled("foo"))
 
+    @pytest.mark.slow_0_01
     def test_enabled_assistive_false(self):
         """
         Test if a bundle ID is disabled for assistive access

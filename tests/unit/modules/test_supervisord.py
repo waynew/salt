@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.supervisord as supervisord
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import supervisord
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -76,6 +78,7 @@ class SupervisordTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'add' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_add(self):
         """
         Tests if it activates any updates in config for process/group.

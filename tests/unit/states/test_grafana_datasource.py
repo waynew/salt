@@ -2,8 +2,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.grafana_datasource as grafana_datasource
+from salt.states import grafana_datasource
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class GrafanaDatasourceTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {grafana_datasource: {}}
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         with patch("requests.get", mock_json_response([])):
             with patch("requests.post") as rpost:
@@ -79,6 +82,7 @@ class GrafanaDatasourceTestCase(TestCase, LoaderModuleMockMixin):
                     ret["changes"], {"old": {"url": "url"}, "new": {"url": "newurl"}}
                 )
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         with patch("requests.get", mock_json_response([])):
             with patch("requests.delete") as rdelete:

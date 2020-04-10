@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.nftables as nftables
+from salt.states import nftables
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -96,6 +98,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(nftables.chain_absent("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_append(self):
         """
             Test to append a rule to a chain
@@ -248,6 +251,7 @@ class NftablesTestCase(TestCase, LoaderModuleMockMixin):
                                 ret,
                             )
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
             Test to delete a rule to a chain

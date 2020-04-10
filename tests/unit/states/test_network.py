@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt Libs
-import salt.states.network as network
+from salt.states import network
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -187,6 +189,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
                     )
                     self.assertDictEqual(network.routes("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_system(self):
         """
             Test to ensure that global network settings

@@ -7,11 +7,13 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
-import salt.states.boto_cloudwatch_event as boto_cloudwatch_event
 from salt.ext.six.moves import range
+from salt.states import boto_cloudwatch_event
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -155,6 +157,8 @@ class BotoCloudWatchEventStateTestCaseBase(TestCase, LoaderModuleMockMixin):
 class BotoCloudWatchEventTestCase(
     BotoCloudWatchEventStateTestCaseBase, BotoCloudWatchEventTestCaseMixin
 ):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_describe_rule(self):
         """
         Tests exceptions when checking rule existence
@@ -173,6 +177,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("error on list rules" in result.get("comment", {}))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_create_a_new_rule(self):
         """
         Tests present on a rule name that doesn't exist and
@@ -191,6 +197,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("put_rule" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_describe_the_new_rule(self):
         """
         Tests present on a rule name that doesn't exist and
@@ -212,6 +220,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("describe_rule" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_create_a_new_rules_targets(self):
         """
         Tests present on a rule name that doesn't exist and
@@ -232,6 +242,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("put_targets" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_rule_does_not_exist(self):
         """
         Tests the successful case of creating a new rule, and updating its
@@ -251,6 +263,8 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertEqual(result.get("result"), True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_update_an_existing_rule(self):
         """
         Tests present on an existing rule where an error is thrown on updating the pool properties.
@@ -270,6 +284,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("describe_rule" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_get_targets(self):
         """
         Tests present on an existing rule where put_rule succeeded, but an error
@@ -292,6 +308,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("list_targets" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_failing_to_put_targets(self):
         """
         Tests present on an existing rule where put_rule succeeded, but an error
@@ -313,6 +331,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("put_targets" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_putting_targets(self):
         """
         Tests present on an existing rule where put_rule succeeded, and targets
@@ -333,6 +353,8 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertEqual(result.get("result"), True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_removing_targets(self):
         """
         Tests present on an existing rule where put_rule succeeded, and targets
@@ -355,6 +377,8 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertEqual(result.get("result"), True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_failing_to_describe_rule(self):
         """
         Tests exceptions when checking rule existence
@@ -368,6 +392,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("error on list rules" in result.get("comment", {}))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_rule_does_not_exist(self):
         """
         Tests absent on an non-existing rule
@@ -379,6 +405,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), True)
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_failing_to_list_targets(self):
         """
         Tests absent on an rule when the list_targets call fails
@@ -393,6 +421,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("list_targets" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_failing_to_remove_targets_exception(self):
         """
         Tests absent on an rule when the remove_targets call fails
@@ -408,6 +438,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("remove_targets" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_failing_to_remove_targets_nonexception(self):
         """
         Tests absent on an rule when the remove_targets call fails
@@ -420,6 +452,8 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertEqual(result.get("result"), False)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_failing_to_delete_rule(self):
         """
         Tests absent on an rule when the delete_rule call fails
@@ -434,6 +468,8 @@ class BotoCloudWatchEventTestCase(
         self.assertEqual(result.get("result"), False)
         self.assertTrue("delete_rule" in result.get("comment", ""))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent(self):
         """
         Tests absent on an rule

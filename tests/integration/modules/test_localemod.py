@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -22,11 +24,16 @@ def _find_new_locale(current_locale):
 @skipIf(salt.utils.platform.is_darwin(), "locale method is not supported on mac")
 @requires_salt_modules("locale")
 class LocaleModuleTest(ModuleCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_locale(self):
         locale = self.run_function("locale.get_locale")
         self.assertNotIn("Unsupported platform!", locale)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_gen_locale(self):
         # Make sure charmaps are available on test system before attempting
         # call gen_locale. We log this error to the user in the function, but
@@ -48,6 +55,9 @@ class LocaleModuleTest(ModuleCase):
         self.assertTrue(ret)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_set_locale(self):
         original_locale = self.run_function("locale.get_locale")
         locale_to_set = _find_new_locale(original_locale)

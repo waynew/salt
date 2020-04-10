@@ -3,9 +3,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import salt libs
-import salt.modules.linux_acl as linux_acl
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import salt libs
+from salt.modules import linux_acl
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -61,6 +63,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
     def test_getfacl_wo_args(self):
         self.assertRaises(CommandExecutionError, linux_acl.getfacl)
 
+    @pytest.mark.slow_0_01
     def test_getfacl_w_single_arg(self):
         linux_acl.getfacl(self.file)
         self.cmdrun.assert_called_once_with(
@@ -108,6 +111,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             "setfacl -b " + " ".join(self.quoted_files), python_shell=False
         )
 
+    @pytest.mark.slow_0_01
     def test_wipefacls__recursive_w_multiple_args(self):
         linux_acl.wipefacls(*self.files, recursive=True)
         self.cmdrun.assert_called_once_with(
@@ -118,6 +122,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
         for acl in [self.u_acl, self.user_acl, self.g_acl, self.group_acl]:
             self.assertRaises(CommandExecutionError, linux_acl.modfacl, *acl)
 
+    @pytest.mark.slow_0_01
     def test_modfacl__u_w_single_arg(self):
         linux_acl.modfacl(*(self.u_acl + [self.file]))
         self.cmdrun.assert_called_once_with(
@@ -126,6 +131,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             raise_err=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_modfacl__u_w_multiple_args(self):
         linux_acl.modfacl(*(self.u_acl + self.files))
         self.cmdrun.assert_called_once_with(
@@ -214,6 +220,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             raise_err=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_modfacl__default_user_w_single_arg(self):
         linux_acl.modfacl(*(self.default_user_acl + [self.file]))
         self.cmdrun.assert_called_once_with(
@@ -265,6 +272,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             python_shell=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_delfacl__user_w_single_arg(self):
         linux_acl.delfacl(*(self.user_acl[:-1] + [self.file]))
         self.cmdrun.assert_called_once_with(
@@ -273,6 +281,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             python_shell=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_delfacl__user_w_multiple_args(self):
         linux_acl.delfacl(*(self.user_acl[:-1] + self.files))
         self.cmdrun.assert_called_once_with(
@@ -313,6 +322,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
             python_shell=False,
         )
 
+    @pytest.mark.slow_0_01
     def test_delfacl__d_u_w_single_arg(self):
         linux_acl.delfacl(*(self.d_u_acl[:-1] + [self.file]))
         self.cmdrun.assert_called_once_with(

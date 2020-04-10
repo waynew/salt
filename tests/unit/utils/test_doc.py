@@ -6,6 +6,8 @@ Unit Tests for functions located in salt.utils.doc.py.
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.doc
 
@@ -18,6 +20,7 @@ class DocUtilsTestCase(TestCase):
     Test case for doc util.
     """
 
+    @pytest.mark.slow_0_01
     def test_parse_docstring(self):
         test_keystone_str = """Management of Keystone users
                                 ============================

@@ -9,6 +9,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import copy
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 from salt.ext import six
@@ -24,6 +26,7 @@ class FilesTestCase(TestCase):
     Test case for files util.
     """
 
+    @pytest.mark.slow_0_01
     def test_safe_rm(self):
         with patch("os.remove") as os_remove_mock:
             salt.utils.files.safe_rm("dummy_tgt")
@@ -44,6 +47,7 @@ class FilesTestCase(TestCase):
         )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_safe_walk_symlink_recursion(self, tmp):
         if os.stat(tmp).st_ino == 0:
             self.skipTest("inodes not supported in {0}".format(tmp))
@@ -119,6 +123,7 @@ class FilesTestCase(TestCase):
 
     @with_tempdir()
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_recursive_copy(self, src, dest):
         src_structure = {
             "foo": {"foofile.txt": "fooSTRUCTURE"},

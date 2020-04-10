@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_powercfg as powercfg
+from salt.modules import win_powercfg as powercfg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -100,6 +102,7 @@ class PowerCfgTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_set_hibernate_timeout(self):
         """
         Test to make sure we can set the hibernate timeout value
@@ -146,6 +149,7 @@ class PowerCfgTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual({"ac": 30, "dc": 15}, ret)
 
+    @pytest.mark.slow_0_01
     def test_get_disk_timeout(self):
         """
         Test to make sure we can get the disk timeout value
@@ -192,6 +196,7 @@ class PowerCfgTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual({"ac": 30, "dc": 15}, ret)
 
+    @pytest.mark.slow_0_01
     def test_get_hibernate_timeout(self):
         """
         Test to make sure we can get the hibernate timeout value

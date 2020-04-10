@@ -6,11 +6,12 @@ import logging
 import socket
 import textwrap
 
+import pytest
 import salt.exceptions
+from salt._compat import ipaddress
 
 # Import salt libs
-import salt.utils.network as network
-from salt._compat import ipaddress
+from salt.utils import network
 from tests.support.mock import MagicMock, create_autospec, mock_open, patch
 
 # Import Salt Testing libs
@@ -141,10 +142,12 @@ IPV6_SUBNETS = {
 
 
 class NetworkTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_sanitize_host(self):
         ret = network.sanitize_host("10.1./2.$3")
         self.assertEqual(ret, "10.1.2.3")
 
+    @pytest.mark.slow_0_01
     def test_host_to_ips(self):
         """
         NOTE: When this test fails it's usually because the IP address has
@@ -178,9 +181,12 @@ class NetworkTestCase(TestCase):
             ret = network.host_to_ips("someothersite.com")
             self.assertEqual(ret, None)
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id(self):
         self.assertTrue(network.generate_minion_id())
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test__generate_minion_id_with_unicode_in_etc_hosts(self):
         """
         Test that unicode in /etc/hosts doesn't raise an error when
@@ -236,6 +242,7 @@ class NetworkTestCase(TestCase):
         self.assertTrue(network.ipv6("2001:0db8:85a3::8a2e:0370:7334"))
         self.assertTrue(network.ipv6("2001:67c:2e8::/48"))
 
+    @pytest.mark.slow_0_01
     def test_parse_host_port(self):
         _ip = ipaddress.ip_address
         good_host_ports = {
@@ -277,6 +284,8 @@ class NetworkTestCase(TestCase):
                 )
                 raise _e_
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_dns_check(self):
         hosts = [
             {
@@ -356,6 +365,7 @@ class NetworkTestCase(TestCase):
             ):
                 network.dns_check("foo", "1")
 
+    @pytest.mark.slow_0_01
     def test_test_addrs(self):
         # subset of real data from getaddrinfo against saltstack.com
         addrinfo = [
@@ -385,6 +395,7 @@ class NetworkTestCase(TestCase):
             addrs = network._test_addrs(addrinfo, 80)
             self.assertTrue(len(addrs) == 5)
 
+    @pytest.mark.slow_0_01
     def test_is_subnet(self):
         for subnet_data in (IPV4_SUBNETS, IPV6_SUBNETS):
             for item in subnet_data[True]:
@@ -402,6 +413,7 @@ class NetworkTestCase(TestCase):
             log.debug("Testing that %s is not a valid subnet", item)
             self.assertFalse(network.is_ipv4_subnet(item))
 
+    @pytest.mark.slow_0_01
     def test_is_ipv6_subnet(self):
         for item in IPV6_SUBNETS[True]:
             log.debug("Testing that %s is a valid subnet", item)
@@ -510,6 +522,7 @@ class NetworkTestCase(TestCase):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_interfaces_ifconfig_solaris(self):
         with patch("salt.utils.platform.is_sunos", lambda: True):
             interfaces = network._interfaces_ifconfig(SOLARIS)
@@ -663,6 +676,7 @@ class NetworkTestCase(TestCase):
                 ],
             )
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_127_name(self):
         """
         Test if minion IDs can be named 127.foo
@@ -687,6 +701,7 @@ class NetworkTestCase(TestCase):
                 ["127.domainname.blank", "127", "1.2.3.4", "5.6.7.8"],
             )
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_127_name_startswith(self):
         """
         Test if minion IDs can be named starting from "127"
@@ -711,6 +726,7 @@ class NetworkTestCase(TestCase):
                 ["127890.domainname.blank", "127890", "1.2.3.4", "5.6.7.8"],
             )
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_duplicate(self):
         """
         Test if IP addresses in the minion IDs are distinct in the pool
@@ -730,6 +746,7 @@ class NetworkTestCase(TestCase):
         ):
             self.assertEqual(network._generate_minion_id(), ["hostname", "1.2.3.4"])
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_platform_used(self):
         """
         Test if platform.node is used for the first occurrence.
@@ -754,6 +771,7 @@ class NetworkTestCase(TestCase):
                 network.generate_minion_id(), "very.long.and.complex.domain.name"
             )
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_platform_localhost_filtered(self):
         """
         Test if localhost is filtered from the first occurrence.
@@ -775,6 +793,7 @@ class NetworkTestCase(TestCase):
         ):
             self.assertEqual(network.generate_minion_id(), "hostname.domainname.blank")
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_platform_localhost_filtered_all(self):
         """
         Test if any of the localhost is filtered from everywhere.
@@ -815,6 +834,7 @@ class NetworkTestCase(TestCase):
         ):
             self.assertEqual(network.generate_minion_id(), "localhost")
 
+    @pytest.mark.slow_0_01
     def test_generate_minion_id_platform_fqdn(self):
         """
         Test if fqdn is picked up.
@@ -874,6 +894,7 @@ class NetworkTestCase(TestCase):
         ):
             self.assertEqual(network.generate_minion_id(), "1.2.3.4")
 
+    @pytest.mark.slow_0_01
     def test_gen_mac(self):
         with patch("random.randint", return_value=1) as random_mock:
             self.assertEqual(random_mock.return_value, 1)
@@ -893,6 +914,9 @@ class NetworkTestCase(TestCase):
             b"\xf8\xe7\xd6\xc5\xb4\xa3", network.mac_str_to_bytes("f8e7d6c5b4a3")
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_generate_minion_id_with_long_hostname(self):
         """
         Validate the fix for:

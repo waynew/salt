@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -71,6 +72,7 @@ class NapalmYangModModuleTestCase(TestCase, LoaderModuleMockMixin):
 
         return {napalm_yang_mod: module_globals, napalm_network: module_globals}
 
+    @pytest.mark.slow_0_01
     def test_diff(self):
         ret = napalm_yang_mod.diff({}, {"test": True}, "models.openconfig_interfaces")
         assert ret == TEST_DIFF
@@ -82,6 +84,7 @@ class NapalmYangModModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_yang_mod.diff({}, {"test": True}, ["models.openconfig_interfaces"])
         assert ret == TEST_DIFF
 
+    @pytest.mark.slow_0_01
     def test_parse(self):
         ret = napalm_yang_mod.parse("models.openconfig_interfaces")
         assert ret is not None
@@ -90,6 +93,7 @@ class NapalmYangModModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_yang_mod.get_config({}, "models.openconfig_interfaces")
         assert ret is not None
 
+    @pytest.mark.slow_0_01
     def test_load_config(self):
         ret = napalm_yang_mod.load_config({}, "models.openconfig_interfaces")
         assert ret is TEST_CONFIG

@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.servicenow as servicenow
+import pytest
+from salt.modules import servicenow
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -43,10 +44,12 @@ class ServiceNowModuleTestCase(TestCase, LoaderModuleMockMixin):
             ].api.Client = MockServiceNowClient
         return {servicenow: module_globals}
 
+    @pytest.mark.slow_0_01
     def test_module_creation(self):
         client = servicenow._get_client()
         self.assertFalse(client is None)
 
+    @pytest.mark.slow_0_01
     def test_non_structured_query(self):
         result = servicenow.non_structured_query("tests", "role=web")
         self.assertFalse(result is None)

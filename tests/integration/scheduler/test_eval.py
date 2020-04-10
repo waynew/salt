@@ -10,6 +10,7 @@ import os
 import random
 import time
 
+import pytest
 import salt.utils.platform
 
 # Import Salt libs
@@ -24,7 +25,7 @@ from tests.support.runtests import RUNTIME_VARS
 from tests.support.unit import skipIf
 
 try:
-    import dateutil.parser as dateutil_parser
+    from dateutil import parser as dateutil_parser
 
     HAS_DATEUTIL_PARSER = True
 except ImportError:
@@ -69,6 +70,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         self.schedule.reset()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval(self):
         """
         verify that scheduled job runs
@@ -95,6 +99,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time2)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_multiple_whens(self):
         """
         verify that scheduled job runs
@@ -129,6 +136,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time2)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_whens(self):
         """
         verify that scheduled job runs
@@ -145,6 +155,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_loop_interval(self):
         """
         verify that scheduled job runs
@@ -172,6 +185,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
             ret["_last_run"], run_time2 + datetime.timedelta(seconds=LOOP_INTERVAL)
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_multiple_whens_loop_interval(self):
         """
         verify that scheduled job runs
@@ -214,6 +230,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time2)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_once(self):
         """
         verify that scheduled job runs
@@ -235,6 +254,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_once_loop_interval(self):
         """
         verify that scheduled job runs
@@ -263,6 +285,7 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertEqual(ret["_last_run"], run_time)
 
     @skipIf(not HAS_CRONITER, "Cannot find croniter python module")
+    @pytest.mark.slow_0_01
     def test_eval_cron(self):
         """
         verify that scheduled job runs
@@ -283,6 +306,7 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertEqual(ret["_last_run"], run_time)
 
     @skipIf(not HAS_CRONITER, "Cannot find croniter python module")
+    @pytest.mark.slow_0_01
     def test_eval_cron_loop_interval(self):
         """
         verify that scheduled job runs
@@ -305,6 +329,10 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_eval_until(self):
         """
         verify that scheduled job is skipped once the current
@@ -356,6 +384,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertEqual(ret["_skip_reason"], "until_passed")
         self.assertEqual(ret["_skipped_time"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_after(self):
         """
         verify that scheduled job is skipped until after the specified
@@ -407,6 +438,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_enabled(self):
         """
         verify that scheduled job does not run
@@ -428,6 +462,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_enabled_key(self):
         """
         verify that scheduled job runs
@@ -482,6 +519,7 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         # Ensure job data still matches
         self.assertEqual(ret, job["schedule"][job_name])
 
+    @pytest.mark.slow_0_01
     def test_eval_global_disabled_job_enabled(self):
         """
         verify that scheduled job does not run
@@ -511,6 +549,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         # Ensure job is still enabled
         self.assertEqual(ret["enabled"], True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_run_on_start(self):
         """
         verify that scheduled job is run when minion starts
@@ -536,6 +577,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.schedule.eval(now=run_time)
         ret = self.schedule.job_status(job_name)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_splay(self):
         """
         verify that scheduled job runs with splayed time
@@ -562,6 +606,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
             ret = self.schedule.job_status(job_name)
             self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_splay_range(self):
         """
         verify that scheduled job runs with splayed time
@@ -592,6 +639,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
             ret = self.schedule.job_status(job_name)
             self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_splay_global(self):
         """
         verify that scheduled job runs with splayed time
@@ -619,6 +669,10 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
             ret = self.schedule.job_status(job_name)
             self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_eval_seconds(self):
         """
         verify that scheduled job run mutiple times with seconds
@@ -674,6 +728,10 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertEqual(ret["_last_run"], run_time)
         self.assertEqual(ret["_next_fire_time"], next_run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_eval_minutes(self):
         """
         verify that scheduled job run mutiple times with minutes
@@ -723,6 +781,10 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_eval_hours(self):
         """
         verify that scheduled job run mutiple times with hours
@@ -772,6 +834,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_days(self):
         """
         verify that scheduled job run mutiple times with days
@@ -842,6 +907,9 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertEqual(ret["_last_run"], run_time)
         self.assertEqual(ret["_next_fire_time"], next_run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_eval_when_splay(self):
         """
         verify that scheduled job runs
@@ -887,6 +955,7 @@ class SchedulerEvalTest(ModuleCase, SaltReturnAssertsMixin):
             self.assertEqual(ret["_last_run"], run_time2)
             self.assertEqual(ret["_next_fire_time"], None)
 
+    @pytest.mark.slow_0_01
     def test_eval_when_splay_in_past(self):
         """
         verify that scheduled job runs

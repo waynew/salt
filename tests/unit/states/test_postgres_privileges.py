@@ -4,7 +4,8 @@
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.states.postgres_privileges as postgres_privileges
+import pytest
+from salt.states import postgres_privileges
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase
@@ -34,6 +35,7 @@ class PostgresPrivilegesTestCase(TestCase, LoaderModuleMockMixin):
         del self.mock_true
         del self.mock_false
 
+    @pytest.mark.slow_0_01
     def test_present_table(self):
         """
         Test present
@@ -81,6 +83,7 @@ class PostgresPrivilegesTestCase(TestCase, LoaderModuleMockMixin):
                     self.ret,
                 )
 
+    @pytest.mark.slow_0_01
     def test_present_group(self):
         """
         Test present group

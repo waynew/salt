@@ -2,7 +2,6 @@
 """
 unit tests for the grains state
 """
-
 from __future__ import absolute_import, print_function, unicode_literals
 
 import contextlib
@@ -10,14 +9,15 @@ import contextlib
 # Import Python libs
 import os
 
-import salt.modules.grains as grainsmod
-import salt.states.grains as grains
+import pytest
 
 # Import salt libs
 import salt.utils.files
 import salt.utils.stringutils
 import salt.utils.yaml
 from salt.ext import six
+from salt.modules import grains as grainsmod
+from salt.states import grains
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -111,6 +111,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 12
 
+    @pytest.mark.slow_0_01
     def test_present_add(self):
         # Set a non existing grain
         with self.setGrains({"a": "aval"}):
@@ -151,6 +152,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 + "      bar: is a dict\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_present_add_key_to_existing(self):
         with self.setGrains({"a": "aval", "foo": {"k1": "v1"}}):
             # Fails setting a grain to a dict
@@ -194,6 +196,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 grains.__grains__, {"a": "aval", "foo": {"is": {"nested": "bar"}}}
             )
 
+    @pytest.mark.slow_0_01
     def test_present_overwrite(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             # Overwrite an existing grain
@@ -262,6 +265,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 grains.__grains__, {"a": "aval", "foo": {"is": {"nested": "val"}}}
             )
 
+    @pytest.mark.slow_0_01
     def test_present_fails_to_set_dict_or_list(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             # Fails to overwrite a grain to a list
@@ -335,6 +339,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval", "foo": {"k1": "v1"}})
             self.assertGrainFileContent("a: aval\n" + "foo:\n" + "  k1: v1\n")
 
+    @pytest.mark.slow_0_01
     def test_present_force_to_set_dict_or_list(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             # Force to overwrite a grain to a list
@@ -419,6 +424,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 + "      k1: v1\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_present_fails_to_convert_value_to_key(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             # Fails converting a value to a nested grain key
@@ -432,6 +438,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(ret["changes"], {})
 
+    @pytest.mark.slow_0_01
     def test_present_overwrite_test(self):
         with patch.dict(grains.__opts__, {"test": True}):
             with self.setGrains({"a": "aval", "foo": "bar"}):
@@ -442,6 +449,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(grains.__grains__, {"a": "aval", "foo": "bar"})
                 self.assertGrainFileContent("a: aval\n" + "foo: bar\n")
 
+    @pytest.mark.slow_0_01
     def test_present_convert_value_to_key(self):
         with self.setGrains({"a": "aval", "foo": "is"}):
             # Converts a value to a nested grain key
@@ -507,6 +515,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 6
 
+    @pytest.mark.slow_0_01
     def test_absent_already(self):
         # Unset a non existent grain
         with self.setGrains({"a": "aval"}):
@@ -526,6 +535,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval"})
             self.assertGrainFileContent("a: aval\n")
 
+    @pytest.mark.slow_0_01
     def test_absent_unset(self):
         # Unset a grain
         with self.setGrains({"a": "aval", "foo": "bar"}):
@@ -584,6 +594,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 "a: aval\n" + "foo:\n" + "- order\n" + "- is: nested\n" + "- correct\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_absent_unset_test(self):
         with patch.dict(grains.__opts__, {"test": True}):
             with self.setGrains({"a": "aval", "foo": "bar"}):
@@ -594,6 +605,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(grains.__grains__, {"a": "aval", "foo": "bar"})
                 self.assertGrainFileContent("a: aval\n" + "foo: bar\n")
 
+    @pytest.mark.slow_0_01
     def test_absent_fails_nested_complex_grain(self):
         # Unset a nested complex grain
         with self.setGrains(
@@ -619,6 +631,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 + "- correct\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_absent_force_nested_complex_grain(self):
         # Unset a nested complex grain
         with self.setGrains(
@@ -636,6 +649,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 "a: aval\n" + "foo:\n" + "- order\n" + "- is: null\n" + "- correct\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_absent_delete(self):
         # Delete a grain
         with self.setGrains({"a": "aval", "foo": "bar"}):
@@ -685,6 +699,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'append' function tests: 6
 
+    @pytest.mark.slow_0_01
     def test_append(self):
         # Append to an existing list
         with self.setGrains({"a": "aval", "foo": ["bar"]}):
@@ -695,6 +710,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval", "foo": ["bar", "baz"]})
             self.assertGrainFileContent("a: aval\n" + "foo:\n" + "- bar\n" + "- baz\n")
 
+    @pytest.mark.slow_0_01
     def test_append_nested(self):
         # Append to an existing nested list
         with self.setGrains({"a": "aval", "foo": {"list": ["bar"]}}):
@@ -709,6 +725,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 "a: aval\n" + "foo:\n" + "  list:\n" + "  - bar\n" + "  - baz\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_append_already(self):
         # Append to an existing list
         with self.setGrains({"a": "aval", "foo": ["bar"]}):
@@ -730,6 +747,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(ret["changes"], {})
             self.assertEqual(grains.__grains__, {"a": "aval", "foo": {"bar": "val"}})
 
+    @pytest.mark.slow_0_01
     def test_append_convert_to_list(self):
         # Append to an existing grain, converting to a list
         with self.setGrains({"a": "aval", "foo": {"bar": "val"}}):
@@ -771,6 +789,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(ret["changes"], {})
             self.assertEqual(grains.__grains__, {"a": "aval"})
 
+    @pytest.mark.slow_0_01
     def test_append_convert_to_list_empty(self):
         # Append to an existing list
         with self.setGrains({"foo": None}):
@@ -783,6 +802,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_present' function tests: 7
 
+    @pytest.mark.slow_0_01
     def test_list_present(self):
         with self.setGrains({"a": "aval", "foo": ["bar"]}):
             ret = grains.list_present(name="foo", value="baz")
@@ -792,6 +812,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval", "foo": ["bar", "baz"]})
             self.assertGrainFileContent("a: aval\n" + "foo:\n" + "- bar\n" + "- baz\n")
 
+    @pytest.mark.slow_0_01
     def test_list_present_nested(self):
         with self.setGrains({"a": "aval", "foo": {"is": {"nested": ["bar"]}}}):
             ret = grains.list_present(name="foo,is,nested", value="baz", delimiter=",")
@@ -813,6 +834,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 + "    - baz\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_list_present_inexistent(self):
         with self.setGrains({"a": "aval"}):
             ret = grains.list_present(name="foo", value="baz")
@@ -837,6 +859,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
                 "a: aval\n" + "foo:\n" + "  is:\n" + "    nested:\n" + "    - baz\n"
             )
 
+    @pytest.mark.slow_0_01
     def test_list_present_not_a_list(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             ret = grains.list_present(name="foo", value="baz")
@@ -878,6 +901,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_absent' function tests: 6
 
+    @pytest.mark.slow_0_01
     def test_list_absent(self):
         with self.setGrains({"a": "aval", "foo": ["bar"]}):
             ret = grains.list_absent(name="foo", value="bar")
@@ -898,6 +922,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval", "foo": {"list": []}})
             self.assertGrainFileContent("a: aval\n" + "foo:\n" + "  list: []\n")
 
+    @pytest.mark.slow_0_01
     def test_list_absent_inexistent(self):
         with self.setGrains({"a": "aval"}):
             ret = grains.list_absent(name="foo", value="baz")
@@ -907,6 +932,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval"})
             self.assertGrainFileContent("a: aval\n")
 
+    @pytest.mark.slow_0_01
     def test_list_absent_inexistent_nested(self):
         with self.setGrains({"a": "aval"}):
             ret = grains.list_absent(name="foo:list", value="baz")
@@ -916,6 +942,7 @@ class GrainsTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(grains.__grains__, {"a": "aval"})
             self.assertGrainFileContent("a: aval\n")
 
+    @pytest.mark.slow_0_01
     def test_list_absent_not_a_list(self):
         with self.setGrains({"a": "aval", "foo": "bar"}):
             ret = grains.list_absent(name="foo", value="bar")

@@ -7,6 +7,8 @@ import os
 import shutil
 import stat
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.stringutils
@@ -70,6 +72,11 @@ class AutosignGrainsTest(ShellCase):
         except AttributeError:
             pass
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_autosign_grains_accept(self):
         grain_file_path = os.path.join(self.autosign_grains_dir, "test_grain")
         with salt.utils.files.fopen(grain_file_path, "w") as f:
@@ -81,6 +88,11 @@ class AutosignGrainsTest(ShellCase):
         )  # get minon to try to authenticate itself again
         self.assertIn("minion", self.run_key("-l acc"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_autosign_grains_fail(self):
         grain_file_path = os.path.join(self.autosign_grains_dir, "test_grain")
         with salt.utils.files.fopen(grain_file_path, "w") as f:

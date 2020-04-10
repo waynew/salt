@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.smartos as smartos
+from salt.states import smartos
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing Libs
@@ -21,6 +23,7 @@ class SmartOsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {smartos: {"__opts__": {"test": False}}}
 
+    @pytest.mark.slow_0_01
     def test_config_present_does_not_exist(self):
         """
         Test salt.states.smartos.config_present

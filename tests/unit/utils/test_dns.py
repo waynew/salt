@@ -8,6 +8,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import socket
 import textwrap
 
+import pytest
 import salt.modules.cmdmod
 import salt.utils.dns
 
@@ -39,6 +40,7 @@ class DNShelpersCase(TestCase):
     Tests for the parser helpers
     """
 
+    @pytest.mark.slow_0_01
     def test_port(self):
         for right in (1, 42, "123", 65535):
             self.assertEqual(_to_port(right), int(right))
@@ -99,6 +101,7 @@ class DNShelpersCase(TestCase):
             rs_res = _weighted_order(list(recset))
             self.assertTrue(all(rec["name"] in rs_res for rec in recset))
 
+    @pytest.mark.slow_0_01
     def test_data2rec(self):
         right = [
             "10.0.0.1",
@@ -351,6 +354,8 @@ class DNSlookupsCase(TestCase):
                     )
 
     @skipIf(not salt.utils.dns.HAS_DIG, "dig is not available")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_dig_options(self):
         cmd = "dig {0} -v".format(salt.utils.dns.DIG_OPTIONS)
         cmd = salt.modules.cmdmod.retcode(
@@ -358,6 +363,7 @@ class DNSlookupsCase(TestCase):
         )
         self.assertEqual(cmd, 0)
 
+    @pytest.mark.slow_0_01
     def test_dig(self):
         wrong_type = {"retcode": 0, "stderr": ";; Warning, ignoring invalid type ABC"}
 
@@ -422,6 +428,7 @@ class DNSlookupsCase(TestCase):
             secure=secure,
         )
 
+    @pytest.mark.slow_0_01
     def test_drill(self):
         # all Drill returns look like this
         RES_TMPL = textwrap.dedent(
@@ -518,6 +525,7 @@ class DNSlookupsCase(TestCase):
             secure=secure,
         )
 
+    @pytest.mark.slow_0_01
     def test_gai(self):
         # wrong type
         self.assertRaises(ValueError, _lookup_gai, "mockq", "WRONG")
@@ -558,6 +566,7 @@ class DNSlookupsCase(TestCase):
                         msg="Error parsing {0} returns".format(rec_t),
                     )
 
+    @pytest.mark.slow_0_01
     def test_host(self):
         wrong_type = {"retcode": 9, "stderr": "host: invalid type: WRONG"}
 
@@ -611,6 +620,7 @@ class DNSlookupsCase(TestCase):
             _lookup_host, wrong_type=wrong_type, wrong=wrongs, right=rights, empty=empty
         )
 
+    @pytest.mark.slow_0_01
     def test_nslookup(self):
         # all nslookup returns look like this
         RES_TMPL = textwrap.dedent(

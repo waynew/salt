@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -73,6 +74,7 @@ class NapalmProbesModuleTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_probes.results()
         assert ret["out"] == napalm_test_support.TEST_PROBES_RESULTS
 
+    @pytest.mark.slow_0_01
     def test_set_probes(self):
         ret = napalm_probes.set_probes(TEST_PROBES)
         assert ret["result"] is True

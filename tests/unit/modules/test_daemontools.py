@@ -8,9 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.modules.daemontools as daemontools
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import daemontools
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class DaemontoolsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {daemontools: {}}
 
+    @pytest.mark.slow_0_01
     def test_start(self):
         """
         Test for Starts service via daemontools

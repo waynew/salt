@@ -10,8 +10,10 @@ from __future__ import absolute_import
 import logging
 import os
 
+import pytest
+
 # Import Salt libs
-import salt.ext.six as six
+from salt.ext import six
 from tests.support.runtests import RUNTIME_VARS
 
 # Import Salt Testing libs
@@ -84,6 +86,7 @@ class VirtualNameTestCase(TestCase):
                     )
         return ret
 
+    @pytest.mark.slow_0_01
     def test_check_virtualname(self):
         """
         Test that the virtualname is in __name__ of the module

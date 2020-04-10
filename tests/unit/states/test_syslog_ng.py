@@ -10,10 +10,11 @@ import os
 import re
 import tempfile
 
-import salt.modules.syslog_ng as syslog_ng_module
-import salt.states.syslog_ng as syslog_ng
+import pytest
 import salt.utils.files
 import salt.utils.yaml
+from salt.modules import syslog_ng as syslog_ng_module
+from salt.states import syslog_ng
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase
@@ -287,6 +288,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
     def test_generate_source_config(self):
         self._config_generator_template(SOURCE_1_CONFIG, SOURCE_1_EXPECTED)
 
+    @pytest.mark.slow_0_01
     def test_generate_log_config(self):
         self._config_generator_template(LOG_1_CONFIG, LOG_1_EXPECTED)
 
@@ -305,6 +307,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
     def test_generate_global_options_config(self):
         self._config_generator_template(OPTIONS_1_CONFIG, OPTIONS_1_EXPECTED)
 
+    @pytest.mark.slow_0_01
     def test_generate_short_form_statement(self):
         self._config_generator_template(SHORT_FORM_CONFIG, SHORT_FORM_EXPECTED)
 
@@ -323,6 +326,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(remove_whitespaces(expected), remove_whitespaces(config))
             self.assertEqual(False, got["result"])
 
+    @pytest.mark.slow_0_01
     def test_write_config(self):
         yaml_inputs = (
             SOURCE_2_CONFIG,
@@ -367,6 +371,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
             syslog_ng_module.set_config_file("")
             os.remove(config_file_name)
 
+    @pytest.mark.slow_0_01
     def test_started_state_generate_valid_cli_command(self):
         mock_func = MagicMock(return_value={"retcode": 0, "stdout": "", "pid": 1000})
 

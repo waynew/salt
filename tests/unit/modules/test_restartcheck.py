@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libsrestartcheck
-import salt.modules.restartcheck as restartcheck
+from salt.modules import restartcheck
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -157,6 +159,7 @@ class RestartcheckTestCase(TestCase, LoaderModuleMockMixin):
         self.assertFalse(restartcheck._valid_deleted_file("/drm/test (deleted)"))
         self.assertFalse(restartcheck._valid_deleted_file("/drm/test (path inode=1)"))
 
+    @pytest.mark.slow_0_01
     def test_valid_deleted_file_var_tmp(self):
         """
         Test /var/tmp/
@@ -211,6 +214,7 @@ class RestartcheckTestCase(TestCase, LoaderModuleMockMixin):
             restartcheck._valid_deleted_file("/usr/lib/locale/test (path inode=1)")
         )
 
+    @pytest.mark.slow_0_01
     def test_valid_deleted_file_home(self):
         """
         Test /home/
@@ -293,6 +297,7 @@ class RestartcheckTestCase(TestCase, LoaderModuleMockMixin):
             restartcheck._valid_deleted_file("/var/lib/postgresql/test (path inode=1)")
         )
 
+    @pytest.mark.slow_0_01
     def test_valid_deleted_file_var_lib_vdr(self):
         """
         Test /var/lib/vdr/
@@ -305,6 +310,7 @@ class RestartcheckTestCase(TestCase, LoaderModuleMockMixin):
             restartcheck._valid_deleted_file("/var/lib/vdr/test (path inode=1)")
         )
 
+    @pytest.mark.slow_0_01
     def test_valid_deleted_file_aio(self):
         """
         Test /[aio]/

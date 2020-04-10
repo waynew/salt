@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.monit as monit
+from salt.modules import monit
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class MonitTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual(monit.summary(), {})
 
+    @pytest.mark.slow_0_01
     def test_status(self):
         """
         Test for Display a process status from monit
@@ -77,6 +80,7 @@ class MonitTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(monit.__salt__, {"cmd.run": MagicMock(return_value="Process")}):
             self.assertEqual(monit.status("service"), "No such service")
 
+    @pytest.mark.slow_0_01
     def test_reload(self):
         """
         Test for Reload configuration
@@ -120,6 +124,7 @@ class MonitTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(monit.configtest()["result"])
             self.assertEqual(monit.configtest()["comment"], "Syntax OK")
 
+    @pytest.mark.slow_0_01
     def test_validate(self):
         """
         Test for Check all services are monitored

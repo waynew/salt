@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.vmctl as vmctl
+from salt.modules import vmctl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -66,6 +68,7 @@ class VmctlTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertTrue(res)
 
+    @pytest.mark.slow_0_01
     def test_reset_vms(self):
         """
         Tests resetting VMs.
@@ -122,6 +125,7 @@ class VmctlTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(vmctl.__salt__, {"cmd.run_all": mock_cmd}):
             self.assertDictEqual(expected, vmctl.start("4"))
 
+    @pytest.mark.slow_0_01
     def test_start_new_vm(self):
         """
         Tests starting a new VM.
@@ -226,6 +230,7 @@ class VmctlTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(vmctl.__salt__, {"cmd.run_all": mock_cmd}):
             self.assertEqual(expected, vmctl.status("web4"))
 
+    @pytest.mark.slow_0_01
     def test_stop_when_running(self):
         """
         Tests stopping a VM that is running.

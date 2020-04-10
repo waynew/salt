@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.debconfmod as debconfmod
+from salt.modules import debconfmod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -41,6 +43,7 @@ class DebconfmodTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(debconfmod, "get_selections", mock):
             self.assertEqual(debconfmod.show("name"), None)
 
+    @pytest.mark.slow_0_01
     def test_set_(self):
         """
         Test for Set answers to debconf questions for a package.

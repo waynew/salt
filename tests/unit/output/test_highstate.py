@@ -6,13 +6,14 @@ unittests for highstate outputter
 # Import Python Libs
 from __future__ import absolute_import
 
-import salt.output.highstate as highstate
+import pytest
 
 # Import Salt Libs
 import salt.utils.stringutils
 
 # Import 3rd-party libs
 from salt.ext import six
+from salt.output import highstate
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -88,12 +89,14 @@ class JsonTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.addCleanup(delattr, self, "data")
 
+    @pytest.mark.slow_0_01
     def test_default_output(self):
         ret = highstate.output(self.data)
         self.assertIn("Succeeded: 1 (changed=1)", ret)
         self.assertIn("Failed:    0", ret)
         self.assertIn("Total states run:     1", ret)
 
+    @pytest.mark.slow_0_01
     def test_output_comment_is_not_unicode(self):
         entry = None
         for key in (
@@ -197,6 +200,7 @@ class JsonNestedTestCase(TestCase, LoaderModuleMockMixin):
 
         self.addCleanup(delattr, self, "data")
 
+    @pytest.mark.slow_0_01
     def test_nested_output(self):
         ret = highstate.output(self.data)
         self.assertIn("Succeeded: 1 (changed=1)", ret)

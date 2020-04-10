@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 import textwrap
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pkgng as pkgng
+from salt.modules import pkgng
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class PkgNgTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(cls):
         return {pkgng: {"__salt__": {}}}
 
+    @pytest.mark.slow_0_01
     def test_lock(self):
         """
         Test pkgng.lock
@@ -98,6 +101,7 @@ class PkgNgTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades_present(self):
         """
         Test pkgng.list_upgrades with upgrades available

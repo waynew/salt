@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_system as win_system
+from salt.states import win_system
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {win_system: {}}
 
+    @pytest.mark.slow_0_01
     def test_computer_desc(self):
         """
             Test to manage the computer's description field
@@ -101,6 +104,7 @@ class WinSystemTestCase(TestCase, LoaderModuleMockMixin):
                         )
                         self.assertDictEqual(win_system.computer_name("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_hostname(self):
         ret = {"name": "salt", "changes": {}, "result": True, "comment": ""}
 

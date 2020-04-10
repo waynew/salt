@@ -6,6 +6,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 from collections import namedtuple
 
+import pytest
 import salt.utils.args
 
 # Import Salt Libs
@@ -33,6 +34,7 @@ class ArgsTestCase(TestCase):
         )
         self.assertIsInstance(cmd[2], six.text_type)
 
+    @pytest.mark.slow_0_01
     def test_clean_kwargs(self):
         self.assertDictEqual(salt.utils.args.clean_kwargs(foo="bar"), {"foo": "bar"})
         self.assertDictEqual(salt.utils.args.clean_kwargs(__pub_foo="bar"), {})
@@ -62,6 +64,7 @@ class ArgsTestCase(TestCase):
         ret = salt.utils.args.parse_kwarg("foobar")
         self.assertEqual(ret, (None, None))
 
+    @pytest.mark.slow_0_01
     def test_arg_lookup(self):
         def dummy_func(first, second, third, fourth="fifth"):
             pass
@@ -113,6 +116,7 @@ class ArgsTestCase(TestCase):
             )
             self.assertDictEqual(ret, {"args": [], "kwargs": {}})
 
+    @pytest.mark.slow_0_01
     def test_format_call_simple_args(self):
         def foo(one, two=2, three=3):
             pass
@@ -130,6 +134,7 @@ class ArgsTestCase(TestCase):
             {"args": [2], "kwargs": dict(two=2, three=3)},
         )
 
+    @pytest.mark.slow_0_01
     def test_format_call_mimic_typeerror_exceptions(self):
         def foo(one, two=2, three=3):
             pass
@@ -190,6 +195,7 @@ class ArgsTestCase(TestCase):
         self.assertEqual(args, [])
         self.assertEqual(kwargs, {"kw1": "val1", "kw2": "val2"})
 
+    @pytest.mark.slow_0_01
     def test_parse_function_args_kwargs(self):
         fun, args, kwargs = salt.utils.args.parse_function(
             "amod.afunc(str1, str2, kw1=val1, kw2=val2)"
@@ -206,6 +212,7 @@ class ArgsTestCase(TestCase):
         self.assertIsNone(args)
         self.assertIsNone(kwargs)
 
+    @pytest.mark.slow_0_01
     def test_parse_function_malformed_not_fun_def(self):
         fun, args, kwargs = salt.utils.args.parse_function("foo bar, some=text")
         self.assertIsNone(fun)
@@ -248,6 +255,7 @@ class ArgsTestCase(TestCase):
         self.assertEqual(args, ["str1", "str2"])
         self.assertEqual(kwargs, {"kw1": "(val1[val2)]", "kw2": "val2"})
 
+    @pytest.mark.slow_0_01
     def test_parse_function_quotes(self):
         fun, args, kwargs = salt.utils.args.parse_function(
             'amod.afunc("double \\" single \'", \'double " single \\\'\', kw1="equal=equal", kw2=val2)'
@@ -256,6 +264,8 @@ class ArgsTestCase(TestCase):
         self.assertEqual(args, ["double \" single '", "double \" single '"])
         self.assertEqual(kwargs, {"kw1": "equal=equal", "kw2": "val2"})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_yamlify_arg(self):
         """
         Test that we properly yamlify CLI input. In several of the tests below
@@ -323,6 +333,7 @@ class ArgsTestCase(TestCase):
 
 
 class KwargRegexTest(TestCase):
+    @pytest.mark.slow_0_01
     def test_arguments_regex(self):
         argument_matches = (
             ("pip=1.1", ("pip", "1.1")),

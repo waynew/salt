@@ -6,8 +6,10 @@ from __future__ import absolute_import
 import datetime
 import logging
 
+import pytest
+
 # Salt libs
-import salt.beacons.wtmp as wtmp
+from salt.beacons import wtmp
 from salt.ext import six
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, mock_open, patch
@@ -17,7 +19,7 @@ from tests.support.unit import TestCase, skipIf
 
 # pylint: disable=import-error
 try:
-    import dateutil.parser as dateutil_parser  # pylint: disable=unused-import
+    from dateutil import parser as dateutil_parser  # pylint: disable=unused-import
 
     _TIME_SUPPORTED = True
 except ImportError:
@@ -66,6 +68,7 @@ class WTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret, (True, "Valid beacon configuration"))
 
+    @pytest.mark.slow_0_01
     def test_no_match(self):
         config = [
             {
@@ -220,6 +223,7 @@ class WTMPBeaconTestCase(TestCase, LoaderModuleMockMixin):
                     ret = wtmp.beacon(config)
                     self.assertEqual(ret, _expected)
 
+    @pytest.mark.slow_0_01
     def test_match_group(self):
 
         for groupadd in (

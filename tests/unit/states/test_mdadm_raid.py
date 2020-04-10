@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.states.mdadm_raid as mdadm
+from salt.states import mdadm_raid as mdadm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class MdadmTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {mdadm: {}}
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
             Test to verify that the raid is present

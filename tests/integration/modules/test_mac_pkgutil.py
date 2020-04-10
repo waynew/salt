@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -57,6 +59,9 @@ class MacPkgutilModuleTest(ModuleCase):
         self.run_function("pkgutil.forget", [TEST_PKG_NAME])
         self.run_function("file.remove", ["/opt/local"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list(self):
         """
         Test pkgutil.list
@@ -64,6 +69,9 @@ class MacPkgutilModuleTest(ModuleCase):
         self.assertIsInstance(self.run_function("pkgutil.list"), list)
         self.assertIn(self.pkg_name, self.run_function("pkgutil.list"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_is_installed(self):
         """
         Test pkgutil.is_installed
@@ -75,6 +83,9 @@ class MacPkgutilModuleTest(ModuleCase):
         self.assertFalse(self.run_function("pkgutil.is_installed", ["spongebob"]))
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_install_forget(self):
         """
         Test pkgutil.install

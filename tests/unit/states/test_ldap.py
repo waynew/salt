@@ -8,11 +8,11 @@ was an ugly second implementation.
 I'm leaving it for now, but this should really be gutted and replaced
 with something sensible.
 """
-
 from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
+import pytest
 import salt.states.ldap
 from salt.ext import six
 from salt.utils.oset import OrderedSet
@@ -285,6 +285,7 @@ class LDAPTestCase(TestCase, LoaderModuleMockMixin):
             _complex_db(), {"dnfoo": {"dummyattr": ["dummyval"]}}, True
         )
 
+    @pytest.mark.slow_0_01
     def test_managed_no_net_change(self):
         self._test_helper_nochange(
             _complex_db(), {"dnfoo": {"attrfoo1": ["valfoo1.1", "valfoo1.2"]}}

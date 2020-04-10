@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.states.hg as hg
+from salt.states import hg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class HgTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {hg: {}}
 
+    @pytest.mark.slow_0_01
     def test_latest(self):
         """
             Test to Make sure the repository is cloned to
@@ -50,6 +53,7 @@ class HgTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(hg, "_clone_repo", mock):
                     self.assertDictEqual(hg.latest("salt", target="c:\\salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_latest_update_changes(self):
         """
             Test to make sure we don't update even if we have changes
@@ -109,6 +113,8 @@ class HgTestCase(TestCase, LoaderModuleMockMixin):
                         )
                         assert not update_mock.called
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_latest_no_update_no_changes(self):
         """
             Test to Make sure the repository is cloned to

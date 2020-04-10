@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.ipmi as ipmi
+from salt.states import ipmi
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -59,6 +61,7 @@ class IpmiTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'power' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_power(self):
         """
         Test to request power state change
@@ -92,6 +95,7 @@ class IpmiTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'user_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_user_present(self):
         """
         Test to ensure IPMI user and user privileges.

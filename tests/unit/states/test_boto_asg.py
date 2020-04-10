@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.boto_asg as boto_asg
+from salt.states import boto_asg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class BotoAsgTestCase(TestCase, LoaderModuleMockMixin):
 
     maxSize = None
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensure the autoscale group exists.

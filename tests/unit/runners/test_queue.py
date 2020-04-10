@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.runners.queue as queue_mod
+from salt.runners import queue as queue_mod
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -44,6 +46,9 @@ class QueueTest(TestCase, LoaderModuleMockMixin):
         }
         queue_insert.assert_called_once_with(**expected_call)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_process_runner(self):
         ret = [{"fun": "test.stdout_print", "args": [], "kwargs": {}}]
 

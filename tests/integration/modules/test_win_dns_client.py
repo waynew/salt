@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -19,6 +21,11 @@ class WinDNSTest(ModuleCase):
     """
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_add_remove_dns(self):
         """
         Test add and removing a dns server

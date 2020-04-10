@@ -6,11 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.serverdensity_device as serverdensity_device
+import pytest
 
 # Import Salt Libs
 import salt.utils.json
 from salt.exceptions import CommandExecutionError
+from salt.modules import serverdensity_device
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -129,6 +130,7 @@ class ServerdensityDeviceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
         Tests if it delete a device from Server Density.
@@ -149,6 +151,7 @@ class ServerdensityDeviceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'ls' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_ls(self):
         """
         Tests if it list devices in Server Density.

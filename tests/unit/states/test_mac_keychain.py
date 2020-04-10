@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.mac_keychain as keychain
+from salt.states import mac_keychain as keychain
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -168,6 +170,7 @@ class KeychainTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_default_keychain_set_already(self):
         """
             Test setting the default keychain when it's already set
@@ -197,6 +200,7 @@ class KeychainTestCase(TestCase, LoaderModuleMockMixin):
                 assert not set_mock.called
                 self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_default_keychain_missing(self):
         """
             Test setting the default keychain when the keychain is missing
@@ -248,6 +252,7 @@ class KeychainTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_installed_cert_hash_different(self):
         """
             Test installing a certificate into the macOS keychain when it's

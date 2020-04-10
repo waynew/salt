@@ -13,11 +13,13 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
 import salt.config
 import salt.loader
-import salt.modules.status as status_module
 from salt.beacons import status
+from salt.modules import status as status_module
 from tests.support.mixins import LoaderModuleMockMixin
 
 # Salt testing libs
@@ -40,6 +42,11 @@ class StatusBeaconTestCase(TestCase, LoaderModuleMockMixin):
         }
         return {status: module_globals, status_module: module_globals}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_empty_config(self, *args, **kwargs):
         config = []
 
@@ -51,6 +58,11 @@ class StatusBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(sorted(list(ret[0]["data"])), expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_deprecated_dict_config(self):
         config = {"time": ["all"]}
 
@@ -59,6 +71,11 @@ class StatusBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret, (False, "Configuration for status beacon must be a list.")
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_list_config(self):
         config = [{"time": ["all"]}]
 

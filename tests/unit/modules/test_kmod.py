@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.kmod as kmod
+from salt.modules import kmod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -45,6 +47,7 @@ class KmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'lsmod' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_lsmod(self):
         """
         Tests return information about currently loaded modules

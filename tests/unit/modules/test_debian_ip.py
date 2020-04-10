@@ -10,10 +10,11 @@ import tempfile
 
 # Import third party libs
 import jinja2.exceptions
+import pytest
+import salt.utils.platform
 
 # Import Salt Libs
-import salt.modules.debian_ip as debian_ip
-import salt.utils.platform
+from salt.modules import debian_ip
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -90,6 +91,7 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'build_routes' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_build_routes(self):
         """
         Test if it add route scripts for a network interface using up commands.
@@ -167,6 +169,8 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'build_interface' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_build_interface(self):
         """
         Test if it builds an interface script for a network interface.
@@ -604,6 +608,9 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'apply_network_settings' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_apply_network_settings(self):
         """
         Test if it apply global network configuration.
@@ -617,6 +624,7 @@ class DebianIpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'build_network_settings' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_build_network_settings(self):
         """
         Test if it build the global network script.

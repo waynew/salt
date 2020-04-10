@@ -10,6 +10,8 @@ from __future__ import absolute_import
 import fnmatch
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.stringutils
@@ -65,6 +67,7 @@ class BadTestModuleNamesTestCase(TestCase):
     def _match_dirs(self, reldir, matchdirs):
         return any(fnmatch.fnmatchcase(reldir, mdir) for mdir in matchdirs)
 
+    @pytest.mark.slow_0_01
     def test_module_name(self):
         """
         Make sure all test modules conform to the test_*.py naming scheme
@@ -101,6 +104,8 @@ class BadTestModuleNamesTestCase(TestCase):
         error_msg += "If it is a tests module, then please rename as suggested."
         self.assertEqual([], bad_names, error_msg)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_module_name_source_match(self):
         """
         Check all the test mods and check if they correspond to actual files in

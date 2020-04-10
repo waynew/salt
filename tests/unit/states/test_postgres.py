@@ -3,13 +3,17 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.postgres as postgresmod
-import salt.states.postgres_database as postgres_database
-import salt.states.postgres_extension as postgres_extension
-import salt.states.postgres_group as postgres_group
-import salt.states.postgres_schema as postgres_schema
-import salt.states.postgres_user as postgres_user
+from salt.modules import postgres as postgresmod
+from salt.states import (
+    postgres_database,
+    postgres_extension,
+    postgres_group,
+    postgres_schema,
+    postgres_user,
+)
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -41,6 +45,8 @@ class PostgresUserTestCase(TestCase, LoaderModuleMockMixin):
             },
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_present__creation(self):
         # test=True
         with patch.dict(
@@ -94,6 +100,7 @@ class PostgresUserTestCase(TestCase, LoaderModuleMockMixin):
                 createdb=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_present__update(self):
         # test=True
         with patch.dict(
@@ -233,6 +240,8 @@ class PostgresGroupTestCase(TestCase, LoaderModuleMockMixin):
             },
         }
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_present__creation(self):
         # test=True
         with patch.dict(
@@ -285,6 +294,7 @@ class PostgresGroupTestCase(TestCase, LoaderModuleMockMixin):
                 createdb=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_present__update(self):
         # test=True
         with patch.dict(
@@ -464,6 +474,7 @@ class PostgresExtensionTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         scenario of creating upgrading extensions with possible schema and
@@ -569,6 +580,7 @@ class PostgresExtensionTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         scenario of creating upgrading extensions with possible schema and
@@ -628,6 +640,7 @@ class PostgresExtensionTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_absent_failedtest(self):
         with patch.dict(
             postgres_extension.__salt__,
@@ -738,6 +751,7 @@ class PostgresSchemaTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(self.salt_stub["postgres.schema_remove"].call_count, 1)
 
+    @pytest.mark.slow_0_01
     def test_absent_noremove(self):
         with patch.dict(
             postgres_schema.__salt__,

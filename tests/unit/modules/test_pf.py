@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pf as pf
+from salt.modules import pf
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -42,6 +44,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(pf.__salt__, {"cmd.run_all": mock_cmd}):
             self.assertFalse(pf.enable()["changes"])
 
+    @pytest.mark.slow_0_01
     def test_disable_when_enabled(self):
         """
         Tests disabling pf when it's enabled.
@@ -94,6 +97,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertTrue(res["changes"])
 
+    @pytest.mark.slow_0_01
     def test_load_noop(self):
         """
         Tests evaluating but not actually loading ruleset.
@@ -110,6 +114,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertFalse(res["changes"])
 
+    @pytest.mark.slow_0_01
     def test_flush(self):
         """
         Tests a regular flush command.
@@ -162,6 +167,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(pf.__salt__, {"cmd.run_all": mock_cmd}):
             self.assertTrue(pf.table("flush", table="bad_hosts")["changes"])
 
+    @pytest.mark.slow_0_01
     def test_table_expire(self):
         """
         Tests the table expire command.
@@ -190,6 +196,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
                 ]
             )
 
+    @pytest.mark.slow_0_01
     def test_table_test_address(self):
         """
         Tests testing addresses in a table.
@@ -242,6 +249,7 @@ class PfTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(pf.__salt__, {"cmd.run_all": mock_cmd}):
             self.assertListEqual(pf.show("rules")["comment"], expected)
 
+    @pytest.mark.slow_0_01
     def test_show_capital(self):
         """
         Tests a show command starting with a capital letter.

@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import uuid
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.iptables as iptables
+from salt.modules import iptables
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test if it return version from iptables --version
@@ -37,6 +40,8 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'build_rule' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_build_rule(self):
         """
         Test if it build a well-formatted iptables rule based on kwargs.
@@ -273,6 +278,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_saved_policy' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_saved_policy(self):
         """
         Test if it return the current policy for the specified table/chain
@@ -337,6 +343,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_policy' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_policy(self):
         """
         Test if it set the current policy for the specified table/chain
@@ -366,6 +373,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'save' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_save(self):
         """
         Test if it save the current in-memory rules to disk
@@ -386,6 +394,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'check' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_check(self):
         """
         Test if it check for the existence of a rule in the table and chain
@@ -476,6 +485,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'new_chain' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_new_chain(self):
         """
         Test if it create new custom chain to the specified table.
@@ -493,6 +503,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete_chain' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete_chain(self):
         """
         Test if it delete custom chain to the specified table.
@@ -510,6 +521,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'append' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_append(self):
         """
         Test if it append a rule to the specified table/chain.
@@ -595,6 +607,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
         Test if it delete a rule from the specified table/chain
@@ -622,6 +635,7 @@ class IptablesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'flush' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_flush(self):
         """
         Test if it flush the chain in the specified table,

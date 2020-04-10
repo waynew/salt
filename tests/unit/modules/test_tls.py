@@ -8,11 +8,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 # Import Python libs
 import logging
 
+import pytest
+
 # Import 3rd party Libs
-import salt.ext as six
+from salt import ext as six
 
 # Import Salt Libs
-import salt.modules.tls as tls
+from salt.modules import tls
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing Libs
@@ -127,6 +129,7 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(tls.__salt__, {"config.option": mock_opt}):
             self.assertEqual(tls.cert_base_path(), ca_path)
 
+    @pytest.mark.slow_0_01
     def test_set_ca_cert_path(self):
         """
         Test for setting the cert base path
@@ -213,6 +216,7 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(tls.get_ca(ca_name), certp)
 
+    @pytest.mark.slow_0_01
     def test_cert_info(self):
         """
         Test cert info
@@ -313,6 +317,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(result, ret)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_ca(self, ca_path):
         """
         Test creating CA cert
@@ -340,6 +346,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_recreate_ca(self, ca_path):
         """
         Test creating CA cert when one already exists
@@ -370,6 +378,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_csr(self, ca_path):
         """
         Test creating certificate signing request
@@ -405,6 +415,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_recreate_csr(self, ca_path):
         """
         Test creating certificate signing request when one already exists
@@ -443,6 +455,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_self_signed_cert(self, ca_path):
         """
         Test creating self signed certificate
@@ -471,6 +485,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_recreate_self_signed_cert(self, ca_path):
         """
         Test creating self signed certificate when one already exists
@@ -499,6 +515,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_ca_signed_cert(self, ca_path):
         """
         Test signing certificate from request
@@ -533,6 +551,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_recreate_ca_signed_cert(self, ca_path):
         """
         Test signing certificate from request when certificate exists
@@ -570,6 +590,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_create_pkcs12(self, ca_path):
         """
         Test creating pkcs12
@@ -607,6 +629,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_recreate_pkcs12(self, ca_path):
         """
         Test creating pkcs12 when it already exists
@@ -685,6 +709,8 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(tls.get_extensions("client"), pillarval)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pyOpenSSL_version_destructive(self, ca_path):
         """
         Test extension logic with different pyOpenSSL versions
@@ -815,6 +841,7 @@ class TLSAddTestCase(TestCase, LoaderModuleMockMixin):
                             tls.create_csr(ca_name, **_TLS_TEST_DATA["create_ca"]), ret
                         )
 
+    @pytest.mark.slow_0_01
     def test_get_expiration_date(self):
         with patch(
             "salt.utils.files.fopen", mock_open(read_data=_TLS_TEST_DATA["ca_cert"])

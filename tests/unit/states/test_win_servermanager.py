@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_servermanager as win_servermanager
+from salt.states import win_servermanager
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class WinServermanagerTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {win_servermanager: {}}
 
+    @pytest.mark.slow_0_01
     def test_installed(self):
         """
             Test to install the windows feature
@@ -86,6 +89,7 @@ class WinServermanagerTestCase(TestCase, LoaderModuleMockMixin):
                 }
                 self.assertDictEqual(win_servermanager.installed("squidward"), ret)
 
+    @pytest.mark.slow_0_01
     def test_removed(self):
         """
             Test to remove the windows feature

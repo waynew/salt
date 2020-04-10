@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 # Import Python libs
 import textwrap
 
+import pytest
+
 # Import Salt modules
-import salt.modules.napalm_formula as napalm_formula
+from salt.modules import napalm_formula
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -97,10 +99,12 @@ class TestModulesNAPALMFormula(TestCase, LoaderModuleMockMixin):
         ret = napalm_formula.container_path(self.model)
         self.assertEqual(set(ret), set(paths))
 
+    @pytest.mark.slow_0_01
     def test_setval(self):
         dict_ = {"foo": {"bar": {"baz": True}}}
         self.assertEqual(dict_, napalm_formula.setval("foo:bar:baz", True))
 
+    @pytest.mark.slow_0_01
     def test_defaults(self):
         expected_result = {
             "interfaces": {

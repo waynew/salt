@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.kmod as kmod
+from salt.states import kmod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -62,6 +64,7 @@ class KmodTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(kmod.present(name), ret)
 
+    @pytest.mark.slow_0_01
     def test_present_multi(self):
         """
         Test to ensure that multiple kernel modules are loaded.
@@ -159,6 +162,7 @@ class KmodTestCase(TestCase, LoaderModuleMockMixin):
                 ret.update({"comment": comment, "result": True, "changes": {}})
                 self.assertDictEqual(kmod.absent(name), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent_multi(self):
         """
         Test to verify that multiple kernel modules are not loaded.

@@ -3,6 +3,7 @@
 # Import python libs
 from __future__ import absolute_import, unicode_literals
 
+import pytest
 from salt.utils import dictdiffer
 
 # Import Salt libs
@@ -41,6 +42,7 @@ class ListDictDifferTestCase(TestCase):
             self.list_diff.added[0], {"key": 5, "value": "foo5", "int_value": 105}
         )
 
+    @pytest.mark.slow_0_01
     def test_removed(self):
         self.assertEqual(len(self.list_diff.removed), 1)
         self.assertDictEqual(

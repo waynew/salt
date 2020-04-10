@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.status as status
+from salt.states import status
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class StatusTestCase(TestCase, LoaderModuleMockMixin):
         return {status: {}}
 
     # 'loadavg' function tests: 1
+    @pytest.mark.slow_0_01
     def test_loadavg(self):
         """
         Test to return the current load average for the specified minion.

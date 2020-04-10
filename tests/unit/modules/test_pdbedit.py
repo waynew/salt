@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pdbedit as pdbedit
+from salt.modules import pdbedit
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -20,6 +22,7 @@ class PdbeditTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {pdbedit: {}}
 
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test salt.modules.__virtual__'s handling of pdbedit versions

@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.powerpath as powerpath
+from salt.states import powerpath
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -73,6 +75,7 @@ class PowerpathTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'license_absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_license_absent(self):
         """
         Test to ensures that the specified PowerPath license key is absent

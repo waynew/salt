@@ -11,8 +11,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt libs
-import salt.returners.pgjsonb as pgjsonb
+from salt.returners import pgjsonb
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -30,6 +32,7 @@ class PGJsonbCleanOldJobsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {pgjsonb: {"__opts__": {"keep_jobs": 1, "archive_jobs": 0}}}
 
+    @pytest.mark.slow_0_01
     def test_clean_old_jobs_purge(self):
         """
         Tests that the function returns None when no jid_root is found.
@@ -39,6 +42,8 @@ class PGJsonbCleanOldJobsTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(pgjsonb.__salt__, {"config.option": MagicMock()}):
                 self.assertEqual(pgjsonb.clean_old_jobs(), None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_clean_old_jobs_archive(self):
         """
         Tests that the function returns None when no jid_root is found.

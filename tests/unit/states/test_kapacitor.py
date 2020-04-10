@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
-import salt.states.kapacitor as kapacitor
+from salt.states import kapacitor
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -82,6 +84,7 @@ class KapacitorTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {kapacitor: {"__opts__": {"test": False}, "__env__": "test"}}
 
+    @pytest.mark.slow_0_01
     def test_task_present_new_task(self):
         ret, get_mock, define_mock, enable_mock, _ = _present(
             dbrps=["testdb2.default_rp"]

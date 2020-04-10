@@ -8,8 +8,10 @@ from __future__ import absolute_import
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.poudriere as poudriere
+from salt.modules import poudriere
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -85,6 +87,7 @@ class PoudriereTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test if it return poudriere version.
@@ -95,6 +98,7 @@ class PoudriereTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_jails' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_jails(self):
         """
         Test if it return a list of current jails managed by poudriere.
@@ -119,6 +123,7 @@ class PoudriereTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_jail' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_jail(self):
         """
         Test if it creates a new poudriere jail if one does not exist.
@@ -213,6 +218,7 @@ class PoudriereTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'update_ports_tree' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_update_ports_tree(self):
         """
         Test if it updates the ports tree, either the default

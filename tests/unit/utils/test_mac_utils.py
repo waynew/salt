@@ -10,14 +10,16 @@ import os
 import plistlib
 import xml.parsers.expat
 
-# Import Salt libs
-import salt.utils.mac_utils as mac_utils
+import pytest
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.ext import six
 
 # Import 3rd-party libs
 from salt.ext.six.moves import range
+
+# Import Salt libs
+from salt.utils import mac_utils
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, call, mock_open, patch
 
@@ -392,6 +394,8 @@ class MacUtilsTestCase(TestCase, LoaderModuleMockMixin):
     @patch("plistlib.readPlist")
     @patch("salt.utils.path.os_walk")
     @patch("os.path.exists")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_available_services_expat_error(
         self, mock_exists, mock_os_walk, mock_read_plist, mock_run
     ):

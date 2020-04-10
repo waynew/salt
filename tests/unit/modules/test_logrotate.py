@@ -6,10 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.logrotate as logrotate
+import pytest
 
 # Import Salt Libs
 from salt.exceptions import SaltInvocationError
+from salt.modules import logrotate
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -63,6 +64,7 @@ class LogrotateTestCase(TestCase, LoaderModuleMockMixin):
             kwargs = {"key": "/var/log/wtmp", "value": 2}
             self.assertRaises(SaltInvocationError, logrotate.set_, **kwargs)
 
+    @pytest.mark.slow_0_01
     def test_set_setting(self):
         """
         Test if it set a new value for a specific configuration line
@@ -74,6 +76,7 @@ class LogrotateTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(logrotate.set_("/var/log/wtmp", "rotate", "2"))
 
+    @pytest.mark.slow_0_01
     def test_set_setting_failed(self):
         """
         Test if it fails to set a new value for a specific configuration line

@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_ntp as win_ntp
+from salt.modules import win_ntp
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -71,6 +73,7 @@ class WinNtpTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_servers' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_servers(self):
         """
         Test if it get list of configured NTP servers

@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 import logging
 
+import pytest
+
 # Salt libs
-import salt.beacons.cert_info as cert_info
+from salt.beacons import cert_info
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import mock_open, patch
 
@@ -66,6 +68,7 @@ class CertInfoBeaconTestCase(TestCase, LoaderModuleMockMixin):
             (False, "Configuration for cert_info beacon must contain files option."),
         )
 
+    @pytest.mark.slow_0_01
     def test_cert_information(self):
         with patch("salt.utils.files.fopen", mock_open(read_data=_TEST_CERT)):
             config = [{"files": ["/etc/pki/tls/certs/mycert.pem"], "notify_days": -1}]

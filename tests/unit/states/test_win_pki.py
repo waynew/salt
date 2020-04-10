@@ -9,8 +9,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_pki as win_pki
+from salt.states import win_pki
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -75,6 +77,7 @@ class WinPkiTestCase(TestCase, LoaderModuleMockMixin):
                 ret["result"] = None
                 self.assertEqual(win_pki.import_cert(**kwargs), ret)
 
+    @pytest.mark.slow_0_01
     def test_remove_cert(self):
         """
         Test - Remove the certificate from the given certificate store.

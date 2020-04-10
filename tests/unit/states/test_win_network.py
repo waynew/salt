@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_network as win_network
+from salt.states import win_network
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -105,6 +107,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
                 win_network.managed("salt", dns_proto="dhcp", ip_proto="dhcp"), ret
             )
 
+    @pytest.mark.slow_0_01
     def test_managed_test_true_no_changes(self):
         ret = {
             "name": "salt",
@@ -130,6 +133,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
                 win_network.managed("salt", dns_proto="dhcp", ip_proto="dhcp"), ret
             )
 
+    @pytest.mark.slow_0_01
     def test_managed_test_true_changes(self):
         ret = {
             "name": "salt",
@@ -189,6 +193,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
                 win_network.managed("salt", dns_proto="dhcp", ip_proto="dhcp"), ret
             )
 
+    @pytest.mark.slow_0_01
     def test_managed(self):
         ret = {
             "name": "salt",
@@ -232,6 +237,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
                 win_network.managed("salt", dns_proto="dhcp", ip_proto="dhcp"), ret
             )
 
+    @pytest.mark.slow_0_01
     def test_managed_static_dns_clear(self):
         expected = {
             "name": "salt",
@@ -270,6 +276,7 @@ class WinNetworkTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_managed_static_dns(self):
         expected = {
             "name": "salt",

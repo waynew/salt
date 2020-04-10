@@ -13,6 +13,8 @@ import os
 import shutil
 from datetime import date
 
+import pytest
+
 # Import salt libs
 import salt.utils.extend
 import salt.utils.files
@@ -39,6 +41,7 @@ class ExtendTestCase(TestCase):
         not os.path.exists(os.path.join(RUNTIME_VARS.CODE_DIR, "templates")),
         "Test template directory 'templates/' missing.",
     )
+    @pytest.mark.slow_0_01
     def test_run(self):
         with patch("sys.exit", MagicMock):
             out = salt.utils.extend.run(

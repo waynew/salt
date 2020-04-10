@@ -3,8 +3,10 @@
 # import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.boto_secgroup as boto_secgroup
+from salt.states import boto_secgroup
 from salt.utils.odict import OrderedDict
 from tests.support.case import TestCase
 
@@ -30,6 +32,7 @@ class Boto_SecgroupTestCase(TestCase, LoaderModuleMockMixin):
             boto_secgroup._get_rule_changes(desired_rules, present_rules), ([], [])
         )
 
+    @pytest.mark.slow_0_01
     def test__get_rule_changes_create_rules(self):
         """
         tests a condition where a rule must be created

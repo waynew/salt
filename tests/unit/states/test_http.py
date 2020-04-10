@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.http as http
+from salt.states import http
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class HttpTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {http: {}}
 
+    @pytest.mark.slow_0_01
     def test_query(self):
         """
             Test to perform an HTTP query and statefully return the result
@@ -50,6 +53,7 @@ class HttpTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(http.__salt__, {"http.query": mock}):
                 self.assertDictEqual(http.query("salt", "Dude", "stack"), ret[1])
 
+    @pytest.mark.slow_0_01
     def test_query_pcre_statustype(self):
         """
             Test to perform an HTTP query with a regex used to match the status code and statefully return the result
@@ -148,6 +152,7 @@ class HttpTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 sleep_mock.assert_called_once_with(1)
 
+    @pytest.mark.slow_0_01
     def test_wait_for_without_interval(self):
         """
         Test for wait_for_successful_query waits for request_interval

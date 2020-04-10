@@ -10,6 +10,8 @@ import inspect
 import logging
 import time
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.path
 from tests.support.case import ModuleCase
@@ -84,6 +86,10 @@ class VaultTestCase(ModuleCase):
             self.run_state("docker_image.absent", name="vault", force=True)
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_write_read_secret(self):
         assert (
             self.run_function(
@@ -100,6 +106,10 @@ class VaultTestCase(ModuleCase):
         }
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_write_raw_read_secret(self):
         assert (
             self.run_function(
@@ -115,6 +125,11 @@ class VaultTestCase(ModuleCase):
         }
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_delete_secret(self):
         assert (
             self.run_function(
@@ -130,6 +145,10 @@ class VaultTestCase(ModuleCase):
         )
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_list_secrets(self):
         assert (
             self.run_function(

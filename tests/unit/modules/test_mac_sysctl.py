@@ -6,9 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.mac_sysctl as mac_sysctl
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import mac_sysctl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class DarwinSysctlTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {mac_sysctl: {}}
 
+    @pytest.mark.slow_0_01
     def test_get(self):
         """
         Tests the return of get function
@@ -99,6 +102,7 @@ class DarwinSysctlTestCase(TestCase, LoaderModuleMockMixin):
             assert num_writes == 1, num_writes
             assert writes[0] == "#\n# Kernel sysctl configuration\n#\n", writes[0]
 
+    @pytest.mark.slow_0_01
     def test_persist_success(self):
         """
         Tests successful write to existing sysctl file

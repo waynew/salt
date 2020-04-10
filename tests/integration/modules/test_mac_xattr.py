@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -46,6 +48,9 @@ class MacXattrModuleTest(ModuleCase):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list_no_xattr(self):
         """
         Make sure there are no attributes
@@ -62,6 +67,9 @@ class MacXattrModuleTest(ModuleCase):
             "ERROR: File not found: {0}".format(self.no_file),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_write(self):
         """
         Write an attribute
@@ -94,6 +102,9 @@ class MacXattrModuleTest(ModuleCase):
             "ERROR: File not found: {0}".format(self.no_file),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_read(self):
         """
         Test xattr.read
@@ -126,6 +137,9 @@ class MacXattrModuleTest(ModuleCase):
             "ERROR: Attribute not found: patrick",
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_delete(self):
         """
         Test xattr.delete
@@ -169,6 +183,9 @@ class MacXattrModuleTest(ModuleCase):
             "ERROR: Attribute not found: patrick",
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_clear(self):
         """
         Test xattr.clear

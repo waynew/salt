@@ -6,9 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.pw_group as pw_group
+import pytest
 import salt.utils.platform
+
+# Import Salt Libs
+from salt.modules import pw_group
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -59,6 +61,7 @@ class PwGroupTestCase(TestCase, LoaderModuleMockMixin):
             self.assertDictEqual(pw_group.info("name"), {})
 
     @skipIf(salt.utils.platform.is_windows(), "grp not available on Windows")
+    @pytest.mark.slow_0_01
     def test_getent(self):
         """
         Tests for return info on all groups

@@ -7,9 +7,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.mine as mine
+import pytest
 import salt.utils.mine
+
+# Import Salt Libs
+from salt.modules import mine
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing Libs
@@ -66,6 +68,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_get_local_empty(self):
         """
         Tests getting function data from the local mine that does not exist.
@@ -89,6 +92,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(ret_classic, {"webserver": "barfood"})
         self.assertEqual(ret_dict, {"foobard": {"webserver": "barfood"}})
 
+    @pytest.mark.slow_0_01
     def test_send_get_local(self):
         """
         Tests sending an item to the mine in the minion's local cache,
@@ -128,6 +132,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertEqual(ret_multi, ret_multi2)
 
+    @pytest.mark.slow_0_01
     def test_send_get_acl_local(self):
         """
         Tests sending an item to the mine in the minion's local cache,
@@ -252,6 +257,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(mine.get("*", "foo.bar", exclude_minion=True), {})
 
+    @pytest.mark.slow_0_01
     def test_update_local(self):
         """
         Tests the ``update``-function on the minion's local cache.
@@ -300,6 +306,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_update_local_specific(self):
         """
         Tests the ``update``-function on the minion's local cache.
@@ -385,6 +392,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             # Verify the correct load
             self.assertEqual(mine.update(), mock_load)
 
+    @pytest.mark.slow_0_01
     def test_delete_local(self):
         """
         Tests the ``delete``-function on the minion's local cache.
@@ -422,6 +430,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             ret = mine.flush()
             self.assertEqual(self.cache.fetch("minions/webserver", "mine_cache"), {})
 
+    @pytest.mark.slow_0_01
     def test_flush_master(self):
         """
         Tests whether the ``flush``-function sends the correct data to the master.
@@ -433,6 +442,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
             # Verify the correct load
             self.assertEqual(mine.flush(), mock_load)
 
+    @pytest.mark.slow_0_01
     def test_valid(self):
         """
         Tests the ``valid``-function.
@@ -531,6 +541,7 @@ class MineTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_get_docker_with_container_id(self):
         """
         Test for Get all mine data for 'docker.ps' and run an

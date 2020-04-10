@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.event as event
+import pytest
 import salt.utils.event
+
+# Import Salt Libs
+from salt.modules import event
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -32,6 +34,7 @@ class EventTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_fire_master(self):
         """
         Test for Fire an event off up to the master server
@@ -66,6 +69,7 @@ class EventTestCase(TestCase, LoaderModuleMockMixin):
                 ):
                     self.assertFalse(event.fire_master("data", "tag"))
 
+    @pytest.mark.slow_0_01
     def test_fire(self):
         """
         Test to fire an event on the local minion event bus.

@@ -3,6 +3,7 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 from salt.ext.six import text_type as text
 
 # Import Salt Libs
@@ -26,6 +27,7 @@ class SanitizersTestCase(TestCase):
         assert response == "sample"
         assert type(response) == text
 
+    @pytest.mark.slow_0_01
     def test_sanitized_filename(self):
         """
         Test sanitized input for filename
@@ -56,6 +58,7 @@ class SanitizersTestCase(TestCase):
         out = mask_args_value("quantum: fluctuations", "quant*")
         assert out == "quantum: ** hidden **"
 
+    @pytest.mark.slow_0_01
     def test_value_not_masked(self):
         """
         Test if the values are not masked.

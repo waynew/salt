@@ -14,9 +14,8 @@ import re
 import shutil
 import tempfile
 
+import pytest
 import salt.config
-import salt.modules.config as config
-import salt.modules.virt as virt
 import salt.syspaths
 
 # Import salt libs
@@ -29,6 +28,7 @@ from salt.ext import six
 
 # pylint: disable=import-error
 from salt.ext.six.moves import range  # pylint: disable=redefined-builtin
+from salt.modules import config, virt
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -106,6 +106,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mock_domain.name.return_value = name
         return mock_domain
 
+    @pytest.mark.slow_0_01
     def test_disk_profile_merge(self):
         """
         Test virt._disk_profile() when merging with user-defined disks
@@ -141,6 +142,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             disks,
         )
 
+    @pytest.mark.slow_0_01
     def test_boot_default_dev(self):
         """
         Test virt._gen_xml() default boot device
@@ -153,6 +155,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("os/type").attrib["arch"], "x86_64")
         self.assertEqual(root.find("os/type").text, "hvm")
 
+    @pytest.mark.slow_0_01
     def test_boot_custom_dev(self):
         """
         Test virt._gen_xml() custom boot device
@@ -186,6 +189,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         devs = root.findall(".//boot")
         self.assertTrue(len(devs) == 2)
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_no_nic(self):
         """
         Test virt._gen_xml() serial console
@@ -208,6 +212,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("devices/serial").attrib["type"], "pty")
         self.assertEqual(root.find("devices/console").attrib["type"], "pty")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_xml_for_serial_console(self):
         """
         Test virt._gen_xml() serial console
@@ -230,6 +236,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("devices/serial").attrib["type"], "pty")
         self.assertEqual(root.find("devices/console").attrib["type"], "pty")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_gen_xml_for_telnet_console(self):
         """
         Test virt._gen_xml() telnet console
@@ -254,6 +262,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("devices/console").attrib["type"], "tcp")
         self.assertEqual(root.find("devices/console/source").attrib["service"], "22223")
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_telnet_console_unspecified_port(self):
         """
         Test virt._gen_xml() telnet console without any specified port
@@ -279,6 +288,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             int(root.find("devices/console/source").attrib["service"]), int
         )
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_serial_no_console(self):
         """
         Test virt._gen_xml() with no serial console
@@ -301,6 +311,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("devices/serial").attrib["type"], "pty")
         self.assertEqual(root.find("devices/console"), None)
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_telnet_no_console(self):
         """
         Test virt._gen_xml() with no telnet console
@@ -366,6 +377,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             root.find("devices/graphics/listen").attrib["address"], "myhost"
         )
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_spice_default(self):
         """
         Test virt._gen_xml() with default spice graphics device
@@ -457,6 +469,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(system["model"], "virtio")
             self.assertTrue(int(system["size"]) >= 1)
 
+    @pytest.mark.slow_0_01
     def test_default_disk_profile_hypervisor_xen(self):
         """
         Test virt._disk_profile() default XEN profile
@@ -490,6 +503,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(eth0["source"], "DEFAULT")
             self.assertEqual(eth0["model"], "e1000")
 
+    @pytest.mark.slow_0_01
     def test_default_nic_profile_hypervisor_kvm(self):
         """
         Test virt._nic_profile() default KVM profile
@@ -506,6 +520,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(eth0["source"], "br0")
             self.assertEqual(eth0["model"], "virtio")
 
+    @pytest.mark.slow_0_01
     def test_default_nic_profile_hypervisor_xen(self):
         """
         Test virt._nic_profile() default XEN profile
@@ -522,6 +537,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(eth0["source"], "br0")
             self.assertFalse(eth0["model"])
 
+    @pytest.mark.slow_0_01
     def test_gen_vol_xml(self):
         """
         Test virt._get_vol_xml()
@@ -535,6 +551,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("capacity").attrib["unit"], "KiB")
         self.assertEqual(root.find("capacity").text, six.text_type(8192 * 1024))
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_kvm_default_profile(self):
         """
         Test virt._gen_xml(), KVM default profile case
@@ -569,6 +586,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mac = iface.find("mac").attrib["address"]
         self.assertTrue(re.match("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", mac, re.I))
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_esxi_default_profile(self):
         """
         Test virt._gen_xml(), ESXi/vmware default profile case
@@ -640,6 +658,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(iface.find("source").attrib["bridge"], "br0")
             self.assertIsNone(iface.find("model"))
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_esxi_custom_profile(self):
         """
         Test virt._gen_xml(), ESXi/vmware custom profile case
@@ -673,6 +692,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(len(root.findall(".//disk")) == 2)
             self.assertTrue(len(root.findall(".//interface")) == 2)
 
+    @pytest.mark.slow_0_01
     def test_gen_xml_for_kvm_custom_profile(self):
         """
         Test virt._gen_xml(), KVM custom profile case
@@ -718,6 +738,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             }
         },
     )
+    @pytest.mark.slow_0_01
     def test_disk_profile_kvm_disk_pool(self, mock_poolinfo):
         """
         Test virt._gen_xml(), KVM case with pools defined.
@@ -790,6 +811,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
     @patch(
         "salt.modules.virt.pool_info", return_value={"target_path": "/dev/disk/by-path"}
     )
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_disk_profile_kvm_disk_pool_invalid(self, mock_poolinfo):
         """
         Test virt._gen_xml(), KVM case with pools defined.
@@ -859,6 +882,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         # kvm mac address shoud start with 52:54:00
         self.assertTrue("mac address='52:54:00" in xml_data)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_diff_disks(self):
         """
         Test virt._diff_disks()
@@ -959,6 +984,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             ],
         )
 
+    @pytest.mark.slow_0_01
     def test_diff_nics(self):
         """
         Test virt._diff_nics()
@@ -1023,6 +1049,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             ["52:54:00:39:02:b2", "52:54:00:39:02:b3"],
         )
 
+    @pytest.mark.slow_0_01
     def test_init(self):
         """
         Test init() function
@@ -1270,6 +1297,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(mock_chmod.call_args[0][0], expected_disk_path)
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         """
         Test virt.update()
@@ -1583,6 +1611,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             virt.update("my vm", cpu=4, mem=2048),
         )
 
+    @pytest.mark.slow_0_01
     def test_mixed_dict_and_list_as_profile_objects(self):
         """
         Test virt._nic_profile with mixed dictionaries and lists as input.
@@ -1634,6 +1663,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                     )
                 )
 
+    @pytest.mark.slow_0_01
     def test_get_xml(self):
         """
         Test virt.get_xml()
@@ -1651,6 +1681,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(xml, virt.get_xml("test-vm"))
         self.assertEqual(xml, virt.get_xml(domain))
 
+    @pytest.mark.slow_0_01
     def test_parse_qemu_img_info(self):
         """
         Make sure that qemu-img info output is properly parsed
@@ -1779,6 +1810,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.virt.stop", return_value=True)
     @patch("salt.modules.virt.undefine")
     @patch("os.remove")
+    @pytest.mark.slow_0_01
     def test_purge_default(self, mock_remove, mock_undefine, mock_stop):
         """
         Test virt.purge() with default parameters
@@ -1832,6 +1864,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.virt.stop", return_value=True)
     @patch("salt.modules.virt.undefine")
     @patch("os.remove")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_purge_noremovable(self, mock_remove, mock_undefine, mock_stop):
         """
         Test virt.purge(removables=False)
@@ -1888,6 +1922,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mock_remove.assert_called_once()
         mock_remove.assert_any_call("/disks/test.qcow2")
 
+    @pytest.mark.slow_0_01
     def test_capabilities(self):
         """
         Test the virt.capabilities parsing
@@ -2214,6 +2249,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(expected, caps)
 
+    @pytest.mark.slow_0_01
     def test_network(self):
         """
         Test virt._get_net_xml()
@@ -2267,6 +2303,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "192.168.2.125",
         )
 
+    @pytest.mark.slow_0_01
     def test_domain_capabilities(self):
         """
         Test the virt.domain_capabilities parsing
@@ -2424,6 +2461,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(expected, caps)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_network_tag(self):
         """
         Test virt._get_net_xml() with VLAN tag
@@ -2451,6 +2490,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         actual = virt.list_networks()
         self.assertEqual(names, actual)
 
+    @pytest.mark.slow_0_01
     def test_network_info(self):
         """
         Test virt.network_info()
@@ -2510,6 +2550,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             net,
         )
 
+    @pytest.mark.slow_0_01
     def test_network_info_all(self):
         """
         Test virt.network_info()
@@ -2556,6 +2597,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             net,
         )
 
+    @pytest.mark.slow_0_01
     def test_network_info_notfound(self):
         """
         Test virt.network_info() when the network can't be found
@@ -2576,6 +2618,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual("<net>Raw XML</net>", virt.network_get_xml("default"))
 
+    @pytest.mark.slow_0_01
     def test_pool(self):
         """
         Test virt._gen_pool_xml()
@@ -2645,6 +2688,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             root.find("source/adapter/parentaddr/address").attrib["function"], "0x2"
         )
 
+    @pytest.mark.slow_0_01
     def test_pool_with_rbd(self):
         """
         Test virt._gen_pool_xml() with an RBD source
@@ -2720,6 +2764,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(root.find("source/host").attrib["name"], "nfs.host")
         self.assertEqual(root.find("source/auth"), None)
 
+    @pytest.mark.slow_0_01
     def test_pool_with_iscsi_direct(self):
         """
         Test virt._gen_pool_xml() with a iscsi-direct source
@@ -2747,6 +2792,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "iqn.2013-06.com.example:iscsi-initiator",
         )
 
+    @pytest.mark.slow_0_01
     def test_pool_define(self):
         """
         Test virt.pool_define()
@@ -2855,6 +2901,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             root.find("description").text, "Passphrase for default pool created by Salt"
         )
 
+    @pytest.mark.slow_0_01
     def test_list_pools(self):
         """
         Test virt.list_pools()
@@ -2870,6 +2917,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         actual = virt.list_pools()
         self.assertEqual(names, actual)
 
+    @pytest.mark.slow_0_01
     def test_pool_info(self):
         """
         Test virt.pool_info()
@@ -2919,6 +2967,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             pool,
         )
 
+    @pytest.mark.slow_0_01
     def test_pool_info_notarget(self):
         """
         Test virt.pool_info()
@@ -2966,6 +3015,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             pool,
         )
 
+    @pytest.mark.slow_0_01
     def test_pool_info_notfound(self):
         """
         Test virt.pool_info() when the pool can't be found
@@ -2976,6 +3026,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         pool = virt.pool_info("foo")
         self.assertEqual({}, pool)
 
+    @pytest.mark.slow_0_01
     def test_pool_info_all(self):
         """
         Test virt.pool_info()
@@ -3039,6 +3090,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             pool,
         )
 
+    @pytest.mark.slow_0_01
     def test_pool_get_xml(self):
         """
         Test virt.pool_get_xml
@@ -3049,6 +3101,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual("<pool>Raw XML</pool>", virt.pool_get_xml("default"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pool_list_volumes(self):
         """
         Test virt.pool_list_volumes
@@ -3063,6 +3117,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
 
     @patch("salt.modules.virt._is_kvm_hyper", return_value=True)
     @patch("salt.modules.virt._is_xen_hyper", return_value=False)
+    @pytest.mark.slow_0_01
     def test_get_hypervisor(self, isxen_mock, iskvm_mock):
         """
         test the virt.get_hypervisor() function
@@ -3075,6 +3130,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         isxen_mock.return_value = True
         self.assertEqual("xen", virt.get_hypervisor())
 
+    @pytest.mark.slow_0_01
     def test_pool_delete(self):
         """
         Test virt.pool_delete function
@@ -3094,6 +3150,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             self.mock_libvirt.VIR_STORAGE_POOL_DELETE_NORMAL
         )
 
+    @pytest.mark.slow_0_01
     def test_full_info(self):
         """
         Test virt.full_info
@@ -3233,6 +3290,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual("5900", graphics["port"])
         self.assertEqual("0.0.0.0", graphics["listen"])
 
+    @pytest.mark.slow_0_01
     def test_pool_update(self):
         """
         Test the pool_update function
@@ -3336,6 +3394,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.mock_conn.storagePoolDefineXML.assert_not_called()
 
+    @pytest.mark.slow_0_01
     def test_pool_update_password(self):
         """
         Test the pool_update function, where the password only is changed
@@ -3394,6 +3453,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_conn.storagePoolDefineXML.assert_called_once_with(expected_xml)
         mock_secret.setValue.assert_called_once_with(b"secret")
 
+    @pytest.mark.slow_0_01
     def test_pool_update_password_create(self):
         """
         Test the pool_update function, where the password only is changed
@@ -3449,6 +3509,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_conn.storagePoolDefineXML.assert_called_once_with(expected_xml)
         mock_secret.setValue.assert_called_once_with(b"secret")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_volume_infos(self):
         """
         Test virt.volume_infos
@@ -3760,6 +3822,8 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_volume_delete(self):
         """
         Test virt.volume_delete
@@ -3862,6 +3926,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @patch("salt.modules.virt.get_hypervisor", return_value="kvm")
+    @pytest.mark.slow_0_01
     def test_pool_capabilities_computed(self, mock_get_hypervisor):
         """
         Test virt.pool_capabilities where libvirt doesn't have the pool-capabilities feature

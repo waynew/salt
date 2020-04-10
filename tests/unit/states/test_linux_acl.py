@@ -7,9 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 
-# Import Salt Libs
-import salt.states.linux_acl as linux_acl
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import linux_acl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -28,6 +30,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensure a Linux ACL is present
@@ -283,6 +286,7 @@ class LinuxAclTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_present(self):
         """
         Test to ensure a Linux ACL is present

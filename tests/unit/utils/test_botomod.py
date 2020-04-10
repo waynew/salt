@@ -5,12 +5,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.utils.boto3mod as boto3mod
-
-# Import Salt libs
-import salt.utils.botomod as botomod
+import pytest
 from salt.exceptions import SaltInvocationError
 from salt.ext import six
+
+# Import Salt libs
+from salt.utils import boto3mod, botomod
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -156,6 +156,7 @@ class BotoUtilsTestCaseBase(TestCase, LoaderModuleMockMixin):
 
 
 class BotoUtilsCacheIdTestCase(BotoUtilsTestCaseBase):
+    @pytest.mark.slow_0_01
     def test_set_and_get_with_no_auth_params(self):
         botomod.cache_id(service, resource_name, resource_id=resource_id)
         self.assertEqual(botomod.cache_id(service, resource_name), resource_id)
@@ -176,6 +177,8 @@ class BotoUtilsCacheIdTestCase(BotoUtilsTestCaseBase):
             botomod.cache_id(service, resource_name, region="us-west-2"), None
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_set_and_get_after_invalidation_returns_none(self):
         botomod.cache_id(service, resource_name, resource_id=resource_id)
         botomod.cache_id(
@@ -183,6 +186,7 @@ class BotoUtilsCacheIdTestCase(BotoUtilsTestCaseBase):
         )
         self.assertEqual(botomod.cache_id(service, resource_name), None)
 
+    @pytest.mark.slow_0_01
     def test_partial(self):
         cache_id = botomod.cache_id_func(service)
         cache_id(resource_name, resource_id=resource_id)
@@ -198,16 +202,19 @@ class BotoUtilsCacheIdTestCase(BotoUtilsTestCaseBase):
 )
 class BotoUtilsGetConnTestCase(BotoUtilsTestCaseBase):
     @mock_ec2
+    @pytest.mark.slow_0_01
     def test_conn_is_cached(self):
         conn = botomod.get_connection(service, **conn_parameters)
         self.assertTrue(conn in botomod.__context__.values())
 
     @mock_ec2
+    @pytest.mark.slow_0_01
     def test_conn_is_cache_with_profile(self):
         conn = botomod.get_connection(service, profile=conn_parameters)
         self.assertTrue(conn in botomod.__context__.values())
 
     @mock_ec2
+    @pytest.mark.slow_0_01
     def test_get_conn_with_no_auth_params_raises_invocation_error(self):
         with patch(
             "boto.{0}.connect_to_region".format(service),
@@ -217,6 +224,7 @@ class BotoUtilsGetConnTestCase(BotoUtilsTestCaseBase):
                 botomod.get_connection(service)
 
     @mock_ec2
+    @pytest.mark.slow_0_01
     def test_get_conn_error_raises_command_execution_error(self):
         with patch(
             "boto.{0}.connect_to_region".format(service),
@@ -226,6 +234,7 @@ class BotoUtilsGetConnTestCase(BotoUtilsTestCaseBase):
                 botomod.get_connection(service)
 
     @mock_ec2
+    @pytest.mark.slow_0_01
     def test_partial(self):
         get_conn = botomod.get_connection_func(service)
         conn = get_conn(**conn_parameters)
@@ -253,6 +262,7 @@ class BotoUtilsGetErrorTestCase(BotoUtilsTestCaseBase):
         }
         self.assertEqual(r, expected)
 
+    @pytest.mark.slow_0_01
     def test_exception_message_with_no_body(self):
         e = BotoServerError("400", "Mocked error")
         r = botomod.get_error(e)
@@ -285,6 +295,8 @@ class BotoUtilsGetErrorTestCase(BotoUtilsTestCaseBase):
     " or equal to version {0}".format(required_boto3_version),
 )
 class BotoBoto3CacheContextCollisionTest(BotoUtilsTestCaseBase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_context_conflict_between_boto_and_boto3_utils(self):
         botomod.assign_funcs(__name__, "ec2")
         boto3mod.assign_funcs(__name__, "ec2", get_conn_funcname="_get_conn3")

@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.vbox_guest as vbox_guest
+from salt.states import vbox_guest
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -95,6 +97,7 @@ class VboxGuestTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(vbox_guest.additions_removed("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_grantaccess_to_sharedfolders(self):
         """
             Test to grant access to auto-mounted shared folders to the users.

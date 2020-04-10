@@ -6,6 +6,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import tempfile
 
+import pytest
 import salt.utils.files
 
 # Import Salt Libs
@@ -48,6 +49,7 @@ class EC2TestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {ec2: {"__opts__": {}}}
 
+    @pytest.mark.slow_0_01
     def test__validate_key_path_and_mode(self):
         # Key file exists
         with patch("os.path.exists", return_value=True):
@@ -80,6 +82,8 @@ class EC2TestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.cloud.clouds.ec2.get_location")
     @patch("salt.cloud.clouds.ec2.get_provider")
     @patch("salt.utils.aws.query")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_password_data(self, query, get_provider, get_location, _get_node):
         query.return_value = [{"passwordData": PASS_DATA}]
         _get_node.return_value = {"instanceId": "i-abcdef"}
@@ -97,6 +101,7 @@ class EC2TestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.cloud.clouds.ec2.get_location")
     @patch("salt.cloud.clouds.ec2.get_provider")
     @patch("salt.cloud.clouds.ec2.aws.query")
+    @pytest.mark.slow_0_01
     def test_get_imageid(self, aws_query, get_provider, get_location, config):
         """
         test querying imageid function
@@ -125,6 +130,7 @@ class EC2TestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.cloud.clouds.ec2.get_spot_config")
     @patch("salt.cloud.clouds.ec2._param_from_config")
     @patch("salt.cloud.clouds.ec2.securitygroupid")
+    @pytest.mark.slow_0_01
     def test_termination_protection(
         self,
         securitygroupid,

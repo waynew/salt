@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.firewalld as firewalld
+from salt.modules import firewalld
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {firewalld: {}}
 
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test for Return version from firewall-cmd
@@ -29,6 +32,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value=2):
             self.assertEqual(firewalld.version(), 2)
 
+    @pytest.mark.slow_0_01
     def test_default_zone(self):
         """
         Test for Print default zone for connections and interfaces
@@ -50,6 +54,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value="A"):
             self.assertEqual(firewalld.get_zones(), ["A"])
 
+    @pytest.mark.slow_0_01
     def test_get_services(self):
         """
         Test for Print predefined services
@@ -152,6 +157,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value=""):
             self.assertEqual(firewalld.add_service("name"), "")
 
+    @pytest.mark.slow_0_01
     def test_remove_service(self):
         """
         Test for Remove a service from zone
@@ -159,6 +165,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value=""):
             self.assertEqual(firewalld.remove_service("name"), "")
 
+    @pytest.mark.slow_0_01
     def test_add_masquerade(self):
         """
         Test for adding masquerade
@@ -173,6 +180,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value="success"):
             self.assertEqual(firewalld.remove_masquerade("name"), "success")
 
+    @pytest.mark.slow_0_01
     def test_add_port(self):
         """
         Test adding a port to a specific zone
@@ -238,6 +246,7 @@ class FirewalldTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(firewalld, "__firewall_cmd", return_value=ret):
             self.assertEqual(firewalld.list_port_fwd("zone"), exp)
 
+    @pytest.mark.slow_0_01
     def test_block_icmp(self):
         """
         Test ICMP block

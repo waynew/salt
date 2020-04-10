@@ -6,6 +6,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 from salt import template
 from salt.ext.six.moves import StringIO
@@ -30,6 +32,7 @@ class TemplateTestCase(TestCase):
         ret = template.compile_template(["1", "2", "3"], None, None, None, None)
         self.assertDictEqual(ret, {})
 
+    @pytest.mark.slow_0_01
     def test_compile_template_preserves_windows_newlines(self):
         """
         Test to ensure that a file with Windows newlines, when rendered by a
@@ -84,6 +87,7 @@ class TemplateTestCase(TestCase):
         ).read()
         self.assertEqual(ret, input_data_windows)
 
+    @pytest.mark.slow_0_01
     def test_check_render_pipe_str(self):
         """
         Check that all renderers specified in the pipe string are available.

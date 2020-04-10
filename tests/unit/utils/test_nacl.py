@@ -5,9 +5,11 @@ from __future__ import absolute_import
 
 import os
 
-# Import Salt libs
-import salt.modules.config as config
+import pytest
 import salt.utils.files
+
+# Import Salt libs
+from salt.modules import config
 from tests.support.helpers import with_tempfile
 from tests.support.mixins import LoaderModuleMockMixin
 
@@ -15,9 +17,9 @@ from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.unit import TestCase, skipIf
 
 try:
-    import libnacl.secret  # pylint: disable=unused-import
     import libnacl.sealed  # pylint: disable=unused-import
-    import salt.utils.nacl as nacl
+    import libnacl.secret  # pylint: disable=unused-import
+    from salt.utils import nacl
 
     HAS_LIBNACL = True
 except (ImportError, OSError, AttributeError):
@@ -36,6 +38,7 @@ class NaclUtilsTests(TestCase, LoaderModuleMockMixin):
         self.key = "C16NxgBhw8cqbhvPCDAn2pirwW1A1WEVLUexCsoUD2Y="
         self.pub = "+XWFfZXnfItS++a4gQf8Adu1aUlTgHWyTfsglbTdXyg="
 
+    @pytest.mark.slow_0_01
     def test_keygen(self):
         """
         test nacl.keygen function
@@ -87,6 +90,7 @@ class NaclUtilsTests(TestCase, LoaderModuleMockMixin):
         assert isinstance(ret, bytes)
 
     @with_tempfile()
+    @pytest.mark.slow_0_01
     def test_enc_sk_file(self, fpath):
         """
         test nacl.enc function
@@ -128,6 +132,7 @@ class NaclUtilsTests(TestCase, LoaderModuleMockMixin):
         assert ret == b"blah"
 
     @with_tempfile()
+    @pytest.mark.slow_0_01
     def test_dec_sk_file(self, fpath):
         """
         test nacl.dec function

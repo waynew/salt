@@ -8,10 +8,11 @@ import datetime
 import logging
 import os
 
-import dateutil.parser as dateutil_parser
+import pytest
 
 # Import Salt libs
 import salt.utils.schedule
+from dateutil import parser as dateutil_parser
 from salt.modules.test import ping
 
 # Import Salt Testing libs
@@ -48,6 +49,9 @@ class SchedulerPostponeTest(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         self.schedule.reset()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_postpone(self):
         """
         verify that scheduled job is postponed until the specified time.

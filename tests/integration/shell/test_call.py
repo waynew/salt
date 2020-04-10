@@ -17,6 +17,8 @@ import re
 import shutil
 import sys
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.json
@@ -39,12 +41,20 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
 
     _call_binary_ = "salt-call"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_default_output(self):
         out = self.run_call("-l quiet test.fib 3")
 
         expect = ["local:", "    - 2"]
         self.assertEqual(expect, out[:-1])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_text_output(self):
         out = self.run_call("-l quiet --out txt test.fib 3")
 
@@ -52,6 +62,11 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
 
         self.assertEqual("".join(expect), "".join(out).rsplit(",", 1)[0])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_json_out_indent(self):
         out = self.run_call("test.ping -l quiet --out=json --out-indent=-1")
         self.assertIn('"local": true', "".join(out))
@@ -62,6 +77,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
         out = self.run_call("test.ping -l quiet --out=json --out-indent=1")
         self.assertIn('"local": true', "".join(out))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_local_sls_call(self):
         fileroot = os.path.join(RUNTIME_VARS.FILES, "file", "base")
         out = self.run_call(
@@ -73,6 +92,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
         self.assertIn("Succeeded: 1", "".join(out))
 
     @with_tempfile()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_local_salt_call(self, name):
         """
         This tests to make sure that salt-call does not execute the
@@ -100,10 +123,19 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
         salt.utils.platform.is_windows() or salt.utils.platform.is_darwin(),
         "This test requires a supported master",
     )
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_user_delete_kw_output(self):
         ret = self.run_call("-l quiet -d user.delete")
         assert "salt '*' user.delete name remove=True force=True" in "".join(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_salt_documentation_too_many_arguments(self):
         """
         Test to see if passing additional arguments shows an error
@@ -114,6 +146,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
             "\n".join(data[1]),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_issue_6973_state_highstate_exit_code(self):
         """
         If there is no tops/master_tops or state file matches
@@ -155,6 +191,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
         self.assertTrue(True in ["returnTOmaster" in a for a in master_out])
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_syslog_file_not_found(self):
         """
         test when log_file is set to a syslog file that does not exist
@@ -288,6 +328,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
                     os.unlink(output_file)
 
     @skipIf(sys.platform.startswith("win"), "This test does not apply on Win")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_42116_cli_pillar_override(self):
         ret = self.run_call(
             "state.apply issue-42116-cli-pillar-override "
@@ -302,6 +346,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
             log.debug("salt-call output:\n\n%s", "\n".join(ret))
             self.fail("CLI pillar override not found in pillar data")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_pillar_items_masterless(self):
         """
         Test to ensure we get expected output
@@ -332,6 +380,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
             user = user_info[-1].strip()
         super(CallTest, self).tearDown()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_exit_status_unknown_argument(self):
         """
         Ensure correct exit status when an unknown argument is passed to salt-call.
@@ -349,6 +401,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
             status, "EX_USAGE", message="unknown argument", stdout=stdout, stderr=stderr
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_masterless_highstate(self):
         """
         test state.highstate in masterless mode
@@ -367,6 +423,10 @@ class CallTest(ShellCase, testprogram.TestProgramCase, ShellCaseCommonTestsMixin
 
         self.assertTrue(os.path.exists(destpath))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_exit_status_correct_usage(self):
         """
         Ensure correct exit status when salt-call starts correctly.

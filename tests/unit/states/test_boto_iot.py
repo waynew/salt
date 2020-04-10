@@ -7,13 +7,15 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
-import salt.states.boto_iot as boto_iot
 
 # Import 3rd-party libs
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.states import boto_iot
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -30,8 +32,8 @@ from tests.unit.modules.test_boto_iot import BotoIoTTestCaseMixin
 try:
     import boto
     import boto3
-    from botocore.exceptions import ClientError
     from botocore import __version__ as found_botocore_version
+    from botocore.exceptions import ClientError
 
     HAS_BOTO = True
 except ImportError:
@@ -211,6 +213,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
     TestCase for salt.modules.boto_iot state.module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_thing_type_does_not_exist(self):
         """
         tests present on a thing type that does not exist.
@@ -229,6 +233,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
             result["changes"]["new"]["thing_type"]["thingTypeName"], thing_type_name
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_thing_type_exists(self):
         self.conn.describe_thing_type.return_value = thing_type_ret
         result = self.salt_states["boto_iot.thing_type_present"](
@@ -242,6 +248,12 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertEqual(result["changes"], {})
         self.assertTrue(self.conn.create_thing_type.call_count == 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_with_failure(self):
         self.conn.describe_thing_type.side_effect = [not_found_error, thing_type_ret]
         self.conn.create_thing_type.side_effect = ClientError(
@@ -257,6 +269,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_thing_type_does_not_exist(self):
         """
         Tests absent on a thing type does not exist
@@ -268,6 +282,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_thing_type_exists(self):
         """
         Tests absent on a thing type
@@ -280,6 +296,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertEqual(result["changes"]["new"]["thing_type"], None)
         self.assertTrue(self.conn.deprecate_thing_type.call_count == 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_deprecate_failure(self):
         self.conn.describe_thing_type.return_value = thing_type_ret
         self.conn.deprecate_thing_type.side_effect = ClientError(
@@ -293,6 +311,8 @@ class BotoIoTThingTypeTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue("deprecate_thing_type" in result["comment"])
         self.assertTrue(self.conn.delete_thing_type.call_count == 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_delete_failure(self):
         self.conn.describe_thing_type.return_value = deprecated_thing_type_ret
         self.conn.delete_thing_type.side_effect = ClientError(
@@ -312,6 +332,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
     TestCase for salt.modules.boto_iot state.module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_policy_does_not_exist(self):
         """
         Tests present on a policy that does not exist.
@@ -329,6 +351,10 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
             result["changes"]["new"]["policy"]["policyName"], policy_ret["policyName"]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_policy_exists(self):
         self.conn.get_policy.return_value = policy_ret
         self.conn.create_policy_version.return_value = policy_ret
@@ -340,6 +366,12 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_with_failure(self):
         self.conn.get_policy.side_effect = [not_found_error, policy_ret]
         self.conn.create_policy.side_effect = ClientError(
@@ -353,6 +385,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_policy_does_not_exist(self):
         """
         Tests absent on a policy that does not exist.
@@ -362,6 +396,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_policy_exists(self):
         self.conn.get_policy.return_value = policy_ret
         self.conn.list_policy_versions.return_value = {"policyVersions": []}
@@ -371,6 +407,10 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["policy"], None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_failure(self):
         self.conn.get_policy.return_value = policy_ret
         self.conn.list_policy_versions.return_value = {"policyVersions": []}
@@ -383,6 +423,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_attached_when_policy_not_attached(self):
         """
         Tests attached on a policy that is not attached.
@@ -394,6 +436,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertTrue(result["changes"]["new"]["attached"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_attached_when_policy_attached(self):
         """
         Tests attached on a policy that is attached.
@@ -405,6 +449,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_attached_with_failure(self):
         """
         Tests attached on a policy that is attached.
@@ -419,6 +465,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertFalse(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_detached_when_policy_not_detached(self):
         """
         Tests detached on a policy that is not detached.
@@ -431,6 +479,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         log.warning(result)
         self.assertFalse(result["changes"]["new"]["attached"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_detached_when_policy_detached(self):
         """
         Tests detached on a policy that is detached.
@@ -442,6 +492,8 @@ class BotoIoTPolicyTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_detached_with_failure(self):
         """
         Tests detached on a policy that is detached.
@@ -470,6 +522,8 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
     TestCase for salt.modules.boto_iot state.module rules
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_topic_rule_does_not_exist(self):
         """
         Tests present on a topic_rule that does not exist.
@@ -493,6 +547,10 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
             result["changes"]["new"]["rule"]["ruleName"], topic_rule_ret["ruleName"]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_policy_exists(self):
         self.conn.get_topic_rule.return_value = {"rule": topic_rule_ret}
         self.conn.create_topic_rule.return_value = {"created": True}
@@ -507,6 +565,12 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_with_failure(self):
         self.conn.get_topic_rule.side_effect = [
             topic_rule_not_found_error,
@@ -526,6 +590,8 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_topic_rule_does_not_exist(self):
         """
         Tests absent on a topic rule that does not exist.
@@ -535,6 +601,8 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_topic_rule_exists(self):
         self.conn.get_topic_rule.return_value = topic_rule_ret
         result = self.salt_states["boto_iot.topic_rule_absent"](
@@ -543,6 +611,10 @@ class BotoIoTTopicRuleTestCase(BotoIoTStateTestCaseBase, BotoIoTTestCaseMixin):
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["rule"], None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_failure(self):
         self.conn.get_topic_rule.return_value = topic_rule_ret
         self.conn.delete_topic_rule.side_effect = ClientError(

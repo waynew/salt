@@ -10,6 +10,8 @@ import logging
 import os
 import textwrap
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.minion
@@ -83,6 +85,8 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
     Validate files in the salt/conf directory.
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_conf_master_sample_is_commented(self):
         """
         The sample config file located in salt/conf/master must be completely
@@ -96,6 +100,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             "Sample config file '{}' must be commented out.".format(master_config),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_minion_sample_is_commented(self):
         """
         The sample config file located in salt/conf/minion must be completely
@@ -109,6 +114,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             "Sample config file '{}' must be commented out.".format(minion_config),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_sample_is_commented(self):
         """
         The sample config file located in salt/conf/cloud must be completely
@@ -122,6 +128,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             "Sample config file '{}' must be commented out.".format(cloud_config),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_profiles_sample_is_commented(self):
         """
         The sample config file located in salt/conf/cloud.profiles must be completely
@@ -137,6 +144,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             ),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_providers_sample_is_commented(self):
         """
         The sample config file located in salt/conf/cloud.providers must be completely
@@ -152,6 +160,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             ),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_proxy_sample_is_commented(self):
         """
         The sample config file located in salt/conf/proxy must be completely
@@ -165,6 +174,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             "Sample config file '{}' must be commented out.".format(proxy_config),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_roster_sample_is_commented(self):
         """
         The sample config file located in salt/conf/roster must be completely
@@ -178,6 +188,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
             "Sample config file '{}' must be commented out.".format(roster_config),
         )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_profiles_d_files_are_commented(self):
         """
         All cloud profile sample configs in salt/conf/cloud.profiles.d/* must be completely
@@ -199,6 +210,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
                 "Sample config file '{}' must be commented out.".format(conf_file),
             )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_providers_d_files_are_commented(self):
         """
         All cloud profile sample configs in salt/conf/cloud.providers.d/* must be completely
@@ -220,6 +232,7 @@ class SampleConfTest(DefaultConfigsBase, TestCase):
                 "Sample config file '{}' must be commented out.".format(conf_file),
             )
 
+    @pytest.mark.slow_0_01
     def test_conf_cloud_maps_d_files_are_commented(self):
         """
         All cloud profile sample configs in salt/conf/cloud.maps.d/* must be completely
@@ -258,6 +271,7 @@ def _salt_configuration_error(filename):
 
 class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
     @with_tempfile()
+    @pytest.mark.slow_0_01
     def test_sha256_is_default_for_master(self, fpath):
         with salt.utils.files.fopen(fpath, "w") as wfh:
             wfh.write("root_dir: /\n" "key_logfile: key\n")
@@ -265,6 +279,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["hash_type"], "sha256")
 
     @with_tempfile()
+    @pytest.mark.slow_0_01
     def test_sha256_is_default_for_minion(self, fpath):
         with salt.utils.files.fopen(fpath, "w") as wfh:
             wfh.write("root_dir: /\n" "key_logfile: key\n")
@@ -272,6 +287,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["hash_type"], "sha256")
 
     @with_tempfile()
+    @pytest.mark.slow_0_01
     def test_proper_path_joining(self, fpath):
         temp_config = "root_dir: /\n" "key_logfile: key\n"
         if salt.utils.platform.is_windows():
@@ -292,6 +308,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertNotEqual(config["key_logfile"], expect_sep_join)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_common_prefix_stripping(self, tempdir):
         root_dir = os.path.join(tempdir, "foo", "bar")
         os.makedirs(root_dir)
@@ -302,6 +319,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["log_file"], fpath)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_default_root_dir_included_in_config_root_dir(self, tempdir):
         root_dir = os.path.join(tempdir, "foo", "bar")
         os.makedirs(root_dir)
@@ -316,6 +334,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         "You can't set an environment dynamically in Windows",
     )
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_load_master_config_from_environ_var(self, tempdir):
         env_root_dir = os.path.join(tempdir, "foo", "env")
         os.makedirs(env_root_dir)
@@ -346,6 +366,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         "You can't set an environment dynamically in Windows",
     )
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_load_minion_config_from_environ_var(self, tempdir):
         env_root_dir = os.path.join(tempdir, "foo", "env")
         os.makedirs(env_root_dir)
@@ -373,6 +394,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             self.assertEqual(config["log_file"], fpath)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_load_client_config_from_environ_var(self, tempdir):
         env_root_dir = os.path.join(tempdir, "foo", "env")
         os.makedirs(env_root_dir)
@@ -418,6 +441,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             self.assertEqual(config["log_file"], fpath)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_issue_5970_minion_confd_inclusion(self, tempdir):
         minion_config = os.path.join(tempdir, "minion")
         minion_confd = os.path.join(tempdir, "minion.d")
@@ -449,6 +473,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertTrue(config["blah"])
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_master_confd_inclusion(self, tempdir):
         master_config = os.path.join(tempdir, "master")
         master_confd = os.path.join(tempdir, "master.d")
@@ -481,6 +506,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
     @with_tempfile()
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_master_file_roots_glob(self, tempdir, fpath):
         # Create some files
         for f in "abc":
@@ -514,6 +540,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
     @with_tempfile()
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_master_pillar_roots_glob(self, tempdir, fpath):
         # Create some files.
         for f in "abc":
@@ -546,6 +573,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         assert ret == {"base": expected}
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_master_id_function(self, tempdir):
         master_config = os.path.join(tempdir, "master")
 
@@ -567,6 +597,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
     @with_tempfile()
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_minion_file_roots_glob(self, tempdir, fpath):
         # Create some files.
         for f in "abc":
@@ -593,6 +624,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
     @with_tempfile()
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_minion_pillar_roots_glob(self, tempdir, fpath):
         # Create some files.
         for f in "abc":
@@ -618,6 +650,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         )
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_function(self, tempdir):
         minion_config = os.path.join(tempdir, "minion")
 
@@ -637,6 +672,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "hello_world")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_lowercase(self, tempdir):
         """
         This tests that setting `minion_id_lowercase: True` does lower case
@@ -662,6 +700,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "king_bob")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_remove_domain_string_positive(self, tempdir):
         """
         This tests that the values of `minion_id_remove_domain` is suppressed from a generated minion id,
@@ -687,6 +728,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "king_bob")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_remove_domain_string_negative(self, tempdir):
         """
         See above
@@ -709,6 +753,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "king_bob.foo.org")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_remove_domain_bool_true(self, tempdir):
         """
         See above
@@ -730,6 +777,9 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "king_bob")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_id_remove_domain_bool_false(self, tempdir):
         """
         See above
@@ -751,6 +801,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(config["id"], "king_bob.foo.org")
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_backend_rename(self, tempdir):
         """
         This tests that we successfully rename git, hg, svn, and minion to
@@ -778,6 +830,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(master_config["fileserver_backend"], expected)
         self.assertEqual(minion_config["fileserver_backend"], expected)
 
+    @pytest.mark.slow_0_01
     def test_syndic_config(self):
         minion_conf_path = self.get_config_file_path("syndic")
         master_conf_path = os.path.join(os.path.dirname(minion_conf_path), "master")
@@ -875,6 +928,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         _count_strings(config)
         return tally
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_conf_file_strings_are_unicode_for_master(self):
         """
         This ensures that any strings which are loaded are unicode strings
@@ -886,6 +941,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         self.assertEqual(len(non_unicode), 8 if six.PY2 else 0, non_unicode)
         self.assertTrue(tally["unicode"] > 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_conf_file_strings_are_unicode_for_minion(self):
         """
         This ensures that any strings which are loaded are unicode strings
@@ -914,6 +971,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                 master_config="bar",
             )
 
+    @pytest.mark.slow_0_01
     def test_cloud_config_double_providers_path(self):
         """
         Tests passing in providers_config_path and providers_config kwargs.
@@ -927,6 +985,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                 providers_config="bar",
             )
 
+    @pytest.mark.slow_0_01
     def test_cloud_config_double_profiles_path(self):
         """
         Tests passing in profiles_config_path and profiles_config kwargs.
@@ -940,6 +999,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                 profiles_config="bar",
             )
 
+    @pytest.mark.slow_0_01
     def test_cloud_config_providers_in_opts(self):
         """
         Tests mixing old cloud providers with pre-configured providers configurations
@@ -957,6 +1017,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                     providers_config="bar",
                 )
 
+    @pytest.mark.slow_0_01
     def test_cloud_config_providers_in_opts_path(self):
         """
         Tests mixing old cloud providers with pre-configured providers configurations
@@ -975,6 +1036,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
                         providers_config_path="bar",
                     )
 
+    @pytest.mark.slow_0_01
     def test_cloud_config_deploy_scripts_search_path(self):
         """
         Tests the contents of the 'deploy_scripts_search_path' tuple to ensure that
@@ -1004,6 +1066,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
     # apply_cloud_config tests
 
+    @pytest.mark.slow_0_01
     def test_apply_cloud_config_no_provider_detail_list(self):
         """
         Tests when the provider is not contained in a list of details
@@ -1119,6 +1182,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_apply_vm_profiles_config_extend_success(self):
         """
         Tests profile extends functionality with valid provider and profile configs
@@ -1156,6 +1220,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_apply_vm_profiles_config_extend_override_success(self):
         """
         Tests profile extends and recursively merges data elements
@@ -1298,6 +1363,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             ret, salt.config.apply_cloud_providers_config(overrides, defaults=DEFAULT)
         )
 
+    @pytest.mark.slow_0_01
     def test_apply_cloud_providers_config_extend_multiple(self):
         """
         Tests the successful extension of two cloud providers
@@ -1496,6 +1562,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             DEFAULT,
         )
 
+    @pytest.mark.slow_0_01
     def test_apply_cloud_providers_extends_not_in_providers(self):
         """
         Tests when extends is not in the list of providers
@@ -1542,6 +1609,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         provider = "foo:bar"
         self.assertFalse(salt.config.is_provider_configured(opts, provider))
 
+    @pytest.mark.slow_0_01
     def test_is_provider_configured_no_driver(self):
         """
         Tests when provider driver is not in opts
@@ -1620,6 +1688,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         "You can't set an environment dynamically in Windows",
     )
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_load_cloud_config_from_environ_var(self, tempdir):
         env_root_dir = os.path.join(tempdir, "foo", "env")
         os.makedirs(env_root_dir)
@@ -1647,6 +1717,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             self.assertEqual(config["log_file"], fpath)
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_deploy_search_path_as_string(self, temp_conf_dir):
         config_file_path = os.path.join(temp_conf_dir, "cloud")
         deploy_dir_path = os.path.join(temp_conf_dir, "test-deploy.d")
@@ -1669,6 +1741,8 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
             deploy_dir_path, default_config["deploy_scripts_search_path"][0]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_includes_load(self):
         """
         Tests that cloud.{providers,profiles}.d directories are loaded, even if not
@@ -1699,6 +1773,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
 
         self.assertEqual(config_opts, configuration)
 
+    @pytest.mark.slow_0_01
     def test_include_config_with_errors(self):
         """
         Tests that include_config function returns valid configuration even on errors
@@ -1754,6 +1829,7 @@ class ConfigTestCase(TestCase, AdaptedConfigurationTestCaseMixin):
         ret.update(kwargs)
         return ret
 
+    @pytest.mark.slow_0_01
     def test_apply_config(self):
         """
         Ensure that the environment and saltenv options work properly
@@ -1835,6 +1911,7 @@ class APIConfigTestCase(DefaultConfigsBase, TestCase):
         # Reset DEFAULT_API_OPTS settings as to not interfere with other unit tests
         salt.config.DEFAULT_API_OPTS = self.default_api_opts
 
+    @pytest.mark.slow_0_01
     def test_api_config_log_file_values(self):
         """
         Tests the opts value of the 'log_file' after running through the

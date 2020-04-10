@@ -13,6 +13,8 @@ import pprint
 import re
 import tempfile
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
@@ -128,6 +130,7 @@ class TestSaltCacheLoader(TestCase):
     def tearDown(self):
         salt.utils.files.rm_rf(self.tempdir)
 
+    @pytest.mark.slow_0_01
     def test_searchpath(self):
         """
         The searchpath is based on the cachedir option and the saltenv parameter
@@ -138,6 +141,7 @@ class TestSaltCacheLoader(TestCase):
         loader = self.get_loader(opts=opts, saltenv="test")
         assert loader.searchpath == [os.path.join(tmp, "files", "test")]
 
+    @pytest.mark.slow_0_01
     def test_mockclient(self):
         """
         A MockFileClient is used that records all file requests normally sent
@@ -175,6 +179,7 @@ class TestSaltCacheLoader(TestCase):
         jinja = Environment(loader=loader)
         return loader._file_client, jinja
 
+    @pytest.mark.slow_0_01
     def test_import(self):
         """
         You can import and use macros from other files
@@ -186,6 +191,7 @@ class TestSaltCacheLoader(TestCase):
         self.assertEqual(fc.requests[0]["path"], "salt://hello_import")
         self.assertEqual(fc.requests[1]["path"], "salt://macro")
 
+    @pytest.mark.slow_0_01
     def test_relative_import(self):
         """
         You can import using relative paths
@@ -207,6 +213,7 @@ class TestSaltCacheLoader(TestCase):
         template = jinja.get_template("relative/rescape")
         self.assertRaises(exceptions.TemplateNotFound, template.render)
 
+    @pytest.mark.slow_0_01
     def test_include(self):
         """
         You can also include a template that imports and uses macros
@@ -219,6 +226,7 @@ class TestSaltCacheLoader(TestCase):
         self.assertEqual(fc.requests[1]["path"], "salt://hello_import")
         self.assertEqual(fc.requests[2]["path"], "salt://macro")
 
+    @pytest.mark.slow_0_01
     def test_include_context(self):
         """
         Context variables are passes to the included template by default.
@@ -227,6 +235,7 @@ class TestSaltCacheLoader(TestCase):
         result = jinja.get_template("hello_include").render(a="Hi", b="Salt")
         self.assertEqual(result, "Hey world !Hi Salt !")
 
+    @pytest.mark.slow_0_01
     def test_cached_file_client(self):
         """
         Multiple instantiations of SaltCacheLoader use the cached file client
@@ -236,6 +245,7 @@ class TestSaltCacheLoader(TestCase):
             loader_b = SaltCacheLoader(self.opts)
         assert loader_a._file_client is loader_b._file_client
 
+    @pytest.mark.slow_0_01
     def test_file_client_kwarg(self):
         """
         A file client can be passed to SaltCacheLoader overriding the any
@@ -245,6 +255,7 @@ class TestSaltCacheLoader(TestCase):
         loader = SaltCacheLoader(self.opts, _file_client=mfc)
         assert loader._file_client is mfc
 
+    @pytest.mark.slow_0_01
     def test_cache_loader_shutdown(self):
         """
         The shudown method can be called without raising an exception when the
@@ -285,6 +296,7 @@ class TestGetTemplate(TestCase):
     def tearDown(self):
         salt.utils.files.rm_rf(self.tempdir)
 
+    @pytest.mark.slow_0_01
     def test_fallback(self):
         """
         A Template with a filesystem loader is returned as fallback
@@ -298,6 +310,7 @@ class TestGetTemplate(TestCase):
             )
         self.assertEqual(out, "world" + os.linesep)
 
+    @pytest.mark.slow_0_01
     def test_fallback_noloader(self):
         """
         A Template with a filesystem loader is returned as fallback
@@ -311,6 +324,7 @@ class TestGetTemplate(TestCase):
             )
         self.assertEqual(out, "Hey world !a b !" + os.linesep)
 
+    @pytest.mark.slow_0_01
     def test_saltenv(self):
         """
         If the template is within the searchpath it can
@@ -340,6 +354,7 @@ class TestGetTemplate(TestCase):
             self.assertEqual(out, "Hey world !Hi Salt !" + os.linesep)
             self.assertEqual(fc.requests[0]["path"], "salt://macro")
 
+    @pytest.mark.slow_0_01
     def test_macro_additional_log_for_generalexc(self):
         """
         If we failed in a macro because of e.g. a TypeError, get
@@ -364,6 +379,7 @@ class TestGetTemplate(TestCase):
                     dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
                 )
 
+    @pytest.mark.slow_0_01
     def test_macro_additional_log_for_undefined(self):
         """
         If we failed in a macro because of undefined variables, get
@@ -388,6 +404,7 @@ class TestGetTemplate(TestCase):
                     dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
                 )
 
+    @pytest.mark.slow_0_01
     def test_macro_additional_log_syntaxerror(self):
         """
         If  we failed in a macro, get more output from trace.
@@ -412,6 +429,7 @@ class TestGetTemplate(TestCase):
                     dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
                 )
 
+    @pytest.mark.slow_0_01
     def test_non_ascii_encoding(self):
         fc = MockFileClient()
         with patch.object(SaltCacheLoader, "file_client", MagicMock(return_value=fc)):
@@ -459,6 +477,7 @@ class TestGetTemplate(TestCase):
             self.assertEqual(fc.requests[0]["path"], "salt://macro")
 
     @skipIf(HAS_TIMELIB is False, "The `timelib` library is not installed.")
+    @pytest.mark.slow_0_01
     def test_strftime(self):
         response = render_jinja_tmpl(
             '{{ "2002/12/25"|strftime }}',
@@ -507,6 +526,7 @@ class TestGetTemplate(TestCase):
             )
             self.assertEqual(response, "02")
 
+    @pytest.mark.slow_0_01
     def test_non_ascii(self):
         fn = os.path.join(self.template_dir, "non_ascii")
         out = JINJA(fn, opts=self.local_opts, saltenv="test", salt=self.local_salt)
@@ -516,30 +536,35 @@ class TestGetTemplate(TestCase):
                 salt.utils.stringutils.to_unicode("Assunção" + os.linesep), result
             )
 
+    @pytest.mark.slow_0_01
     def test_get_context_has_enough_context(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(template, 8)
         expected = "---\n[...]\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_get_context_at_top_of_file(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(template, 1)
         expected = "---\n1\n2\n3\n4\n5\n6\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_get_context_at_bottom_of_file(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(template, 15)
         expected = "---\n[...]\na\nb\nc\nd\ne\nf\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_get_context_2_context_lines(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(template, 8, num_lines=2)
         expected = "---\n[...]\n6\n7\n8\n9\na\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_get_context_with_marker(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(
@@ -548,6 +573,7 @@ class TestGetTemplate(TestCase):
         expected = "---\n[...]\n6\n7\n8 <---\n9\na\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_render_with_syntax_error(self):
         template = "hello\n\n{{ bad\n\nfoo"
         expected = r".*---\nhello\n\n{{ bad\n\nfoo    <======================\n---"
@@ -572,6 +598,7 @@ class TestGetTemplate(TestCase):
                 dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
             )
 
+    @pytest.mark.slow_0_01
     def test_render_with_utf8_syntax_error(self):
         with patch.object(builtins, "__salt_system_encoding__", "utf-8"):
             template = "hello\n\n{{ bad\n\nfoo한"
@@ -586,6 +613,7 @@ class TestGetTemplate(TestCase):
                 dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
             )
 
+    @pytest.mark.slow_0_01
     def test_render_with_undefined_variable(self):
         template = "hello\n\n{{ foo }}\n\nfoo"
         expected = r"Jinja variable \'foo\' is undefined"
@@ -597,6 +625,7 @@ class TestGetTemplate(TestCase):
             dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
         )
 
+    @pytest.mark.slow_0_01
     def test_render_with_undefined_variable_utf8(self):
         template = "hello\xed\x95\x9c\n\n{{ foo }}\n\nfoo"
         expected = r"Jinja variable \'foo\' is undefined"
@@ -608,6 +637,7 @@ class TestGetTemplate(TestCase):
             dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
         )
 
+    @pytest.mark.slow_0_01
     def test_render_with_undefined_variable_unicode(self):
         template = "hello한\n\n{{ foo }}\n\nfoo"
         expected = r"Jinja variable \'foo\' is undefined"
@@ -647,6 +677,7 @@ class TestJinjaDefaultOptions(TestCase):
             "mylist": [0, 1, 2, 3],
         }
 
+    @pytest.mark.slow_0_01
     def test_comment_prefix(self):
 
         template = """
@@ -665,6 +696,7 @@ class TestJinjaDefaultOptions(TestCase):
         )
         self.assertEqual(rendered, "onetwothree")
 
+    @pytest.mark.slow_0_01
     def test_statement_prefix(self):
 
         template = """
@@ -733,6 +765,7 @@ class TestCustomExtensions(TestCase):
             rendered = env.from_string("{{ dataset|unique }}").render(dataset=dataset)
             self.assertEqual(rendered, "{0}".format(unique))
 
+    @pytest.mark.slow_0_01
     def test_unique_tuple(self):
         dataset = ("foo", "foo", "bar")
         unique = set(dataset)
@@ -773,6 +806,7 @@ class TestCustomExtensions(TestCase):
         rendered = env.from_string("{{ dataset|json }}").render(dataset=dataset)
         self.assertEqual(dataset, salt.utils.json.loads(rendered))
 
+    @pytest.mark.slow_0_01
     def test_serialize_yaml(self):
         dataset = {
             "foo": True,
@@ -785,6 +819,7 @@ class TestCustomExtensions(TestCase):
         rendered = env.from_string("{{ dataset|yaml }}").render(dataset=dataset)
         self.assertEqual(dataset, salt.utils.yaml.safe_load(rendered))
 
+    @pytest.mark.slow_0_01
     def test_serialize_yaml_str(self):
         dataset = "str value"
         env = Environment(extensions=[SerializerExtension])
@@ -813,6 +848,7 @@ class TestCustomExtensions(TestCase):
         rendered = env.from_string("{{ dataset|python }}").render(dataset=dataset)
         self.assertEqual(rendered, pprint.pformat(dataset))
 
+    @pytest.mark.slow_0_01
     def test_load_yaml(self):
         env = Environment(extensions=[SerializerExtension])
         rendered = env.from_string(
@@ -830,6 +866,7 @@ class TestCustomExtensions(TestCase):
                 "{% set document = document|load_yaml %}" "{{ document.foo }}"
             ).render(document={"foo": "it works"})
 
+    @pytest.mark.slow_0_01
     def test_load_tag(self):
         env = Environment(extensions=[SerializerExtension])
 
@@ -907,6 +944,7 @@ class TestCustomExtensions(TestCase):
         with self.assertRaises(exceptions.TemplateNotFound):
             env.from_string('{% import_json "does not exists" as doc %}').render()
 
+    @pytest.mark.slow_0_01
     def test_load_text_template(self):
         loader = DictLoader({"foo": "Foo!"})
         env = Environment(extensions=[SerializerExtension], loader=loader)
@@ -917,6 +955,7 @@ class TestCustomExtensions(TestCase):
         with self.assertRaises(exceptions.TemplateNotFound):
             env.from_string('{% import_text "does not exists" as doc %}').render()
 
+    @pytest.mark.slow_0_01
     def test_catalog(self):
         loader = DictLoader(
             {
@@ -1008,6 +1047,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "{'foo': {'bar': {'baz': 42}}}")
 
+    @pytest.mark.slow_0_01
     def test_update_dict_key_value(self):
         """
         Test the `update_dict_key_value` Jinja filter.
@@ -1082,6 +1122,7 @@ class TestCustomExtensions(TestCase):
             else "{'bar': {'baz': [1, 2, 42]}}",
         )
 
+    @pytest.mark.slow_0_01
     def test_extend_dict_key_value(self):
         """
         Test the `extend_dict_key_value` Jinja filter.
@@ -1132,6 +1173,7 @@ class TestCustomExtensions(TestCase):
             dict(opts=self.local_opts, saltenv="test", salt=self.local_salt),
         )
 
+    @pytest.mark.slow_0_01
     def test_sequence(self):
         env = Environment()
         env.filters["sequence"] = ensure_sequence_filter
@@ -1169,6 +1211,8 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "abcd_efghh_ijk_lmno_p")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_snake_to_camel_case(self):
         """
         Test the `to_camelcase` Jinja filter.
@@ -1185,6 +1229,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "TheFoxJumpedOverTheLazyDog")
 
+    @pytest.mark.slow_0_01
     def test_is_ip(self):
         """
         Test the `is_ip` Jinja filter.
@@ -1229,6 +1274,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "False")
 
+    @pytest.mark.slow_0_01
     def test_is_ipv6(self):
         """
         Test the `is_ipv6` Jinja filter.
@@ -1257,6 +1303,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "False")
 
+    @pytest.mark.slow_0_01
     def test_ipaddr(self):
         """
         Test the `ipaddr` Jinja filter.
@@ -1287,6 +1334,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "224.0.0.1, ff01::1")
 
+    @pytest.mark.slow_0_01
     def test_ipv4(self):
         """
         Test the `ipv4` Jinja filter.
@@ -1327,6 +1375,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "127.0.0.1")
 
+    @pytest.mark.slow_0_01
     def test_ipv6(self):
         """
         Test the `ipv6` Jinja filter.
@@ -1387,6 +1436,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "192.168.0.1, 192.168.0.2")
 
+    @pytest.mark.slow_0_01
     def test_network_size(self):
         """
         Test the `network_size` Jinja filter.
@@ -1404,6 +1454,8 @@ class TestCustomExtensions(TestCase):
         self.assertEqual(rendered, "16777216")
 
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_http_query(self):
         """
         Test the `http_query` Jinja filter.
@@ -1426,6 +1478,7 @@ class TestCustomExtensions(TestCase):
                 "Failed with backend: {}".format(backend),
             )
 
+    @pytest.mark.slow_0_01
     def test_to_bool(self):
         """
         Test the `to_bool` Jinja filter.
@@ -1454,6 +1507,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "True")
 
+    @pytest.mark.slow_0_01
     def test_quote(self):
         """
         Test the `quote` Jinja filter.
@@ -1506,6 +1560,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "3652b285-26ad-588e-a5dc-c2ee65edc804")
 
+    @pytest.mark.slow_0_01
     def test_min(self):
         """
         Test the `min` Jinja filter.
@@ -1536,6 +1591,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "2.0")
 
+    @pytest.mark.slow_0_01
     def test_union(self):
         """
         Test the `union` Jinja filter.
@@ -1576,6 +1632,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "1, 4")
 
+    @pytest.mark.slow_0_01
     def test_md5(self):
         """
         Test the `md5` Jinja filter.
@@ -1586,6 +1643,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "7ddf32e17a6ac5ce04a8ecbf782ca509")
 
+    @pytest.mark.slow_0_01
     def test_sha256(self):
         """
         Test the `sha256` Jinja filter.
@@ -1635,6 +1693,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "True")
 
+    @pytest.mark.slow_0_01
     def test_base64_encode(self):
         """
         Test the `base64_encode` Jinja filter.
@@ -1645,6 +1704,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "cmFuZG9t")
 
+    @pytest.mark.slow_0_01
     def test_base64_decode(self):
         """
         Test the `base64_decode` Jinja filter.
@@ -1655,6 +1715,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "random")
 
+    @pytest.mark.slow_0_01
     def test_json_query(self):
         """
         Test the `json_query` Jinja filter.
@@ -1699,6 +1760,7 @@ class TestDotNotationLookup(ModuleCase):
     def render(self, tmpl_str, context=None):
         return self.jinja(tmpl_str, context=context or {}, from_str=True).read()
 
+    @pytest.mark.slow_0_01
     def test_normlookup(self):
         """
         Sanity-check the normal dictionary-lookup syntax for our stub function
@@ -1709,6 +1771,7 @@ class TestDotNotationLookup(ModuleCase):
             ret = self.render(tmpl_str)
         self.assertEqual(ret, "Hello, True.")
 
+    @pytest.mark.slow_0_01
     def test_dotlookup(self):
         """
         Check calling a stub function using awesome dot-notation
@@ -1719,6 +1782,7 @@ class TestDotNotationLookup(ModuleCase):
             ret = self.render(tmpl_str)
         self.assertEqual(ret, "Hello, True.")
 
+    @pytest.mark.slow_0_01
     def test_shadowed_dict_method(self):
         """
         Check calling a stub function with a name that shadows a ``dict``

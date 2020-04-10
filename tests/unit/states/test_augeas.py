@@ -8,8 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.states.augeas as augeas
+import pytest
+from salt.states import augeas
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -65,6 +65,7 @@ class AugeasTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertDictEqual(augeas.change(self.name), self.ret)
 
+    @pytest.mark.slow_0_01
     def test_change_non_list_load_path(self):
         """
         Test if none list load_path is handled correctly
@@ -110,6 +111,7 @@ class AugeasTestCase(TestCase, LoaderModuleMockMixin):
                     augeas.change(self.name, changes=self.changes), self.ret
                 )
 
+    @pytest.mark.slow_0_01
     def test_change_no_context_with_full_path_fail(self):
         """
         Test handling of no context with full path with execute fail
@@ -127,6 +129,7 @@ class AugeasTestCase(TestCase, LoaderModuleMockMixin):
                     augeas.change(self.name, changes=self.fp_changes), self.ret
                 )
 
+    @pytest.mark.slow_0_01
     def test_change_no_context_with_full_path_pass(self):
         """
         Test handling of no context with full path with execute pass
@@ -178,6 +181,7 @@ class AugeasTestCase(TestCase, LoaderModuleMockMixin):
                     augeas.change(self.name, changes=changes), self.ret
                 )
 
+    @pytest.mark.slow_0_01
     def test_change_no_context_without_full_path_invalid_change(self):
         """
         Test handling of invalid change when no context supplied
@@ -245,6 +249,7 @@ class AugeasTestCase(TestCase, LoaderModuleMockMixin):
                         self.ret,
                     )
 
+    @pytest.mark.slow_0_01
     def test_change_with_context_without_old_file(self):
         """
         Test handling of context without oldfile pass

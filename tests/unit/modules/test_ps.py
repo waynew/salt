@@ -9,15 +9,16 @@ from __future__ import absolute_import, print_function, unicode_literals
 import time
 from collections import namedtuple
 
-import salt.modules.ps as ps
+import pytest
 
 # Import Salt libs
 import salt.utils.data
-import salt.utils.psutil_compat as psutil
 
 # Import 3rd-party libs
 # pylint: disable=import-error,unused-import
 from salt.ext.six.moves import range  # pylint: disable=redefined-builtin
+from salt.modules import ps
+from salt.utils import psutil_compat as psutil
 from tests.support.mock import MagicMock, Mock, call, patch
 
 # Import Salt Testing libs
@@ -220,6 +221,7 @@ class PsTestCase(TestCase):
                 ps.swap_memory(),
             )
 
+    @pytest.mark.slow_0_01
     def test_disk_partitions(self):
         with patch(
             "salt.utils.psutil_compat.disk_partitions",
@@ -260,6 +262,7 @@ class PsTestCase(TestCase):
                 ps.disk_partitions()[0],
             )
 
+    @pytest.mark.slow_0_01
     def test_network_io_counters(self):
         with patch(
             "salt.utils.psutil_compat.net_io_counters",
@@ -279,6 +282,7 @@ class PsTestCase(TestCase):
                 ps.network_io_counters(),
             )
 
+    @pytest.mark.slow_0_01
     def test_disk_io_counters(self):
         with patch(
             "salt.utils.psutil_compat.disk_io_counters",

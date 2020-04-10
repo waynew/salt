@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.win_ip as win_ip
+import pytest
 from salt.exceptions import CommandExecutionError, SaltInvocationError
+
+# Import Salt Libs
+from salt.modules import win_ip
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -112,6 +114,7 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'is_enabled' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_is_enabled(self):
         """
         Test if it returns `True` if interface is enabled, otherwise `False`.
@@ -133,6 +136,7 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'enable' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_enable(self):
         """
         Test if it enable an interface.
@@ -188,6 +192,7 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_subnet_length' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_subnet_length(self):
         """
         Test if it disable an interface.
@@ -197,6 +202,10 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_static_ip' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_set_static_ip(self):
         """
         Test if it set static IP configuration on a Windows NIC.
@@ -257,6 +266,7 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_static_dns' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_static_dns(self):
         """
         Test if it set static DNS configuration on a Windows NIC.
@@ -326,6 +336,7 @@ class WinShadowTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_set_static_dns_no_action(self):
         """
         Test if it set static DNS configuration on a Windows NIC.

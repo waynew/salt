@@ -6,6 +6,8 @@
 # Import Salt Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import joyent
 
@@ -90,6 +92,7 @@ class JoyentTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(joyent.__utils__["cloud.fire_event"].called_once())
         self.assertEqual(result, None)
 
+    @pytest.mark.slow_0_01
     def test_query_instance_ready(self):
         """
         IP address assigned, and VM is ready

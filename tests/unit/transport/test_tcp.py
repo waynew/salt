@@ -10,6 +10,7 @@ import logging
 import socket
 import threading
 
+import pytest
 import salt.config
 import salt.exceptions
 import salt.ext.tornado.concurrent
@@ -158,6 +159,10 @@ class AESReqTestCases(BaseTCPReqCase, ReqChannelMixin):
     # TODO: make failed returns have a specific framing so we can raise the same exception
     # on encrypted channels
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_badload(self):
         """
         Test a variety of bad requests, make sure that we get some sort of error
@@ -261,6 +266,9 @@ class BaseTCPPubCase(AsyncTestCase, AdaptedConfigurationTestCaseMixin):
 
 
 class AsyncTCPPubChannelTest(AsyncTestCase, AdaptedConfigurationTestCaseMixin):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_connect_publish_port(self):
         """
         test when publish_port is not 4506
@@ -350,6 +358,8 @@ class SaltMessageClientPoolTest(AsyncTestCase):
 
         self.assertIsNone(test_connect(self))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_connect_partial(self):
         @gen_test(timeout=0.1)
         def test_connect(self):
@@ -380,6 +390,8 @@ class SaltMessageClientCleanupTest(TestCase, AdaptedConfigurationTestCaseMixin):
         self.sock.close()
         del self.sock
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_message_client(self):
         """
         test message client cleanup on close
@@ -424,6 +436,8 @@ class TCPPubServerChannelTest(TestCase, AdaptedConfigurationTestCaseMixin):
     @patch("salt.master.SMaster.secrets")
     @patch("salt.crypt.Crypticle")
     @patch("salt.utils.asynchronous.SyncWrapper")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_publish_filtering(self, sync_wrapper, crypticle, secrets):
         opts = self.get_temp_config("master")
         opts["sign_pub_messages"] = False
@@ -464,6 +478,8 @@ class TCPPubServerChannelTest(TestCase, AdaptedConfigurationTestCaseMixin):
     @patch("salt.master.SMaster.secrets")
     @patch("salt.crypt.Crypticle")
     @patch("salt.utils.asynchronous.SyncWrapper")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_publish_filtering_str_list(
         self, sync_wrapper, crypticle, secrets, check_minions
     ):

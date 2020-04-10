@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 from collections import namedtuple
 
+import pytest
+
 # Salt libs
-import salt.beacons.diskusage as diskusage
+from salt.beacons import diskusage
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, Mock, patch
 
@@ -58,6 +60,7 @@ class DiskUsageBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret, (False, "Configuration for diskusage beacon must be a list.")
         )
 
+    @pytest.mark.slow_0_01
     def test_empty_config(self):
         config = [{}]
 
@@ -101,6 +104,8 @@ class DiskUsageBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = diskusage.beacon(config)
             self.assertNotEqual(ret, [{"diskusage": 50, "mount": "/"}])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_diskusage_match_regex(self):
         disk_usage_mock = Mock(side_effect=STUB_DISK_USAGE)
         with patch(
@@ -119,6 +124,7 @@ class DiskUsageBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = diskusage.beacon(config)
             self.assertEqual(ret, [{"diskusage": 50, "mount": "/"}])
 
+    @pytest.mark.slow_0_01
     def test_diskusage_windows_single_slash(self):
         r"""
         This tests new behavior (C:\)

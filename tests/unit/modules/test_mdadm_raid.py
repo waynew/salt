@@ -10,8 +10,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.mdadm_raid as mdadm
+from salt.modules import mdadm_raid as mdadm
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class MdadmTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {mdadm: {}}
 
+    @pytest.mark.slow_0_01
     def test_create(self):
         mock = MagicMock(return_value="salt")
         with patch.dict(mdadm.__salt__, {"cmd.run": mock}), patch(
@@ -89,6 +92,7 @@ class MdadmTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(kwargs, {"python_shell": False})
 
+    @pytest.mark.slow_0_01
     def test_create_test_mode(self):
         mock = MagicMock()
         with patch.dict(mdadm.__salt__, {"cmd.run": mock}):

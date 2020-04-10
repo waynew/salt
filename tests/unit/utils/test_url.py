@@ -3,6 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
 import salt.utils.url
@@ -78,6 +80,7 @@ class UrlTestCase(TestCase):
 
     # is_escaped tests
 
+    @pytest.mark.slow_0_01
     def test_is_escaped_windows(self):
         """
         Test not testing a 'salt://' URL on windows
@@ -165,6 +168,7 @@ class UrlTestCase(TestCase):
 
         self.assertEqual(salt.utils.url.escape(url), url)
 
+    @pytest.mark.slow_0_01
     def test_escape_unescaped_url(self):
         """
         Test testing an unescaped 'salt://' URL
@@ -196,6 +200,7 @@ class UrlTestCase(TestCase):
         with patch("salt.utils.platform.is_windows", MagicMock(return_value=True)):
             self.assertEqual(salt.utils.url.unescape(url), url)
 
+    @pytest.mark.slow_0_01
     def test_unescape_escaped_path(self):
         """
         Test escaping an escaped path
@@ -292,6 +297,7 @@ class UrlTestCase(TestCase):
 
         self.assertTrue(salt.utils.url.validate(url, protos))
 
+    @pytest.mark.slow_0_01
     def test_validate_invalid(self):
         """
         Test URL invalid validation

@@ -6,9 +6,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.cron as cronmod
-import salt.states.cron as cron
+import pytest
 from salt.ext.six.moves import StringIO
+from salt.modules import cron as cronmod
+from salt.states import cron
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -86,6 +87,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
             self.addCleanup(patcher.stop)
         self.addCleanup(set_crontab, "")
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         cron.present(name="foo", hour="1", identifier="1", user="root")
         self.assertMultiLineEqual(
@@ -280,6 +282,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(ret["changes"], {})
         self.assertEqual(ret["comment"], "Cron foo already present")
 
+    @pytest.mark.slow_0_01
     def test_existing_noid_jobs_are_updated_with_identifier(self):
         set_crontab(
             "# Lines below here are managed by Salt, do not edit\n"

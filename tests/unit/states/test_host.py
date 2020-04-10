@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.host as host
+from salt.states import host
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -37,6 +39,7 @@ class HostTestCase(TestCase, LoaderModuleMockMixin):
             host: {"__opts__": {"test": False}},
         }
 
+    @pytest.mark.slow_0_01
     def test_present(self):
         """
         Test to ensures that the named host is present with the given ip
@@ -303,6 +306,7 @@ class HostTestCase(TestCase, LoaderModuleMockMixin):
             assert add_host.mock_calls == [], add_host.mock_calls
             assert rm_host.mock_calls == [], rm_host.mock_calls
 
+    @pytest.mark.slow_0_01
     def test_host_present_should_return_True_if_test_and_no_changes(self):
         expected = {
             "comment": "Host {} ({}) already present".format(

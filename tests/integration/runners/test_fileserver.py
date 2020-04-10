@@ -7,6 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import contextlib
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -20,6 +22,9 @@ class FileserverTest(ShellCase):
     Test the fileserver runner
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_dir_list(self):
         """
         fileserver.dir_list
@@ -38,6 +43,9 @@ class FileserverTest(ShellCase):
         self.assertIsInstance(ret["return"], list)
         self.assertTrue("_modules" in ret["return"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_empty_dir_list(self):
         """
         fileserver.empty_dir_list
@@ -56,6 +64,9 @@ class FileserverTest(ShellCase):
         self.assertIsInstance(ret["return"], list)
         self.assertEqual(ret["return"], [])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_envs(self):
         """
         fileserver.envs
@@ -71,6 +82,11 @@ class FileserverTest(ShellCase):
         ret = self.run_run_plus(fun="fileserver.envs", backend=["roots"])
         self.assertIsInstance(ret["return"], list)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_clear_file_list_cache(self):
         """
         fileserver.clear_file_list_cache
@@ -147,6 +163,9 @@ class FileserverTest(ShellCase):
             )
             self.assertEqual(ret["return"], {"roots": ["base"]})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_file_list(self):
         """
         fileserver.file_list
@@ -171,6 +190,9 @@ class FileserverTest(ShellCase):
         salt.utils.platform.is_windows(),
         "Git for Windows does not preserve symbolic links when cloning",
     )
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_symlink_list(self):
         """
         fileserver.symlink_list
@@ -189,6 +211,9 @@ class FileserverTest(ShellCase):
         self.assertIsInstance(ret["return"], dict)
         self.assertTrue("dest_sym" in ret["return"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_update(self):
         """
         fileserver.update

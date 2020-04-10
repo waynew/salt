@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.states.virtualenv_mod as virtualenv_mod
+from salt.states import virtualenv_mod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class VirtualenvModTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {virtualenv_mod: {"__env__": "base"}}
 
+    @pytest.mark.slow_0_01
     def test_managed(self):
         """
             Test to create a virtualenv and optionally manage it with pip

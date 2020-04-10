@@ -9,11 +9,12 @@ import os
 
 # Import 3rd-party libs
 import jinja2.exceptions
-import salt.modules.rh_ip as rh_ip
+import pytest
 from salt.ext import six
 
 # Import Salt Libs
 from salt.ext.six.moves import range
+from salt.modules import rh_ip
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -41,6 +42,7 @@ class RhipTestCase(TestCase, LoaderModuleMockMixin):
         msg = rh_ip._error_msg_network("fnord", values)
         self.assertTrue(msg.endswith("[1|True|False|no-kaboom]"), msg)
 
+    @pytest.mark.slow_0_01
     def test_build_bond(self):
         """
         Test to create a bond script in /etc/modprobe.d with the passed
@@ -64,6 +66,7 @@ class RhipTestCase(TestCase, LoaderModuleMockMixin):
                         with patch.object(rh_ip, "_read_file", return_value="A"):
                             self.assertEqual(rh_ip.build_bond("iface", test=None), "A")
 
+    @pytest.mark.slow_0_01
     def test_build_interface(self):
         """
         Test to build an interface script for a network interface.
@@ -177,6 +180,7 @@ class RhipTestCase(TestCase, LoaderModuleMockMixin):
                                                         "A",
                                                     )
 
+    @pytest.mark.slow_0_01
     def test_build_routes(self):
         """
         Test to build a route script for a network interface.
@@ -219,6 +223,7 @@ class RhipTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(rh_ip, "_read_file", return_value="A"):
                 self.assertEqual(rh_ip.get_bond("iface"), "A")
 
+    @pytest.mark.slow_0_01
     def test_get_interface(self):
         """
         Test to return the contents of an interface script
@@ -227,6 +232,7 @@ class RhipTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(rh_ip, "_read_file", return_value="A"):
                 self.assertEqual(rh_ip.get_interface("iface"), "A")
 
+    @pytest.mark.slow_0_01
     def test_up(self):
         """
         Test to start up a network interface

@@ -10,6 +10,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.event
 
@@ -23,6 +25,8 @@ class ReactorTest(SaltMinionEventAssertsMixin, ModuleCase):
     Test Salt's reactor system
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_ping_reaction(self):
         """
         Fire an event on the master and ensure

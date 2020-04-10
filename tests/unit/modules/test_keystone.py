@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.keystone as keystone
+from salt.modules import keystone
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -469,6 +471,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'ec2_credentials_delete' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_ec2_credentials_delete(self):
         """
         Test if it delete EC2-compatible credentials
@@ -737,6 +740,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'service_list' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_service_list(self):
         """
         Test if it return a list of available services (keystone services-list)
@@ -786,6 +790,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'tenant_get' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_tenant_get(self):
         """
         Test if it return a specific tenants (keystone tenant-get)
@@ -916,6 +921,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'user_delete' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_user_delete(self):
         """
         Test if it delete a user (keystone user-delete)
@@ -958,6 +964,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'user_password_update' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_user_password_update(self):
         """
         Test if it update a user's password (keystone user-password-update)

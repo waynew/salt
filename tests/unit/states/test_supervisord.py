@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.supervisord as supervisord
+from salt.states import supervisord
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class SupervisordTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'running' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_running(self):
         """
         Test to ensure the named service is running.

@@ -11,6 +11,8 @@ import os
 import textwrap
 import time
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 
@@ -122,6 +124,12 @@ class MinionBlackoutTestCase(ModuleCase):
         self.wait_for_all_jobs()
         log.info("Exited minion blackout.")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_blackout(self):
         """
         Test that basic minion blackout functionality works
@@ -136,6 +144,12 @@ class MinionBlackoutTestCase(ModuleCase):
         ret = self.run_function("test.ping")
         self.assertEqual(ret, True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_blackout_whitelist(self):
         """
         Test that minion blackout whitelist works
@@ -158,6 +172,12 @@ class MinionBlackoutTestCase(ModuleCase):
         self.assertTrue(isinstance(fib_ret, list))
         self.assertEqual(fib_ret[0], 13)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_blackout_nonwhitelist(self):
         """
         Test that minion refuses to run non-whitelisted functions during

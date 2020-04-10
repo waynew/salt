@@ -6,10 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.bluez_bluetooth as bluez
+import pytest
 import salt.utils.validate.net
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import bluez_bluetooth as bluez
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -105,6 +107,7 @@ class BluezTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(bluez.__salt__, {"cmd.run": mock}):
                 self.assertFalse(bluez.discoverable("hci0"))
 
+    @pytest.mark.slow_0_01
     def test_noscan(self):
         """
             Test of turning off of scanning modes
@@ -145,6 +148,7 @@ class BluezTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(bluez.__salt__, {"cmd.run": mock}):
                 self.assertIsNone(bluez.block("DE:AD:BE:EF:CA:FE"))
 
+    @pytest.mark.slow_0_01
     def test_unblock(self):
         """
             Test to unblock specific bluetooth device
@@ -199,6 +203,7 @@ class BluezTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(bluez.__salt__, {"service.start": mock}):
             self.assertEqual(bluez.start(), "Ok")
 
+    @pytest.mark.slow_0_01
     def test_stop(self):
         """
             Test to stop bluetooth service

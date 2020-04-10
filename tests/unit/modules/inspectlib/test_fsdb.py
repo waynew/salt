@@ -23,6 +23,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import io
 
+import pytest
 from salt.ext import six
 from salt.ext.six.moves import StringIO
 from salt.modules.inspectlib.entities import CsvDBEntity
@@ -112,6 +113,7 @@ class InspectorFSDBTestCase(TestCase):
             assert list(csvdb.list_tables()) == ["test_db"]
             assert csvdb.is_closed() is False
 
+    @pytest.mark.slow_0_01
     def test_close(self):
         """
         Test closing the database.
@@ -185,6 +187,7 @@ class InspectorFSDBTestCase(TestCase):
                 csvdb.store(obj)
                 assert writable.data[0].strip() == "123,test entity,0.123"
 
+    @pytest.mark.slow_0_01
     def test_delete_object(self):
         """
         Deleting an object from the store.
@@ -226,6 +229,8 @@ class InspectorFSDBTestCase(TestCase):
             assert csvdb._remained[0].bar == "another"
             assert csvdb._remained[0].spam == 0.456
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_update_object(self):
         """
         Updating an object from the store.
@@ -340,6 +345,8 @@ class InspectorFSDBTestCase(TestCase):
             assert entities[0].bar == "test"
             assert entities[0].spam == 0.123
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_obj_more_than(self):
         """
         Getting an object from the store with conditions
@@ -402,6 +409,7 @@ class InspectorFSDBTestCase(TestCase):
             assert entities[0].bar == "test"
             assert entities[0].spam == 0.123
 
+    @pytest.mark.slow_0_01
     def test_get_obj_matching(self):
         """
         Getting an object from the store with conditions
@@ -433,6 +441,7 @@ class InspectorFSDBTestCase(TestCase):
             assert entities[0].bar == "this is test of something"
             assert entities[0].spam == 0.123
 
+    @pytest.mark.slow_0_01
     def test_obj_serialization(self):
         """
         Test object serialization.
@@ -473,6 +482,7 @@ class InspectorFSDBTestCase(TestCase):
             }
             assert csvdb._validate_object(obj) == [123, "test entity", 0.123]
 
+    @pytest.mark.slow_0_01
     def test_criteria(self):
         """
         Test criteria selector.

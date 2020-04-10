@@ -12,11 +12,12 @@ import os
 import shutil
 import time
 
-import salt.modules.gpg as gpg
+import pytest
 import salt.utils.files
 
 # Import Salt libs
 import salt.utils.platform
+from salt.modules import gpg
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest
@@ -328,6 +329,7 @@ class GpgTestCase(TestCase, LoaderModuleMockMixin):
 
     @destructiveTest  # Need to run as root!?
     @skipIf(not HAS_GPG, "GPG Module Unavailable")
+    @pytest.mark.slow_0_01
     def test_delete_key(self):
         """
         Test gpg.delete_key
@@ -442,6 +444,9 @@ class GpgTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertEqual(ret, _expected_result)
 
     @skipIf(not HAS_GPG, "GPG Module Unavailable")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_gpg_import_pub_key(self):
         config_user = MagicMock(return_value="salt")
         user_info = MagicMock(
@@ -453,6 +458,9 @@ class GpgTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(ret["res"], True)
 
     @skipIf(not HAS_GPG, "GPG Module Unavailable")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_gpg_import_priv_key(self):
         config_user = MagicMock(return_value="salt")
         user_info = MagicMock(
@@ -464,6 +472,9 @@ class GpgTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertEqual(ret["res"], True)
 
     @skipIf(not HAS_GPG, "GPG Module Unavailable")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_gpg_sign(self):
         config_user = MagicMock(return_value="salt")
         user_info = MagicMock(

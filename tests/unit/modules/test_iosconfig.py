@@ -7,7 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 # Import Python libs
 import textwrap
 
-import salt.modules.iosconfig as iosconfig
+import pytest
+from salt.modules import iosconfig
 
 # Import Salt modules
 from salt.utils.odict import OrderedDict
@@ -77,6 +78,7 @@ class TestModulesIOSConfig(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {}
 
+    @pytest.mark.slow_0_01
     def test_tree(self):
         running_config_tree = OrderedDict(
             [
@@ -115,6 +117,7 @@ class TestModulesIOSConfig(TestCase, LoaderModuleMockMixin):
         tree = iosconfig.tree(config=self.running_config)
         self.assertEqual(tree, running_config_tree)
 
+    @pytest.mark.slow_0_01
     def test_clean(self):
         clean_running_config = textwrap.dedent(
             """\

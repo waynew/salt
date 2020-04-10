@@ -5,9 +5,11 @@ unit tests for the script engine
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.config
-import salt.engines.script as script
+from salt.engines import script
 from salt.exceptions import CommandExecutionError
 
 # Import Salt Testing Libs
@@ -26,6 +28,7 @@ class EngineScriptTestCase(TestCase, LoaderModuleMockMixin):
         opts = salt.config.DEFAULT_MASTER_OPTS
         return {script: {"__opts__": opts}}
 
+    @pytest.mark.slow_0_01
     def test__get_serializer(self):
         """
         Test known serializer is returned or exception is raised

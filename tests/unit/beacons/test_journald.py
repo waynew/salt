@@ -7,9 +7,11 @@ import datetime
 import logging
 from uuid import UUID
 
-# Salt libs
-import salt.beacons.journald as journald
+import pytest
 import salt.utils.data
+
+# Salt libs
+from salt.beacons import journald
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import Mock
 
@@ -102,6 +104,7 @@ class JournaldBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret, (True, "Valid beacon configuration"))
 
+    @pytest.mark.slow_0_01
     def test_journald_match(self):
         config = [{"services": {"sshd": {"SYSLOG_IDENTIFIER": "sshd", "PRIORITY": 6}}}]
 

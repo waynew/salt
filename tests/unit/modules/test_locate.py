@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.locate as locate
+from salt.modules import locate
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class LocateTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_version(self):
         """
         Test if it returns the version of locate

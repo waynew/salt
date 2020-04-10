@@ -6,8 +6,9 @@
 # Import Python Libs
 from __future__ import absolute_import, unicode_literals
 
-import salt.modules.zabbix as zabbix
+import pytest
 from salt.exceptions import SaltException
+from salt.modules import zabbix
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -382,6 +383,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                     module_return,
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_getmedia(self):
         """
         query_submitted = {"params": {"userids": 3}, "jsonrpc": "2.0", "id": 0,
@@ -446,6 +448,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                     module_return,
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_deletemedia(self):
         """
         query_submitted = {"params": [1], "jsonrpc": "2.0", "id": 0, "auth": "9fb226c759a320de0de3b7a141404506",
@@ -461,6 +464,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                     zabbix.user_deletemedia("1", **CONN_ARGS), module_return
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_list(self):
         """
         query_submitted = {"params": {"output": "extend"}, "jsonrpc": "2.0", "id": 0,
@@ -598,6 +602,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                     zabbix.usergroup_create("testgroup", **CONN_ARGS), module_return
                 )
 
+    @pytest.mark.slow_0_01
     def test_usergroup_delete(self):
         """
         query_submitted = {"params": [13], "jsonrpc": "2.0", "id": 0,
@@ -643,6 +648,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                         zabbix.usergroup_exists("testgroup", **CONN_ARGS), module_return
                     )
 
+    @pytest.mark.slow_0_01
     def test_usergroup_get(self):
         """
         query_submitted = {"params": {"filter": {"name": "testgroup"}, "output": "extend",
@@ -682,6 +688,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
                         zabbix.usergroup_get("testgroup", **CONN_ARGS), module_return
                     )
 
+    @pytest.mark.slow_0_01
     def test_usergroup_update(self):
         """
         query_submitted = {"params": {"usrgrpid": 13, "users_status": 1}, "jsonrpc": "2.0",
@@ -802,6 +809,7 @@ class ZabbixTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(zabbix, "_login", return_value=CONN_ARGS):
                 self.assertEqual(zabbix.usergroup_list(**CONN_ARGS), module_return)
 
+    @pytest.mark.slow_0_01
     def test_host_inventory_get(self):
         """
         test host_inventory_get

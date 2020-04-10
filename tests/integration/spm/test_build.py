@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import shutil
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.path
@@ -28,6 +30,8 @@ class SPMBuildTest(SPMCase, ModuleCase):
         self.config = self._spm_config()
         self._spm_build_files(self.config)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_spm_build(self):
         """
         test spm build
@@ -40,6 +44,11 @@ class SPMBuildTest(SPMCase, ModuleCase):
         self.assertTrue(os.path.isdir(self.config["formula_path"]))
 
     @skipIf(salt.utils.path.which("fallocate") is None, "fallocate not installed")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_spm_build_big_file(self):
         """
         test spm build with a big file
@@ -68,6 +77,9 @@ class SPMBuildTest(SPMCase, ModuleCase):
         for sls in files:
             self.assertIn(sls, " ".join(get_files))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_spm_build_exclude(self):
         """
         test spm build while excluding directory

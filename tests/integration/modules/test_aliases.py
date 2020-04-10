@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ModuleCase
 
@@ -12,6 +14,10 @@ class AliasesTest(ModuleCase):
     Validate aliases module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_set_target(self):
         """
         aliases.set_target and aliases.get_target
@@ -21,6 +27,10 @@ class AliasesTest(ModuleCase):
         tgt_ret = self.run_function("aliases.get_target", alias="fred")
         self.assertEqual(tgt_ret, "bob")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_has_target(self):
         """
         aliases.set_target and aliases.has_target
@@ -30,6 +40,10 @@ class AliasesTest(ModuleCase):
         tgt_ret = self.run_function("aliases.has_target", alias="fred", target="bob")
         self.assertTrue(tgt_ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_list_aliases(self):
         """
         aliases.list_aliases
@@ -40,6 +54,11 @@ class AliasesTest(ModuleCase):
         self.assertIsInstance(tgt_ret, dict)
         self.assertIn("fred", tgt_ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_rm_alias(self):
         """
         aliases.rm_alias

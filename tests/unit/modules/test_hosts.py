@@ -6,13 +6,15 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.hosts as hosts
+import pytest
 import salt.utils.data
 import salt.utils.platform
 import salt.utils.stringutils
 from salt.ext import six
 from salt.ext.six.moves import StringIO
+
+# Import Salt Libs
+from salt.modules import hosts
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -56,6 +58,7 @@ class HostsTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertEqual("", hosts.get_ip("Salt3"))
 
+    @pytest.mark.slow_0_01
     def test_get_ip_none(self):
         """
         Tests return ip associated with the named host
@@ -117,6 +120,7 @@ class HostsTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertFalse(hosts.set_host("10.10.10.10", "Salt1"))
 
+    @pytest.mark.slow_0_01
     def test_set_host_true(self):
         """
         Tests true if the alias is set
@@ -131,6 +135,7 @@ class HostsTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(hosts.__salt__, {"config.option": mock_opt}):
                 self.assertTrue(hosts.set_host("10.10.10.10", "Salt1"))
 
+    @pytest.mark.slow_0_01
     def test_set_host_true_remove(self):
         """
         Test if an empty hosts value removes existing entries
@@ -230,6 +235,7 @@ class HostsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'rm_host' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_rm_host(self):
         """
         Tests if specified host entry gets removed from the hosts file
@@ -253,6 +259,7 @@ class HostsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'add_host' function tests: 3
 
+    @pytest.mark.slow_0_01
     def test_add_host(self):
         """
         Tests if specified host entry gets added from the hosts file

@@ -7,6 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import salt libs
 from salt.returners import librato_return
 
@@ -53,6 +55,7 @@ class libratoTest(ShellCase):
     Test the librato returner
     """
 
+    @pytest.mark.slow_0_01
     def test_count_runtimes(self):
         """
         Test the calculations

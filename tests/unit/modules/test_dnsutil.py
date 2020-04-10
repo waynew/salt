@@ -8,9 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-# Import Salt Libs
-import salt.modules.dnsutil as dnsutil
+import pytest
 import salt.utils.stringutils
+
+# Import Salt Libs
+from salt.modules import dnsutil
 from tests.support.mock import MagicMock, mock_open, patch
 
 # Import Salt Testing Libs
@@ -137,6 +139,7 @@ class DNSUtilTestCase(TestCase):
             msg="Did not set time greater than one week to one week",
         )
 
+    @pytest.mark.slow_0_01
     def test_to_seconds_empty(self):
         self.assertEqual(
             dnsutil._to_seconds(""), 604800, msg="Did not set empty time to one week"

@@ -13,6 +13,7 @@ import struct
 import sys
 from io import BytesIO
 
+import pytest
 import salt.utils.msgpack
 from salt.ext.six.moves import range
 
@@ -118,6 +119,7 @@ class TestMsgpack(TestCase):
         unpacked = msgpack.unpackb(packed)
         self.assertEqual(data, unpacked)
 
+    @pytest.mark.slow_0_01
     def test_array_size(self):
         sizes = [0, 5, 50, 1000]
         bio = BytesIO()
@@ -132,6 +134,7 @@ class TestMsgpack(TestCase):
         for size in sizes:
             self.assertEqual(unpacker.unpack(), list(range(size)))
 
+    @pytest.mark.slow_0_01
     def test_manual_reset(self):
         sizes = [0, 5, 50, 1000]
         packer = salt.utils.msgpack.Packer(autoreset=False)
@@ -148,6 +151,7 @@ class TestMsgpack(TestCase):
         packer.reset()
         self.assertEqual(packer.bytes(), b"")
 
+    @pytest.mark.slow_0_01
     def test_map_size(self):
         sizes = [0, 5, 50, 1000]
         bio = BytesIO()

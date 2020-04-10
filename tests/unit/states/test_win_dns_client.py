@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_dns_client as win_dns_client
+from salt.states import win_dns_client
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -128,6 +130,7 @@ class WinDnsClientTestCase(TestCase, LoaderModuleMockMixin):
                     ret.update({"result": True})
                     self.assertDictEqual(win_dns_client.dns_dhcp("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_primary_suffix(self):
         """
             Test to configure the global primary DNS suffix of a DHCP client.

@@ -13,6 +13,8 @@ import threading
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.exceptions
@@ -169,6 +171,9 @@ class ClearReqTestCases(BaseZMQReqCase, ReqChannelMixin):
         """
         raise salt.ext.tornado.gen.Return((payload, {"fun": "send_clear"}))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_master_uri_override(self):
         """
         ensure master_uri kwarg is respected
@@ -211,6 +216,11 @@ class AESReqTestCases(BaseZMQReqCase, ReqChannelMixin):
     # WARNING: This test will fail randomly on any system with > 1 CPU core!!!
     #
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_badload(self):
         """
         Test a variety of bad requests, make sure that we get some sort of error
@@ -364,6 +374,7 @@ class AsyncReqMessageClientPoolTest(TestCase):
             del self.original_message_clients
         super(AsyncReqMessageClientPoolTest, self).tearDown()
 
+    @pytest.mark.slow_0_01
     def test_send(self):
         for message_client_mock in self.message_client_pool.message_clients:
             message_client_mock.send_queue = [0, 0, 0]
@@ -375,6 +386,7 @@ class AsyncReqMessageClientPoolTest(TestCase):
         self.message_client_pool.message_clients[2].send.return_value = [1]
         self.assertEqual([1], self.message_client_pool.send())
 
+    @pytest.mark.slow_0_01
     def test_destroy(self):
         self.message_client_pool.destroy()
         self.assertEqual([], self.message_client_pool.message_clients)
@@ -529,6 +541,10 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
                 results.append(payload["jid"])
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_publish_to_pubserv_ipc(self):
         """
         Test sending 10K messags to ZeroMQPubServerChannel using IPC transport
@@ -560,6 +576,9 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
         server_channel.pub_close()
         assert len(results) == send_num, (len(results), set(expect).difference(results))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_zeromq_publish_port(self):
         """
         test when connecting that we
@@ -589,6 +608,8 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
             channel.connect()
         assert str(opts["publish_port"]) in patch_socket.mock_calls[0][1][0]
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_zeromq_zeromq_filtering_decode_message_no_match(self):
         """
         test AsyncZeroMQPubChannel _decode_messages when
@@ -626,6 +647,8 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
             res = server_channel._decode_messages(message)
         assert res.result() is None
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_zeromq_zeromq_filtering_decode_message(self):
         """
         test AsyncZeroMQPubChannel _decode_messages
@@ -665,6 +688,12 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
         assert res.result()["enc"] == "aes"
 
     @skipIf(salt.utils.platform.is_windows(), "Skip on Windows OS")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_zeromq_filtering(self):
         """
         Test sending messags to publisher using UDP
@@ -712,6 +741,12 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
         server_channel.pub_close()
         assert len(results) == send_num, (len(results), set(expect).difference(results))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_publish_to_pubserv_tcp(self):
         """
         Test sending 10K messags to ZeroMQPubServerChannel using TCP transport
@@ -761,6 +796,9 @@ class PubServerChannel(TestCase, AdaptedConfigurationTestCaseMixin):
             server_channel.publish(load)
         server_channel.close()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_issue_36469_tcp(self):
         """
         Test sending both large and small messags to publisher using TCP

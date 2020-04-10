@@ -3,9 +3,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
-import salt.utils.win_pdh as win_pdh
+from salt.utils import win_pdh
 
 # Import Salt Testing Libs
 from tests.support.unit import TestCase, skipIf
@@ -13,6 +15,9 @@ from tests.support.unit import TestCase, skipIf
 
 @skipIf(not salt.utils.platform.is_windows(), "System is not Windows")
 class WinPdhTestCase(TestCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list_objects(self):
         known_objects = ["Cache", "Memory", "Process", "Processor", "System"]
         objects = win_pdh.list_objects()
@@ -31,6 +36,7 @@ class WinPdhTestCase(TestCase):
         for item in known_instances:
             self.assertTrue(item in instances)
 
+    @pytest.mark.slow_0_01
     def test_build_counter_list(self):
         counter_list = [
             ("Memory", None, "Available Bytes"),
@@ -58,6 +64,9 @@ class WinPdhTestCase(TestCase):
         ]
         self.assertEqual(resulting_paths, expected_paths)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_all_counters(self):
         results = win_pdh.get_all_counters("Processor")
         known_counters = [
@@ -72,6 +81,9 @@ class WinPdhTestCase(TestCase):
         for item in known_counters:
             self.assertTrue(item in results)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_counters(self):
         counter_list = [
             ("Memory", None, "Available Bytes"),
@@ -93,6 +105,9 @@ class WinPdhTestCase(TestCase):
         for item in expected_counters:
             self.assertTrue(item in results)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_counter(self):
         results = win_pdh.get_counter("Processor", "*", "% Processor Time")
         self.assertTrue("\\Processor(*)\\% Processor Time" in results)

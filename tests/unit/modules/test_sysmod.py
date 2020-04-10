@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.sysmod as sysmod
+from salt.modules import sysmod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -173,6 +175,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'state_doc' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_state_doc(self):
         """
         Test if it returns the docstrings for all states.
@@ -186,6 +189,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'runner_doc' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_runner_doc(self):
         """
         Test if it returns the docstrings for all runners.
@@ -274,6 +278,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'reload_modules' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_reload_modules(self):
         """
         Test if it tell the minion to reload the execution modules
@@ -282,6 +287,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'argspec' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_argspec(self):
         """
         Test if it return the argument specification
@@ -358,6 +364,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_state_modules' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_list_state_modules(self):
         """
         Test if it lists the modules loaded on the minion.
@@ -442,6 +449,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_returner_functions' function tests: 7
 
+    @pytest.mark.slow_0_01
     def test_list_returner_functions(self):
         """
         Test if it lists the functions for all returner modules.
@@ -482,6 +490,7 @@ class SysmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_renderers' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_list_renderers(self):
         """
         Test if it list the renderers loaded on the minion.

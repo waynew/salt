@@ -5,6 +5,8 @@ Tests for the salt-run command
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ShellCase
 
@@ -14,6 +16,10 @@ class ManageTest(ShellCase):
     Test the manage runner
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_up(self):
         """
         manage.up
@@ -24,6 +30,10 @@ class ManageTest(ShellCase):
         self.assertTrue(any("- minion" in out for out in ret["out"]))
         self.assertTrue(any("- sub_minion" in out for out in ret["out"]))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_down(self):
         """
         manage.down

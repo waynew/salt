@@ -9,6 +9,8 @@ import os
 import pprint
 import shutil
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 from tests.support.case import ModuleCase
@@ -76,6 +78,9 @@ class ManTest(ModuleCase):
                     )
                 )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_man(self):
         """
         Make sure that man pages are installed

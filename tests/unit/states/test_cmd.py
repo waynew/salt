@@ -7,9 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
-# Import Salt Libs
-import salt.states.cmd as cmd
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import cmd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +29,7 @@ class CmdTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'mod_run_check' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_mod_run_check(self):
         """
         Test to execute the onlyif and unless logic.
@@ -106,6 +109,7 @@ class CmdTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'wait_script' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_wait_script(self):
         """
         Test to download a script from a remote source and execute it
@@ -119,6 +123,7 @@ class CmdTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'run' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_run(self):
         """
         Test to run a command if certain circumstances are met.

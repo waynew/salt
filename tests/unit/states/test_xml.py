@@ -5,8 +5,10 @@ Test cases for xml state
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.xml as xml
+from salt.states import xml
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class XMLTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {xml: {}}
 
+    @pytest.mark.slow_0_01
     def test_value_already_present(self):
         """
         Test for existing value_present
@@ -41,6 +44,7 @@ class XMLTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(xml.__salt__, {"xml.get_value": MagicMock(return_value=value)}):
             self.assertDictEqual(xml.value_present(name, xpath, value), state_return)
 
+    @pytest.mark.slow_0_01
     def test_value_update(self):
         """
         Test for updating value_present

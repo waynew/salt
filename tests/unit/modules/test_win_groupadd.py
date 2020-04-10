@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.win_groupadd as win_groupadd
+import pytest
 import salt.utils.win_functions
+
+# Import Salt Libs
+from salt.modules import win_groupadd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -18,9 +20,9 @@ from tests.support.unit import TestCase, skipIf
 # Import Other Libs
 # pylint: disable=unused-import
 try:
-    import win32com
     import pythoncom
     import pywintypes
+    import win32com
 
     PYWINTYPES_ERROR = pywintypes.com_error(
         -1234, "Exception occurred.", (0, None, "C", None, 0, -2147352567), None
@@ -132,6 +134,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(win_groupadd.delete("foo"))
 
+    @pytest.mark.slow_0_01
     def test_delete_no_group(self):
         """
         Test removing a group that doesn't exists
@@ -165,6 +168,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertFalse(win_groupadd.delete("foo"))
 
+    @pytest.mark.slow_0_01
     def test_info(self):
         """
         Test if it return information about a group.
@@ -219,6 +223,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(win_groupadd.__context__, {"group.getent": True}):
             self.assertTrue(win_groupadd.getent())
 
+    @pytest.mark.slow_0_01
     def test_adduser(self):
         """
         Test adding a user to a group
@@ -243,6 +248,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         ), patch.object(salt.utils.win_functions, "get_sam_name", sam_mock):
             self.assertFalse(win_groupadd.adduser("foo", "steve"))
 
+    @pytest.mark.slow_0_01
     def test_adduser_error(self):
         """
         Test adding a user and encountering an error
@@ -290,6 +296,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         ), patch.object(salt.utils.win_functions, "get_sam_name", sam_mock):
             self.assertFalse(win_groupadd.deluser("foo", "spongebob"))
 
+    @pytest.mark.slow_0_01
     def test_deluser_error(self):
         """
         Test removing a user and encountering an error
@@ -351,6 +358,7 @@ class WinGroupTestCase(TestCase, LoaderModuleMockMixin):
         ), patch.object(win_groupadd, "_get_group_object", obj_group_mock):
             self.assertFalse(win_groupadd.members("foo", "spongebob"))
 
+    @pytest.mark.slow_0_01
     def test_members_fail_to_remove(self):
         """
         Test adding a list of members and fail to remove members not in the list

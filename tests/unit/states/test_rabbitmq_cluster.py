@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.rabbitmq_cluster as rabbitmq_cluster
+from salt.states import rabbitmq_cluster
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class RabbitmqClusterTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {rabbitmq_cluster: {}}
 
+    @pytest.mark.slow_0_01
     def test_joined(self):
         """
         Test to ensure the current node joined

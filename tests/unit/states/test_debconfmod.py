@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.debconfmod as debconfmod
+from salt.states import debconfmod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -55,6 +57,7 @@ class DebconfmodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test to set debconf selections

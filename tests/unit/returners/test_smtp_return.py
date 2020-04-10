@@ -10,8 +10,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.returners.smtp_return as smtp
+from salt.returners import smtp_return as smtp
 from salt.utils.jinja import SaltCacheLoader
 
 # Import Salt Testing libs
@@ -86,6 +88,7 @@ class SMTPReturnerTestCase(TestCase, LoaderModuleMockMixin):
 
     if HAS_GNUPG:
 
+        @pytest.mark.slow_0_01
         def test_returner(self):
             with patch("salt.returners.smtp_return.gnupg"), patch(
                 "salt.returners.smtp_return.smtplib.SMTP"
@@ -94,6 +97,7 @@ class SMTPReturnerTestCase(TestCase, LoaderModuleMockMixin):
 
     else:
 
+        @pytest.mark.slow_0_01
         def test_returner(self):
             with patch("salt.returners.smtp_return.smtplib.SMTP") as mocked_smtplib:
                 self._test_returner(mocked_smtplib)

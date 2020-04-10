@@ -8,11 +8,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import tempfile
 
-import salt.modules.ini_manage as ini
+import pytest
 
 # Import Salt libs
 import salt.utils.files
 import salt.utils.stringutils
+from salt.modules import ini_manage as ini
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -62,6 +63,7 @@ class IniManageTestCase(TestCase):
     def tearDown(self):
         os.remove(self.tfile.name)
 
+    @pytest.mark.slow_0_01
     def test_get_option(self):
         """
         Test get_option method.
@@ -87,6 +89,7 @@ class IniManageTestCase(TestCase):
             {"test1": "value 1B", "test3": "value 3B"},
         )
 
+    @pytest.mark.slow_0_01
     def test_remove_option(self):
         """
         Test remove_option method.
@@ -106,6 +109,7 @@ class IniManageTestCase(TestCase):
         )
         self.assertEqual(ini.get_section(self.tfile.name, "SectionB"), {})
 
+    @pytest.mark.slow_0_01
     def test_get_ini(self):
         """
         Test get_ini method.
@@ -121,6 +125,7 @@ class IniManageTestCase(TestCase):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_set_option(self):
         """
         Test set_option method.
@@ -168,6 +173,7 @@ class IniManageTestCase(TestCase):
         expected = "{0}{1}{0}".format(os.linesep, "empty_option = ")
         self.assertIn(expected, file_content, "empty_option was not preserved")
 
+    @pytest.mark.slow_0_01
     def test_empty_lines(self):
         """
         Test empty lines preserved after edit
@@ -205,6 +211,7 @@ class IniManageTestCase(TestCase):
             file_content = salt.utils.stringutils.to_unicode(fp_.read())
         self.assertEqual(expected, file_content)
 
+    @pytest.mark.slow_0_01
     def test_empty_lines_multiple_edits(self):
         """
         Test empty lines preserved after multiple edits

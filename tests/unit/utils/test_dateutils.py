@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
 
+import pytest
+
 # Import Salt libs
 import salt.utils.dateutils
 from tests.support.mock import patch
@@ -25,6 +27,7 @@ except ImportError:
 
 
 class DateutilsTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_date_cast(self):
         now = datetime.datetime.now()
         with patch("datetime.datetime"):

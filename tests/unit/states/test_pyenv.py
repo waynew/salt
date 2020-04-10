@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.pyenv as pyenv
+from salt.states import pyenv
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'installed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_installed(self):
         """
         Test to verify that the specified python is installed with pyenv.
@@ -63,6 +66,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to verify that the specified python is not installed with pyenv.

@@ -3,8 +3,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_psget as win_psget
+from salt.modules import win_psget
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -55,6 +57,7 @@ class WinPsgetCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {win_psget: {}}
 
+    @pytest.mark.slow_0_01
     def test_bootstrap(self):
         mock_read_ok = MagicMock(
             return_value={

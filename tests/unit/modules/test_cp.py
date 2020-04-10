@@ -6,14 +6,15 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.cp as cp
+import pytest
 import salt.transport.client
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.platform
-import salt.utils.templates as templates
 from salt.exceptions import CommandExecutionError
+from salt.modules import cp
+from salt.utils import templates
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -29,6 +30,7 @@ class CpTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {cp: {}}
 
+    @pytest.mark.slow_0_01
     def test__render_filenames_undefined_template(self):
         """
         Test if _render_filenames fails upon getting a template not in
@@ -81,6 +83,7 @@ class CpTestCase(TestCase, LoaderModuleMockMixin):
                     cp._render_filenames(path, dest, saltenv, template), ret
                 )
 
+    @pytest.mark.slow_0_01
     def test_get_file_not_found(self):
         """
         Test if get_file can't find the file.
@@ -104,6 +107,7 @@ class CpTestCase(TestCase, LoaderModuleMockMixin):
             with patch("salt.modules.cp.cache_file", MagicMock(return_value=dest)):
                 self.assertEqual(cp.get_file_str(path, dest), ret)
 
+    @pytest.mark.slow_0_01
     def test_push_non_absolute_path(self):
         """
         Test if push fails on a non absolute path.
@@ -122,6 +126,7 @@ class CpTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(cp.push_dir(path), ret)
 
+    @pytest.mark.slow_0_01
     def test_push(self):
         """
         Test if push works with good posix path.

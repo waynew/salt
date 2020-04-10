@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.haproxy as haproxy
+from salt.beacons import haproxy
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -44,6 +46,7 @@ class HAProxyBeaconTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertEqual(ret, (False, "Backends for haproxy beacon require servers."))
 
+    @pytest.mark.slow_0_01
     def test_threshold_reached(self):
         config = [{"backends": {"www-backend": {"threshold": 45, "servers": ["web1"]}}}]
         ret = haproxy.validate(config)

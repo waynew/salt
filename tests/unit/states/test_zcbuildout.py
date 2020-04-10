@@ -5,13 +5,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.cmdmod as cmd
+import pytest
 import salt.modules.virtualenv_mod
-import salt.modules.zcbuildout as modbuildout
-import salt.states.zcbuildout as buildout
 
 # Import Salt libs
 import salt.utils.path
+from salt.modules import cmdmod as cmd
+from salt.modules import zcbuildout as modbuildout
+from salt.states import zcbuildout as buildout
 
 # Import Salt Testing libs
 from tests.support.helpers import requires_network
@@ -53,6 +54,9 @@ class BuildoutTestCase(Base):
         self.assertTrue(cret["result"], cret["comment"])
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_error(self):
         b_dir = os.path.join(self.tdir, "e")
         ret = buildout.installed(b_dir, python=self.py_st)
@@ -62,6 +66,9 @@ class BuildoutTestCase(Base):
         self.assertFalse(ret["result"])
 
     @requires_network()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_installed(self):
         if salt.modules.virtualenv_mod.virtualenv_ver(self.ppy_st) >= (20, 0, 0):
             self.skipTest(

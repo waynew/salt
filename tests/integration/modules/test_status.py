@@ -5,6 +5,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import random
 
+import pytest
 import salt.utils.platform
 
 # Import Salt libs
@@ -23,6 +24,8 @@ class StatusModuleTest(ModuleCase):
 
     @skipIf(salt.utils.platform.is_windows(), "minion is windows")
     @flaky
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_status_pid(self):
         """
         status.pid
@@ -34,6 +37,10 @@ class StatusModuleTest(ModuleCase):
         self.assertIn(random_pid, grep_salt)
 
     @skipIf(not salt.utils.platform.is_windows(), "windows only test")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_status_cpuload(self):
         """
         status.cpuload
@@ -42,6 +49,10 @@ class StatusModuleTest(ModuleCase):
         self.assertTrue(isinstance(ret, float))
 
     @skipIf(not salt.utils.platform.is_windows(), "windows only test")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_status_saltmem(self):
         """
         status.saltmem
@@ -49,6 +60,10 @@ class StatusModuleTest(ModuleCase):
         ret = self.run_function("status.saltmem")
         self.assertTrue(isinstance(ret, int))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_status_diskusage(self):
         """
         status.diskusage
@@ -62,6 +77,10 @@ class StatusModuleTest(ModuleCase):
             self.assertIn("total", str(ret))
             self.assertIn("available", str(ret))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_status_procs(self):
         """
         status.procs
@@ -70,6 +89,10 @@ class StatusModuleTest(ModuleCase):
         for x, y in six.iteritems(ret):
             self.assertIn("cmd", y)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_status_uptime(self):
         """
         status.uptime

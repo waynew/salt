@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.win_service as win_service
+import pytest
 import salt.utils.path
+
+# Import Salt Libs
+from salt.modules import win_service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -18,8 +20,8 @@ from tests.support.unit import TestCase, skipIf
 # Import 3rd Party Libs
 try:
     WINAPI = True
-    import win32serviceutil
     import pywintypes
+    import win32serviceutil
 except ImportError:
     WINAPI = False
 
@@ -54,6 +56,7 @@ class WinServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(win_service, "info", mock_info):
                 self.assertListEqual(win_service.get_enabled(), ["spongebob"])
 
+    @pytest.mark.slow_0_01
     def test_get_disabled(self):
         """
             Test to return the disabled services
@@ -138,6 +141,9 @@ class WinServiceTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @skipIf(not WINAPI, "win32serviceutil not available")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_start(self):
         """
             Test to start the specified service
@@ -182,6 +188,9 @@ class WinServiceTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(win_service.start("spongebob"))
 
     @skipIf(not WINAPI, "win32serviceutil not available")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_stop(self):
         """
             Test to stop the specified service
@@ -235,6 +244,7 @@ class WinServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(win_service, "start", mock_true):
                 self.assertTrue(win_service.restart("salt"))
 
+    @pytest.mark.slow_0_01
     def test_createwin_saltrestart_task(self):
         """
             Test to create a task in Windows task

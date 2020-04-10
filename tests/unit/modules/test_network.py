@@ -10,13 +10,14 @@ import logging
 import os.path
 import socket
 
-import salt.modules.network as network
+import pytest
 
 # Import Salt Libs
 import salt.utils.network
 import salt.utils.path
 from salt._compat import ipaddress
 from salt.exceptions import CommandExecutionError
+from salt.modules import network
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -78,6 +79,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(network.__salt__, {"cmd.run": MagicMock(return_value="A")}):
                 self.assertEqual(network.ping("host"), "A")
 
+    @pytest.mark.slow_0_01
     def test_netstat(self):
         """
         Test for return information on open ports and states
@@ -94,6 +96,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(network.__grains__, {"kernel": "A"}):
             self.assertRaises(CommandExecutionError, network.netstat)
 
+    @pytest.mark.slow_0_01
     def test_active_tcp(self):
         """
         Test for return a dict containing information on all
@@ -149,6 +152,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(salt.utils.network, "interfaces", return_value={}):
             self.assertDictEqual(network.interfaces(), {})
 
+    @pytest.mark.slow_0_01
     def test_hw_addr(self):
         """
         Test for return the hardware address (a.k.a. MAC address)
@@ -171,6 +175,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(salt.utils.network, "interface_ip", return_value={}):
             self.assertDictEqual(network.interface_ip("iface"), {})
 
+    @pytest.mark.slow_0_01
     def test_subnets(self):
         """
         Test for returns a list of subnets to which the host belongs
@@ -289,6 +294,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(network.is_private("::1"))
 
     @skipIf(not bool(ipaddress), "unable to import 'ipaddress'")
+    @pytest.mark.slow_0_01
     def test_is_loopback(self):
         """
         Test for Check if the given IP address is a loopback address
@@ -352,6 +358,7 @@ class NetworkTestCase(TestCase, LoaderModuleMockMixin):
                         network.routes("inet"), [{"addr_family": "inet"}]
                     )
 
+    @pytest.mark.slow_0_01
     def test_default_route(self):
         """
         Test for return default route(s) from routing table

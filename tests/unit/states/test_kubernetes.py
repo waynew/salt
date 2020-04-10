@@ -8,6 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import base64
 from contextlib import contextmanager
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.stringutils
 from salt.ext import six
@@ -287,6 +289,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 actual,
             )
 
+    @pytest.mark.slow_0_01
     def test_configmap_absent(self):
         # Configmap exists, delete it!
         cm = self.make_configmap(name="deleteme", namespace="default")
@@ -323,6 +326,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
             actual,
         )
 
+    @pytest.mark.slow_0_01
     def test_secret_present__exists_test_true(self):
         secret = self.make_secret(name="sekret")
         new_secret = secret.copy()
@@ -361,6 +365,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     actual,
                 )
 
+    @pytest.mark.slow_0_01
     def test_secret_present__create(self):
         # Secret exists and gets replaced
         secret = self.make_secret(name="sekret", data={"password": "booyah"})
@@ -531,6 +536,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     actual,
                 )
 
+    @pytest.mark.slow_0_01
     def test_node_label_present__already_set(self):
         node_data = self.make_node()
         labels = node_data["metadata"]["labels"]
@@ -551,6 +557,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     actual,
                 )
 
+    @pytest.mark.slow_0_01
     def test_node_label_present__update_test_true(self):
         node_data = self.make_node()
         labels = node_data["metadata"]["labels"]
@@ -636,6 +643,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 actual,
             )
 
+    @pytest.mark.slow_0_01
     def test_node_label_absent__delete_test_true(self):
         labels = self.make_node_labels()
         with self.mock_func("node_labels", return_value=labels, test=True):
@@ -691,6 +699,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 actual,
             )
 
+    @pytest.mark.slow_0_01
     def test_namespace_present__create(self):
         namespace_data = self.make_namespace(name="saltstack")
         with self.mock_func("show_namespace", return_value=None):
@@ -734,6 +743,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 actual,
             )
 
+    @pytest.mark.slow_0_01
     def test_namespace_absent__noop_test_true(self):
         with self.mock_func("show_namespace", return_value=None, test=True):
             actual = kubernetes.namespace_absent(name="salt")
@@ -774,6 +784,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                 actual,
             )
 
+    @pytest.mark.slow_0_01
     def test_namespace_absent__delete_code_200(self):
         namespace_data = self.make_namespace(name="salt")
         deleted = namespace_data.copy()
@@ -841,6 +852,7 @@ class KubernetesTestCase(TestCase, LoaderModuleMockMixin):
                     actual,
                 )
 
+    @pytest.mark.slow_0_01
     def test_namespace_absent__delete_error(self):
         namespace_data = self.make_namespace(name="salt")
         deleted = namespace_data.copy()

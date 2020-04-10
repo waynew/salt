@@ -7,15 +7,17 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
 
-# Import Salt Libs
-import salt.states.boto_cloudtrail as boto_cloudtrail
-
 # Import 3rd-party libs
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+
+# Import Salt Libs
+from salt.states import boto_cloudtrail
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -176,6 +178,11 @@ class BotoCloudTrailTestCase(
     TestCase for salt.modules.boto_cloudtrail state.module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_when_trail_does_not_exist(self):
         """
         Tests present on a trail that does not exist.
@@ -195,6 +202,11 @@ class BotoCloudTrailTestCase(
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["trail"]["Name"], trail_ret["Name"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_when_trail_exists(self):
         self.conn.get_trail_status.return_value = status_ret
         self.conn.create_trail.return_value = trail_ret
@@ -211,6 +223,11 @@ class BotoCloudTrailTestCase(
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_with_failure(self):
         self.conn.get_trail_status.side_effect = [not_found_error, status_ret]
         self.conn.create_trail.side_effect = ClientError(error_content, "create_trail")
@@ -226,6 +243,8 @@ class BotoCloudTrailTestCase(
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_trail_does_not_exist(self):
         """
         Tests absent on a trail that does not exist.
@@ -235,12 +254,16 @@ class BotoCloudTrailTestCase(
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_trail_exists(self):
         self.conn.get_trail_status.return_value = status_ret
         result = self.salt_states["boto_cloudtrail.absent"]("test", trail_ret["Name"])
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["trail"], None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_failure(self):
         self.conn.get_trail_status.return_value = status_ret
         self.conn.delete_trail.side_effect = ClientError(error_content, "delete_trail")

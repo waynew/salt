@@ -3,9 +3,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.win_wusa as wusa
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Libs
+from salt.states import win_wusa as wusa
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class WinWusaTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertDictEqual(expected, returned)
 
+    @pytest.mark.slow_0_01
     def test_installed_cache_fail(self):
         """
         test wusa.install when it fails to cache the file

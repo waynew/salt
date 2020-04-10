@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.webutil as htpasswd
+from salt.states import webutil as htpasswd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class HtpasswdTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {htpasswd: {"__opts__": {"test": False}}}
 
+    @pytest.mark.slow_0_01
     def test_user_exists_already(self):
         """
         Test if it returns True when user already exists in htpasswd file

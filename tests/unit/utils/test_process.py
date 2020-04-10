@@ -15,6 +15,7 @@ import time
 import warnings
 
 import psutil
+import pytest
 
 # Import salt libs
 import salt.utils.platform
@@ -96,6 +97,9 @@ def spin(func):
 
 class TestProcessManager(TestCase):
     @spin
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_basic(self):
         """
         Make sure that the process is alive 2s later
@@ -143,6 +147,7 @@ class TestProcessManager(TestCase):
                 process_manager.kill_children()
 
     @die
+    @pytest.mark.slow_0_01
     def test_restarting(self):
         """
         Make sure that the process is alive 2s later
@@ -188,6 +193,9 @@ class TestProcessManager(TestCase):
 
 
 class TestThreadPool(TestCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_basic(self):
         """
         Make sure the threadpool can do things
@@ -205,6 +213,9 @@ class TestThreadPool(TestCase):
         self.assertEqual(counter.value, 1)
         self.assertEqual(pool._job_queue.qsize(), 0)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_full_queue(self):
         """
         Make sure that a full threadpool acts as we expect
@@ -255,6 +266,7 @@ class TestProcessCallbacks(TestCase):
     def process_target(evt):
         evt.set()
 
+    @pytest.mark.slow_0_01
     def test_callbacks(self):
         "Validate Process call after fork and finalize methods"
         teardown_to_mock = "salt.log.setup.shutdown_multiprocessing_logging"
@@ -267,6 +279,7 @@ class TestProcessCallbacks(TestCase):
         mb.assert_called()
         ma.assert_called()
 
+    @pytest.mark.slow_0_01
     def test_callbacks_called_when_run_overriden(self):
         "Validate Process sub classes call after fork and finalize methods when run is overridden"
 
@@ -301,6 +314,8 @@ class TestSignalHandlingProcess(TestCase):
     def children(cls, *args, **kwargs):
         raise psutil.NoSuchProcess(1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_process_does_not_exist(self):
         try:
             with patch("psutil.Process", self.Process):
@@ -309,6 +324,8 @@ class TestSignalHandlingProcess(TestCase):
         except psutil.NoSuchProcess:
             assert False, "psutil.NoSuchProcess raised"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_process_children_do_not_exist(self):
         try:
             with patch("psutil.Process.children", self.children):
@@ -345,6 +362,9 @@ class TestSignalHandlingProcess(TestCase):
             pass
 
     @skipIf(sys.platform.startswith("win"), "No os.fork on Windows")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_signal_processing_regression_test(self):
         evt = multiprocessing.Event()
         sh_proc = salt.utils.process.SignalHandlingProcess(
@@ -374,6 +394,9 @@ class TestSignalHandlingProcess(TestCase):
         p.join()
 
     @skipIf(sys.platform.startswith("win"), "Required signals not supported on windows")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_signal_processing_handle_signals_called(self):
         "Validate SignalHandlingProcess handles signals"
         # Gloobal event to stop all processes we're creating
@@ -426,6 +449,7 @@ class TestSignalHandlingProcessCallbacks(TestCase):
     def process_target(evt):
         evt.set()
 
+    @pytest.mark.slow_0_01
     def test_callbacks(self):
         "Validate SignalHandlingProcess call after fork and finalize methods"
 
@@ -444,6 +468,7 @@ class TestSignalHandlingProcessCallbacks(TestCase):
         ma.assert_called()
         mb.assert_called()
 
+    @pytest.mark.slow_0_01
     def test_callbacks_called_when_run_overriden(self):
         "Validate SignalHandlingProcess sub classes call after fork and finalize methods when run is overridden"
 
@@ -502,6 +527,9 @@ class TestProcessList(TestCase):
                 raise Exception("Process did not finishe before timeout")
             time.sleep(0.3)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_process_list_process(self):
         plist = salt.utils.process.SubprocessList()
         proc = multiprocessing.Process(target=null_target)
@@ -524,6 +552,9 @@ class TestProcessList(TestCase):
         plist.cleanup()
         assert thread not in plist.processes
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_process_list_cleanup(self):
         plist = salt.utils.process.SubprocessList()
         event = multiprocessing.Event()
@@ -569,6 +600,7 @@ class TestDeprecatedClassNames(TestCase):
 
         return _patched_warn_until_date
 
+    @pytest.mark.slow_0_01
     def test_multiprocessing_process_warning(self):
         # We *always* want *all* warnings thrown on this module
         warnings.filterwarnings("always", "", DeprecationWarning, __name__)
@@ -626,6 +658,7 @@ class TestDeprecatedClassNames(TestCase):
             if proc is not None:
                 del proc
 
+    @pytest.mark.slow_0_01
     def test_signal_handling_multiprocessing_process_warning(self):
         # We *always* want *all* warnings thrown on this module
         warnings.filterwarnings("always", "", DeprecationWarning, __name__)

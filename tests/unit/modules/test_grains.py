@@ -6,11 +6,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 import copy
 import os
 
-import salt.modules.grains as grainsmod
-import salt.utils.dictupdate as dictupdate
+import pytest
 
 # Import Salt libs
 from salt.exceptions import SaltException
+from salt.modules import grains as grainsmod
+from salt.utils import dictupdate
 
 # Import 3rd-party libs
 from salt.utils.odict import OrderedDict
@@ -35,6 +36,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_filter_by(self):
         with patch.dict(
             grainsmod.__grains__,
@@ -212,6 +214,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a_list": ["a", "b", "c"], "b": "bval"}
             )
 
+    @pytest.mark.slow_0_01
     def test_append_ok(self):
         # Append to an existing list
         with patch.dict(grainsmod.__grains__, {"a_list": ["a", "b", "c"], "b": "bval"}):
@@ -263,6 +266,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": {"a_list": ["a", "b", "c"], "b": "bval"}}
             )
 
+    @pytest.mark.slow_0_01
     def test_append_nested_ok(self):
         # Append to an existing list
         with patch.dict(
@@ -295,6 +299,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res, {"a": {"b": [{"b1": "bval1"}, "d"]}})
             self.assertEqual(grainsmod.__grains__, {"a": {"b": [{"b1": "bval1"}, "d"]}})
 
+    @pytest.mark.slow_0_01
     def test_append_to_an_element_of_a_list(self):
         # Append to an element in a list
         # It currently fails silently
@@ -329,6 +334,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": "aval", "b": {"nested": "val"}, "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_fail_replacing_existing_complex_key(self):
         # Fails to set a complex value without 'force'
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
@@ -382,6 +388,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(grainsmod.__grains__, {"a": "aval", "b": "l1", "c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_simple_value(self):
         with patch.dict(grainsmod.__grains__, {"a": ["b", "c"], "c": 8}):
             res = grainsmod.set("b", "bval")
@@ -391,6 +398,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": ["b", "c"], "b": "bval", "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_replace_value(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
             res = grainsmod.set("a", 12)
@@ -398,6 +406,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res["changes"], {"a": 12})
             self.assertEqual(grainsmod.__grains__, {"a": 12, "c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_None_ok(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
             res = grainsmod.set("b", None)
@@ -405,6 +414,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res["changes"], {"b": None})
             self.assertEqual(grainsmod.__grains__, {"a": "aval", "b": None, "c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_None_ok_destructive(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
             res = grainsmod.set("b", None, destructive=True)
@@ -419,6 +429,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res["changes"], {"a": None})
             self.assertEqual(grainsmod.__grains__, {"a": None, "c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_None_force_destructive(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
             res = grainsmod.set("a", None, force=True, destructive=True)
@@ -426,6 +437,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res["changes"], {"a": None})
             self.assertEqual(grainsmod.__grains__, {"c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_replace_value_was_complex_force(self):
         with patch.dict(grainsmod.__grains__, {"a": ["item", 12], "c": 8}):
             res = grainsmod.set("a", "aval", force=True)
@@ -440,6 +452,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(res["changes"], {"a": ["item", 12]})
             self.assertEqual(grainsmod.__grains__, {"a": ["item", 12], "c": 8})
 
+    @pytest.mark.slow_0_01
     def test_set_nested_create(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "c": 8}):
             res = grainsmod.set("b,nested", "val", delimiter=",")
@@ -460,6 +473,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": "aval", "b": {"nested": "val2"}, "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_update_dict_remove_key(self):
         with patch.dict(
             grainsmod.__grains__, {"a": "aval", "b": {"nested": "val"}, "c": 8}
@@ -481,6 +495,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 {"a": "aval", "b": {"b2": "val2", "nested": "val"}, "c": 8},
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_list_replace_key(self):
         with patch.dict(
             grainsmod.__grains__, {"a": "aval", "b": ["l1", "l2", "l3"], "c": 8}
@@ -493,6 +508,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 {"a": "aval", "b": ["l1", {"l2": "val2"}, "l3"], "c": 8},
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_list_update_dict_key(self):
         with patch.dict(
             grainsmod.__grains__, {"a": "aval", "b": ["l1", {"l2": "val1"}], "c": 8}
@@ -515,6 +531,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": "aval", "b": ["l1", {"l2": "val2"}], "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_list_append_dict_key(self):
         with patch.dict(
             grainsmod.__grains__, {"a": "aval", "b": ["l1", {"l2": "val2"}], "c": 8}
@@ -529,6 +546,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 {"a": "aval", "b": ["l1", {"l2": "val2"}, {"l3": "val3"}], "c": 8},
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_existing_value_is_the_key(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "b": "l3", "c": 8}):
             res = grainsmod.set("b,l3", "val3", delimiter=",")
@@ -538,6 +556,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": "aval", "b": {"l3": "val3"}, "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_nested_existing_value_overwrite(self):
         with patch.dict(grainsmod.__grains__, {"a": "aval", "b": "l1", "c": 8}):
             res = grainsmod.set("b,l3", "val3", delimiter=",", force=True)
@@ -547,6 +566,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 grainsmod.__grains__, {"a": "aval", "b": {"l3": "val3"}, "c": 8}
             )
 
+    @pytest.mark.slow_0_01
     def test_set_deeply_nested_update(self):
         with patch.dict(
             grainsmod.__grains__,
@@ -562,6 +582,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 {"a": "aval", "b": {"l1": ["l21", "l22", {"l23": "val"}]}, "c": 8},
             )
 
+    @pytest.mark.slow_0_01
     def test_set_deeply_nested_create(self):
         with patch.dict(
             grainsmod.__grains__,
@@ -598,6 +619,7 @@ class GrainsModuleTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_get_ordered(self):
         with patch.dict(
             grainsmod.__grains__,

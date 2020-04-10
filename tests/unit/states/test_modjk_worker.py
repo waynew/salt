@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.modjk_worker as modjk_worker
+from salt.states import modjk_worker
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class ModjkWorkerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'stop' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_stop(self):
         """
         Test to stop the named worker from the lbn load balancers
@@ -43,6 +46,7 @@ class ModjkWorkerTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'activate' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_activate(self):
         """
         Test to activate the named worker from the lbn load balancers

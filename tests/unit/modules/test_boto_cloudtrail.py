@@ -7,11 +7,13 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
-import salt.modules.boto_cloudtrail as boto_cloudtrail
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.modules import boto_cloudtrail
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -143,6 +145,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
     TestCase for salt.modules.boto_cloudtrail module
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_trail_exists_and_a_trail_exists_the_trail_exists_method_returns_true(
         self,
     ):
@@ -154,6 +157,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_trail_exists_and_a_trail_does_not_exist_the_trail_exists_method_returns_false(
         self,
     ):
@@ -165,6 +169,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertFalse(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_trail_exists_and_boto3_returns_an_error_the_trail_exists_method_returns_error(
         self,
     ):
@@ -181,6 +186,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             error_message.format("get_trail_status"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_trail_succeeds_the_create_trail_method_returns_true(
         self,
     ):
@@ -196,6 +202,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_trail_fails_the_create_trail_method_returns_error(
         self,
     ):
@@ -212,6 +219,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             result.get("error", {}).get("message"), error_message.format("create_trail")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_trail_succeeds_the_delete_trail_method_returns_true(
         self,
     ):
@@ -222,6 +230,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_trail_fails_the_delete_trail_method_returns_false(
         self,
     ):
@@ -232,6 +241,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         result = boto_cloudtrail.delete(Name="testtrail", **conn_parameters)
         self.assertFalse(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_trail_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -244,6 +254,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["trail"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_trail_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -255,6 +266,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertFalse(result["trail"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_trail_on_client_error_it_returns_error(self):
         """
         Tests describing parameters failure
@@ -263,6 +275,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         result = boto_cloudtrail.describe(Name="testtrail", **conn_parameters)
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_getting_status_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -275,6 +288,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["trail"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_getting_status_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -286,6 +300,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertFalse(result["trail"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_getting_status_on_client_error_it_returns_error(self):
         """
         Tests getting status failure
@@ -296,6 +311,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         result = boto_cloudtrail.status(Name="testtrail", **conn_parameters)
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_trails_succeeds_the_list_trails_method_returns_true(
         self,
     ):
@@ -307,6 +323,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["trails"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_trail_fails_the_list_trail_method_returns_false(self):
         """
         tests False no trail listed.
@@ -315,6 +332,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         result = boto_cloudtrail.list(**conn_parameters)
         self.assertFalse(result["trails"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_trail_fails_the_list_trail_method_returns_error(self):
         """
         tests False trail error.
@@ -327,6 +345,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             result.get("error", {}).get("message"), error_message.format("list_trails")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_a_trail_succeeds_the_update_trail_method_returns_true(
         self,
     ):
@@ -342,6 +361,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_a_trail_fails_the_update_trail_method_returns_error(
         self,
     ):
@@ -358,6 +378,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             result.get("error", {}).get("message"), error_message.format("update_trail")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_starting_logging_succeeds_the_start_logging_method_returns_true(
         self,
     ):
@@ -370,6 +391,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["started"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_start_logging_fails_the_start_logging_method_returns_false(self):
         """
         tests False logging not started.
@@ -383,6 +405,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         )
         self.assertFalse(result["started"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_stopping_logging_succeeds_the_stop_logging_method_returns_true(
         self,
     ):
@@ -393,6 +416,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["stopped"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_stop_logging_fails_the_stop_logging_method_returns_false(self):
         """
         tests False logging not stopped.
@@ -402,6 +426,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
         result = boto_cloudtrail.stop_logging(Name=trail_ret["Name"], **conn_parameters)
         self.assertFalse(result["stopped"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_adding_tags_succeeds_the_add_tags_method_returns_true(self):
         """
         tests True tags added.
@@ -416,6 +441,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["tagged"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_adding_tags_fails_the_add_tags_method_returns_false(self):
         """
         tests False tags not added.
@@ -430,6 +456,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             )
         self.assertFalse(result["tagged"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_removing_tags_succeeds_the_remove_tags_method_returns_true(self):
         """
         tests True tags removed.
@@ -444,6 +471,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertTrue(result["tagged"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_removing_tags_fails_the_remove_tags_method_returns_false(self):
         """
         tests False tags not removed.
@@ -458,6 +486,8 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
             )
         self.assertFalse(result["tagged"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_that_when_listing_tags_succeeds_the_list_tags_method_returns_true(self):
         """
         tests True tags listed.
@@ -472,6 +502,7 @@ class BotoCloudTrailTestCase(BotoCloudTrailTestCaseBase, BotoCloudTrailTestCaseM
 
         self.assertEqual(result["tags"], {})
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_tags_fails_the_list_tags_method_returns_false(self):
         """
         tests False tags not listed.

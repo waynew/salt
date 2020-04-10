@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_license as win_license
+from salt.modules import win_license
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -48,6 +50,7 @@ class LicenseTestCase(TestCase, LoaderModuleMockMixin):
                 "AAAAA-AAAAA-AAAAA-AAAA-AAAAA-ABCDE"
             )
 
+    @pytest.mark.slow_0_01
     def test_uninstall(self):
         """
             Test uninstalling the given product key

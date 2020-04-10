@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.ini_manage as ini_manage
+from salt.states import ini_manage
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class IniManageTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'options_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_options_present(self):
         """
         Test to verify options present in file.
@@ -114,6 +117,7 @@ class IniManageTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'sections_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_sections_present(self):
         """
         Test to verify sections present in file.

@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_license as win_license
+from salt.states import win_license
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -156,6 +158,7 @@ class LicenseTestCase(TestCase, LoaderModuleMockMixin):
             assert not activate_mock.called
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_installed_activate_fail(self):
         """
             Test activating the given product key when the install fails

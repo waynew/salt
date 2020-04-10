@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.ipset as ipset
+from salt.modules import ipset
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -32,6 +34,7 @@ class IpsetTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(ipset.__salt__, {"cmd.run": mock}):
                 self.assertEqual(ipset.version(), "B")
 
+    @pytest.mark.slow_0_01
     def test_new_set(self):
         """
         Test for Create new custom set
@@ -94,6 +97,7 @@ class IpsetTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(ipset.__salt__, {"cmd.run": mock}):
                 self.assertEqual(ipset.list_sets(), [{"A": ""}])
 
+    @pytest.mark.slow_0_01
     def test_check_set(self):
         """
         Test for Check that given ipset set exists.
@@ -104,6 +108,8 @@ class IpsetTestCase(TestCase, LoaderModuleMockMixin):
             self.assertFalse(ipset.check_set("set"))
             self.assertTrue(ipset.check_set("set"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_add(self):
         """
         Test for Append an entry to the specified set.
@@ -171,6 +177,7 @@ comment support",
                     self.assertEqual(ipset.delete("set", "entry"), "Success")
                     self.assertEqual(ipset.delete("set", "entry"), "Error: A")
 
+    @pytest.mark.slow_0_01
     def test_check(self):
         """
         Test for Check that an entry exists in the specified set.
@@ -228,6 +235,7 @@ comment support",
                 self.assertTrue(ipset.check("set", "192.168.0.4-192.168.0.5"))
                 self.assertFalse(ipset.check("set", "192.168.0.4-192.168.0.5"))
 
+    @pytest.mark.slow_0_01
     def test_test(self):
         """
         Test for Test if an entry is in the specified set.
@@ -247,6 +255,7 @@ comment support",
                 self.assertFalse(ipset.test("set", "entry"))
                 self.assertTrue(ipset.test("set", "entry"))
 
+    @pytest.mark.slow_0_01
     def test_flush(self):
         """
         Test for Flush entries in the specified set

@@ -10,11 +10,12 @@ import errno
 import shutil
 import tempfile
 
-import salt.cache.localfs as localfs
+import pytest
 
 # Import Salt libs
 import salt.payload
 import salt.utils.files
+from salt.cache import localfs
 from salt.exceptions import SaltCacheError
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
@@ -81,6 +82,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
                     OSError, localfs.store, bank="", key="", data="", cachedir=""
                 )
 
+    @pytest.mark.slow_0_01
     def test_store_error_writing_cache(self):
         """
         Tests that a SaltCacheError is raised when there is a problem writing to the
@@ -101,6 +103,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
                             cachedir="",
                         )
 
+    @pytest.mark.slow_0_01
     def test_store_success(self):
         """
         Tests that the store function writes the data to the serializer for storage.
@@ -137,6 +140,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
                     SaltCacheError, localfs.fetch, bank="", key="", cachedir=""
                 )
 
+    @pytest.mark.slow_0_01
     def test_fetch_success(self):
         """
         Tests that the fetch function is able to read the cache file and return its data.
@@ -168,6 +172,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
         with patch("os.path.isfile", MagicMock(return_value=False)):
             self.assertIsNone(localfs.updated(bank="", key="", cachedir=""))
 
+    @pytest.mark.slow_0_01
     def test_updated_error_when_reading_mtime(self):
         """
         Tests that a SaltCacheError is raised when there is a problem reading the mtime
@@ -179,6 +184,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
                     SaltCacheError, localfs.updated, bank="", key="", cachedir=""
                 )
 
+    @pytest.mark.slow_0_01
     def test_updated_success(self):
         """
         Test that the updated function returns the modification time of the cache file
@@ -212,6 +218,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
         with patch("os.path.isfile", MagicMock(return_value=False)):
             self.assertFalse(localfs.flush(bank="", key="key", cachedir=""))
 
+    @pytest.mark.slow_0_01
     def test_flush_success(self):
         """
         Tests that the flush function returns True when a key file is provided and
@@ -228,6 +235,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
             with patch.dict(localfs.__opts__, {"cachedir": tmp_dir}):
                 self.assertTrue(localfs.flush(bank="bank", key="key", cachedir=tmp_dir))
 
+    @pytest.mark.slow_0_01
     def test_flush_error_raised(self):
         """
         Tests that a SaltCacheError is raised when there is a problem removing the
@@ -262,6 +270,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
             with patch("os.listdir", MagicMock(side_effect=OSError)):
                 self.assertRaises(SaltCacheError, localfs.list_, bank="", cachedir="")
 
+    @pytest.mark.slow_0_01
     def test_list_success(self):
         """
         Tests the return of the ls function containing bank entries.
@@ -278,6 +287,7 @@ class LocalFSTest(TestCase, LoaderModuleMockMixin):
 
     # 'contains' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_contains(self):
         """
         Test the return of the contains function when key=None and when a key

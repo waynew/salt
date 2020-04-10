@@ -6,10 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.localemod as localemod
+import pytest
 from salt.exceptions import CommandExecutionError
 from salt.ext import six
+
+# Import Salt Libs
+from salt.modules import localemod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -58,6 +60,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {localemod: {}}
 
+    @pytest.mark.slow_0_01
     def test_list_avail(self):
         """
         Test for Lists available (compiled) locales
@@ -72,6 +75,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
         "salt.modules.localemod.__salt__",
         {"cmd.run": MagicMock(return_value=locale_ctl_out)},
     )
+    @pytest.mark.slow_0_01
     def test_localectl_status_parser(self):
         """
         Test localectl status parser.
@@ -345,6 +349,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.localemod.dbus", None)
     @patch("salt.modules.localemod.__salt__", {"cmd.run": MagicMock()})
     @patch("salt.utils.systemd.booted", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_get_locale_with_no_systemd_solaris(self):
         """
         Test getting current system locale with systemd and dbus available on Solaris.
@@ -398,6 +403,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.localemod.dbus", True)
     @patch("salt.utils.systemd.booted", MagicMock(return_value=True))
     @patch("salt.modules.localemod._localectl_set", MagicMock())
+    @pytest.mark.slow_0_01
     def test_set_locale_with_systemd_and_dbus(self):
         """
         Test setting current system locale with systemd and dbus available.
@@ -415,6 +421,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.localemod.__salt__", MagicMock())
     @patch("salt.modules.localemod._localectl_set", MagicMock())
     @patch("salt.utils.systemd.booted", MagicMock(return_value=True))
+    @pytest.mark.slow_0_01
     def test_set_locale_with_systemd_and_dbus_sle12(self):
         """
         Test setting current system locale with systemd and dbus available on SLE12.
@@ -442,6 +449,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.localemod.__salt__", MagicMock())
     @patch("salt.modules.localemod._localectl_set", MagicMock())
     @patch("salt.utils.systemd.booted", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_set_locale_with_no_systemd_redhat(self):
         """
         Test setting current system locale with systemd and dbus available on RedHat.
@@ -618,6 +626,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
         "salt.modules.localemod.__salt__",
         {"locale.list_avail": MagicMock(return_value=["A", "B"])},
     )
+    @pytest.mark.slow_0_01
     def test_avail(self):
         """
         Test for Check if a locale is available
@@ -631,6 +640,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
         "salt.modules.localemod.__salt__",
         {"file.search": MagicMock(return_value=False)},
     )
+    @pytest.mark.slow_0_01
     def test_gen_locale_not_valid(self):
         """
         Tests the return of gen_locale when the provided locale is not found
@@ -714,6 +724,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
             in six.text_type(exc_info.value)
         )
 
+    @pytest.mark.slow_0_01
     def test_gen_locale_debian(self):
         """
         Tests the return of successful gen_locale on Debian system
@@ -829,6 +840,7 @@ class LocalemodTestCase(TestCase, LoaderModuleMockMixin):
         ):
             assert localemod.gen_locale("en_US.UTF-8")
 
+    @pytest.mark.slow_0_01
     def test_gen_locale_verbose(self):
         """
         Tests the return of successful gen_locale

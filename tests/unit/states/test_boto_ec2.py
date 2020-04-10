@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.boto_ec2 as boto_ec2
+from salt.states import boto_ec2
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class BotoEc2TestCase(TestCase, LoaderModuleMockMixin):
 
     # 'key_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_key_present(self):
         """
         Test to ensure key pair is present.

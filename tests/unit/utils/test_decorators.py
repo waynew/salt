@@ -7,9 +7,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt libs
-import salt.utils.decorators as decorators
+import pytest
 from salt.exceptions import CommandExecutionError, SaltConfigurationError
+
+# Import Salt libs
+from salt.utils import decorators
 from salt.version import SaltStackVersion
 from tests.support.mock import patch
 from tests.support.unit import TestCase
@@ -129,6 +131,7 @@ class DecoratorsTest(TestCase):
             ],
         )
 
+    @pytest.mark.slow_0_01
     def test_is_deprecated_with_successor(self):
         """
         Use of is_deprecated will result to the log message,
@@ -151,6 +154,7 @@ class DecoratorsTest(TestCase):
             ],
         )
 
+    @pytest.mark.slow_0_01
     def test_with_deprecated_notfound(self):
         """
         Test with_deprecated should raise an exception, if a same name
@@ -291,6 +295,7 @@ class DecoratorsTest(TestCase):
         self.assertEqual(depr(self.new_function)(), self.new_function())
         self.assertFalse(self.messages)
 
+    @pytest.mark.slow_0_01
     def test_with_deprecated_with_name(self):
         """
         Test with_deprecated should not raise an exception, if a different name

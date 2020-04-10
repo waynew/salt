@@ -5,8 +5,10 @@ from __future__ import absolute_import
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pkgin as pkgin
+from salt.modules import pkgin
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -61,6 +63,7 @@ class PkginTestCase(TestCase, LoaderModuleMockMixin):
         ), patch.dict(pkgin.__salt__, {"cmd.run": pkgin_search_cmd}):
             self.assertDictEqual(pkgin.search("somepkg"), {"somepkg": "1.0"})
 
+    @pytest.mark.slow_0_01
     def test_latest_version(self):
         """
         Test getting the latest version of a package

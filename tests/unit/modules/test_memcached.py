@@ -6,10 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.memcached as memcached
+import pytest
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.ext.six import integer_types
+
+# Import Salt Libs
+from salt.modules import memcached
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing Libs
@@ -69,6 +71,7 @@ class MemcachedTestCase(TestCase):
 
     # 'get' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get(self):
         """
         Test if it retrieve value for a key
@@ -100,6 +103,7 @@ class MemcachedTestCase(TestCase):
 
     # 'set_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test if it set a key on the memcached server
@@ -192,6 +196,7 @@ class MemcachedTestCase(TestCase):
 
     # 'add' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_add(self):
         """
         Test if it add a key from memcache server
@@ -373,6 +378,7 @@ class MemcachedTestCase(TestCase):
         ):
             self.assertRaises(CommandExecutionError, memcached.increment, "salt")
 
+    @pytest.mark.slow_0_01
     def test_increment_none(self):
         """
         Test if it increment the value of a key
@@ -452,6 +458,7 @@ class MemcachedTestCase(TestCase):
                 SaltInvocationError, memcached.decrement, "salt", delta="sa"
             )
 
+    @pytest.mark.slow_0_01
     def test_decrement_exist(self):
         """
         Test if it decrement the value of a key

@@ -7,11 +7,13 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
-import salt.modules.boto_cloudwatch_event as boto_cloudwatch_event
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.modules import boto_cloudwatch_event
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,8 +25,8 @@ from tests.support.unit import TestCase, skipIf
 try:
     import boto
     import boto3
-    from botocore.exceptions import ClientError
     from botocore import __version__ as found_botocore_version
+    from botocore.exceptions import ClientError
 
     HAS_BOTO = True
 except ImportError:
@@ -131,6 +133,7 @@ class BotoCloudWatchEventTestCase(
     TestCase for salt.modules.boto_cloudwatch_event module
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_rule_exists_and_a_rule_exists_the_rule_exists_method_returns_true(
         self,
     ):
@@ -142,6 +145,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertTrue(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_rule_exists_and_a_rule_does_not_exist_the_exists_method_returns_false(
         self,
     ):
@@ -153,6 +157,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertFalse(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_rule_exists_and_boto3_returns_an_error_the_rule_exists_method_returns_error(
         self,
     ):
@@ -166,6 +171,7 @@ class BotoCloudWatchEventTestCase(
             result.get("error", {}).get("message"), error_message.format("list_rules")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_rule_and_rule_exists_the_describe_rule_method_returns_rule(
         self,
     ):
@@ -177,6 +183,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertEqual(result.get("rule"), rule_ret)
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_rule_and_rule_does_not_exists_the_describe_method_returns_none(
         self,
     ):
@@ -188,6 +195,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertNotEqual(result.get("error"), None)
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_rule_and_boto3_returns_error_the_describe_method_returns_error(
         self,
     ):
@@ -201,6 +209,7 @@ class BotoCloudWatchEventTestCase(
             error_message.format("describe_rule"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_rule_succeeds_the_create_rule_method_returns_true(
         self,
     ):
@@ -216,6 +225,7 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertTrue(result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_rule_fails_the_create_method_returns_error(self):
         """
         tests False when rule not created
@@ -231,6 +241,7 @@ class BotoCloudWatchEventTestCase(
             result.get("error", {}).get("message"), error_message.format("put_rule")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_rule_succeeds_the_delete_method_returns_true(self):
         """
         tests True when delete rule succeeds
@@ -241,6 +252,7 @@ class BotoCloudWatchEventTestCase(
         self.assertTrue(result.get("deleted"))
         self.assertEqual(result.get("error"), None)
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_rule_fails_the_delete_method_returns_error(self):
         """
         tests False when delete rule fails
@@ -252,6 +264,7 @@ class BotoCloudWatchEventTestCase(
             result.get("error", {}).get("message"), error_message.format("delete_rule")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_targets_and_rule_exists_the_list_targets_method_returns_targets(
         self,
     ):
@@ -263,6 +276,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertEqual(result.get("targets"), [target_ret])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_targets_and_rule_does_not_exist_the_list_targets_method_returns_error(
         self,
     ):
@@ -274,6 +288,7 @@ class BotoCloudWatchEventTestCase(
 
         self.assertNotEqual(result.get("error"), None)
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_targets_succeeds_the_put_target_method_returns_no_failures(
         self,
     ):
@@ -286,6 +301,7 @@ class BotoCloudWatchEventTestCase(
         )
         self.assertIsNone(result["failures"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_putting_targets_fails_the_put_targets_method_returns_error(self):
         """
         tests False when thing type not created
@@ -298,6 +314,8 @@ class BotoCloudWatchEventTestCase(
             result.get("error", {}).get("message"), error_message.format("put_targets")
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_that_when_removing_targets_succeeds_the_remove_targets_method_returns_true(
         self,
     ):
@@ -312,6 +330,7 @@ class BotoCloudWatchEventTestCase(
         self.assertIsNone(result["failures"])
         self.assertEqual(result.get("error"), None)
 
+    @pytest.mark.slow_0_01
     def test_that_when_removing_targets_fails_the_remove_targets_method_returns_error(
         self,
     ):

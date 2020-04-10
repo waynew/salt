@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.bower as bower
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import bower
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -34,6 +36,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
                 CommandExecutionError, bower.install, "/path/to/project", "underscore"
             )
 
+    @pytest.mark.slow_0_01
     def test_install_new_package(self):
         """
         Test if it returns True when install package succeeds
@@ -50,6 +53,7 @@ class BowerTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(bower.__salt__, {"cmd.run_all": mock}):
             self.assertFalse(bower.install("/path/to/project", "underscore"))
 
+    @pytest.mark.slow_0_01
     def test_uninstall_with_error(self):
         """
         Test if it raises an exception when uninstall package fails

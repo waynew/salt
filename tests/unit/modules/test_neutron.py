@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.neutron as neutron
+from salt.modules import neutron
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -574,6 +576,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete_quota' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete_quota(self):
         """
         Test if it delete the specified tenant's quota value
@@ -666,6 +669,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'update_network' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_update_network(self):
         """
         Test if it updates a network
@@ -716,6 +720,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'update_subnet' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_update_subnet(self):
         """
         Test if it updates a subnet
@@ -813,6 +818,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'remove_gateway_router' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_remove_gateway_router(self):
         """
         Test if it removes an external network gateway from the specified router
@@ -824,6 +830,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_floatingips' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_floatingips(self):
         """
         Test if it fetch a list of all floatingIPs for a tenant
@@ -840,6 +847,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_floatingip' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_floatingip(self):
         """
         Test if it creates a new floatingIP
@@ -884,6 +892,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_security_group' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_security_group(self):
         """
         Test if it creates a new security group
@@ -916,6 +925,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_security_group_rules' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_list_security_group_rules(self):
         """
         Test if it fetches a list of all security group rules for a tenant
@@ -992,6 +1002,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete_vpnservice' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete_vpnservice(self):
         """
         Test if it deletes the specified VPN service
@@ -1068,6 +1079,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_ikepolicy' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_ikepolicy(self):
         """
         Test if it creates a new IKEPolicy
@@ -1108,6 +1120,7 @@ class NeutronTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'delete_ipsecpolicy' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_delete_ipsecpolicy(self):
         """
         Test if it deletes the specified IPsecPolicy

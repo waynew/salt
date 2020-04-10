@@ -2,9 +2,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
-import salt.utils.win_network as win_network
+from salt.utils import win_network
 
 # Import Salt Testing Libs
 from tests.support.mock import MagicMock, patch
@@ -117,6 +119,7 @@ class Interface(object):
 
 @skipIf(not salt.utils.platform.is_windows(), "System is not Windows")
 class WinNetworkTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_get_interface_info_dot_net(self):
         expected = {
             "Ethernet": {

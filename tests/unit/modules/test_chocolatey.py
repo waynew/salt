@@ -8,10 +8,12 @@ from __future__ import absolute_import
 
 import os
 
-# Import Salt Libs
-import salt.modules.chocolatey as chocolatey
+import pytest
 import salt.utils
 import salt.utils.platform
+
+# Import Salt Libs
+from salt.modules import chocolatey
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -109,6 +111,7 @@ class ChocolateyTestCase(TestCase, LoaderModuleMockMixin):
             expected = self.choco_path
             self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test__find_chocolatey_which(self):
         """
         Test _find_chocolatey when found with `cmd.which`
@@ -122,6 +125,7 @@ class ChocolateyTestCase(TestCase, LoaderModuleMockMixin):
             # Does it populate __context__
             self.assertEqual(chocolatey.__context__["chocolatey._path"], expected)
 
+    @pytest.mark.slow_0_01
     def test__find_chocolatey_programdata(self):
         """
         Test _find_chocolatey when found in ProgramData

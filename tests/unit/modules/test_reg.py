@@ -3,11 +3,13 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.reg as reg
+import pytest
 import salt.utils.stringutils
 import salt.utils.win_reg
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import reg
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest, generate_random_name
@@ -51,6 +53,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_key_exists_existing(self):
         """
         Tests the key_exists function using a well known registry key
@@ -63,6 +66,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertFalse(reg.key_exists(hive="HKLM", key=FAKE_KEY))
 
+    @pytest.mark.slow_0_01
     def test_key_exists_invalid_hive(self):
         """
         Tests the key_exists function using an invalid hive
@@ -110,6 +114,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             )
         )
 
+    @pytest.mark.slow_0_01
     def test_value_exists_invalid_hive(self):
         """
         Tests the value_exists function using an invalid hive
@@ -171,6 +176,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
                 )
             )
 
+    @pytest.mark.slow_0_01
     def test_value_exists_no_vname(self):
         """
         Tests the value_exists function when the vname does not exist
@@ -223,6 +229,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
                 win32api.error, reg.list_keys, hive="HKLM", key="SOFTWARE\\Microsoft"
             )
 
+    @pytest.mark.slow_0_01
     def test_list_values_existing(self):
         """
         Test the list_values function using a well known registry key
@@ -242,6 +249,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
         expected = (False, "Cannot find key: HKLM\\{0}".format(FAKE_KEY))
         self.assertEqual(reg.list_values(hive="HKLM", key=FAKE_KEY), expected)
 
+    @pytest.mark.slow_0_01
     def test_list_values_invalid_hive(self):
         """
         Test the list_values function when passing an invalid hive
@@ -369,6 +377,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_read_value_multi_sz_empty_list(self):
         """
         An empty REG_MULTI_SZ value should return an empty list, not None
@@ -398,6 +407,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value(self):
         """
         Test the set_value function
@@ -423,6 +433,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_default(self):
         """
         Test the set_value function on the default value
@@ -444,6 +455,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_unicode_key(self):
         """
         Test the set_value function on a unicode key
@@ -477,6 +489,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_unicode_value(self):
         """
         Test the set_value function on a unicode value
@@ -503,6 +516,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_reg_dword(self):
         """
         Test the set_value function on a REG_DWORD value
@@ -532,6 +546,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_reg_qword(self):
         """
         Test the set_value function on a REG_QWORD value
@@ -684,6 +699,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_value_unicode(self):
         """
         Test the delete_value function on a unicode value
@@ -760,6 +776,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
         self.assertFalse(reg.key_exists(hive="HKLM", key=FAKE_KEY))
         self.assertFalse(reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY))
 
+    @pytest.mark.slow_0_01
     def test_delete_key_recursive_too_close(self):
         """
         Test the delete_key_recursive function when the passed key to delete is
@@ -819,6 +836,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_key_recursive_failed_to_delete(self):
         """
         Test the delete_key_recursive function on failure to delete a key
@@ -844,6 +862,7 @@ class WinFunctionsTestCase(TestCase, LoaderModuleMockMixin):
             reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_key_recursive_unicode(self):
         """
         Test the delete_key_recursive function on value within a unicode key

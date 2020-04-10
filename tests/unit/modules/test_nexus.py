@@ -3,8 +3,10 @@
 # Import pytohn libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
-import salt.modules.nexus as nexus
+from salt.modules import nexus
 
 # Import Salt testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -16,6 +18,7 @@ class nexusTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {nexus: {}}
 
+    @pytest.mark.slow_0_01
     def test_artifact_get_metadata(self):
         with patch(
             "salt.modules.nexus._get_artifact_metadata_xml",
@@ -104,6 +107,7 @@ class nexusTestCase(TestCase, LoaderModuleMockMixin):
             "http://nexus.example.com/repository/libs-releases/com/company/sampleapp/web-module/web/maven-metadata.xml",
         )
 
+    @pytest.mark.slow_0_01
     def test_snapshot_version_metadata_url(self):
         metadata_url = nexus._get_snapshot_version_metadata_url(
             nexus_url="http://nexus.example.com/repository",

@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.sqlite3 as sqlite3
+from salt.modules import sqlite3
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -82,6 +84,7 @@ class Sqlite3TestCase(TestCase, LoaderModuleMockMixin):
 
     # 'modify' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_modify(self):
         """
         Tests if it issue an SQL query to sqlite3 (with no return data).

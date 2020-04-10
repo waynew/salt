@@ -8,9 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.modules.win_path as win_path
+import pytest
 import salt.utils.stringutils
+
+# Import Salt Libs
+from salt.modules import win_path
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -63,6 +65,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(win_path.exists("c:\\foo"))
             self.assertFalse(win_path.exists("c:\\mystuff"))
 
+    @pytest.mark.slow_0_01
     def test_add(self):
         """
         Test to add the directory to the SYSTEM path
@@ -187,6 +190,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
         self.assert_call_matches(mock_set, new_path)
         self.assert_path_matches(env, new_path)
 
+    @pytest.mark.slow_0_01
     def test_remove(self):
         """
         Test win_path.remove

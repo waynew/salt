@@ -8,13 +8,15 @@ from __future__ import absolute_import, print_function, unicode_literals
 import shutil
 import tempfile
 
-# Import Salt Libs
-import salt.states.virt as virt
+import pytest
 import salt.utils.files
 from salt.exceptions import CommandExecutionError
 
 # Import 3rd-party libs
 from salt.ext import six
+
+# Import Salt Libs
+from salt.states import virt
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, mock_open, patch
 
@@ -199,6 +201,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
                             virt.keys(name, basepath=self.pki_dir, st="California"), ret
                         )
 
+    @pytest.mark.slow_0_01
     def test_keys_with_all_options(self):
         """
         Test to manage libvirt keys.
@@ -272,6 +275,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
                             ret,
                         )
 
+    @pytest.mark.slow_0_01
     def test_running(self):
         """
         running state test cases.
@@ -536,6 +540,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
             ret.update({"changes": {}, "result": False, "comment": "error message"})
             self.assertDictEqual(virt.running("myvm", update=True, cpu=2), ret)
 
+    @pytest.mark.slow_0_01
     def test_stopped(self):
         """
         stopped state test cases.
@@ -628,6 +633,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertDictEqual(virt.stopped("myvm"), ret)
 
+    @pytest.mark.slow_0_01
     def test_powered_off(self):
         """
         powered_off state test cases.
@@ -720,6 +726,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertDictEqual(virt.powered_off("myvm"), ret)
 
+    @pytest.mark.slow_0_01
     def test_snapshot(self):
         """
         snapshot state test cases.
@@ -867,6 +874,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertDictEqual(virt.rebooted("myvm"), ret)
 
+    @pytest.mark.slow_0_01
     def test_network_running(self):
         """
         network_running state test cases.
@@ -997,6 +1005,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
             ret.update({"changes": {}, "comment": "Some error", "result": False})
             self.assertDictEqual(virt.network_running("mynet", "br2", "bridge"), ret)
 
+    @pytest.mark.slow_0_01
     def test_pool_running(self):
         """
         pool_running state test cases.
@@ -1368,6 +1377,7 @@ class LibvirtTestCase(TestCase, LoaderModuleMockMixin):
                     ret,
                 )
 
+    @pytest.mark.slow_0_01
     def test_pool_deleted(self):
         """
         Test the pool_deleted state

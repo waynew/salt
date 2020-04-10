@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
 
@@ -17,6 +19,9 @@ class SSHRawTest(SSHCase):
     testing salt-ssh with raw calls
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_ssh_raw(self):
         """
         test salt-ssh with -r argument

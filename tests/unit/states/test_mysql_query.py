@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.states.mysql_query as mysql_query
+from salt.states import mysql_query
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class MysqlQueryTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'run' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_run(self):
         """
         Test to execute an arbitrary query on the specified database.

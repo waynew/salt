@@ -9,12 +9,14 @@ import sys
 
 import pkg_resources
 
+import pytest
+
 # Import Salt Libs
 import salt.config
 import salt.loader
-import salt.modules.boto_route53 as boto_route53
 import salt.utils.versions
 from salt.ext import six
+from salt.modules import boto_route53
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -119,6 +121,7 @@ class BotoRoute53TestCase(TestCase, LoaderModuleMockMixin):
         del self.opts
 
     @mock_route53_deprecated
+    @pytest.mark.slow_0_01
     def test_create_healthcheck(self):
         """
         tests that given a valid instance id and valid ELB that

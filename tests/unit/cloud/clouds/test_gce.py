@@ -9,6 +9,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import gce
 from salt.exceptions import SaltCloudSystemExit
@@ -86,6 +88,7 @@ class GCETestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, gce.destroy, vm_name=VM_NAME, call="function"
         )
 
+    @pytest.mark.slow_0_01
     def test_fail_virtual_missing_deps(self):
         # Missing deps
         with patch("salt.config.check_driver_dependencies", return_value=False):
@@ -98,6 +101,7 @@ class GCETestCase(TestCase, LoaderModuleMockMixin):
                 v = gce.__virtual__()
                 self.assertEqual(v, False)
 
+    @pytest.mark.slow_0_01
     def test_import(self):
         """
         Test that the module picks up installed deps

@@ -6,6 +6,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import opennebula
 from salt.exceptions import SaltCloudNotFound, SaltCloudSystemExit
@@ -81,6 +83,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.list_datastores, "action")
 
+    @pytest.mark.slow_0_01
     def test_list_hosts_action(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_datastores
@@ -125,6 +128,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.list_templates, "action")
 
+    @pytest.mark.slow_0_01
     def test_list_vns_action(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_vns
@@ -195,6 +199,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             mock_kwargs = {"name": "test-cluster"}
             self.assertEqual(opennebula.get_cluster_id(mock_kwargs, "foo"), mock_id)
 
+    @pytest.mark.slow_0_01
     def test_get_datastore_id_action(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call
@@ -246,6 +251,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.get_host_id, call="action")
 
+    @pytest.mark.slow_0_01
     def test_get_host_id_no_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when no name is provided.
@@ -267,6 +273,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
                 call="function",
             )
 
+    @pytest.mark.slow_0_01
     def test_get_host_id_success(self):
         """
         Tests that the function returns successfully.
@@ -279,6 +286,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             mock_kwargs = {"name": "test-host"}
             self.assertEqual(opennebula.get_host_id(mock_kwargs, "foo"), mock_id)
 
+    @pytest.mark.slow_0_01
     def test_get_image_not_found(self):
         """
         Tests that a SaltCloudNotFound is raised when the image doesn't exist.
@@ -358,6 +366,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 self.assertRaises(SaltCloudNotFound, opennebula.get_location, "my-vm")
 
+    @pytest.mark.slow_0_01
     def test_get_location_success(self):
         """
         Tests that the image is returned successfully.
@@ -380,6 +389,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.get_secgroup_id, call="action"
         )
 
+    @pytest.mark.slow_0_01
     def test_get_secgroup_id_no_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when no name is provided.
@@ -415,6 +425,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             mock_kwargs = {"name": "test-secgroup"}
             self.assertEqual(opennebula.get_secgroup_id(mock_kwargs, "foo"), mock_id)
 
+    @pytest.mark.slow_0_01
     def test_get_template_id_action(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call
@@ -432,6 +443,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.get_template_id, None, call="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_get_template_id_not_found(self):
         """
         Tests that a SaltCloudSystemExit is raised when no name is provided.
@@ -554,6 +566,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.image_allocate, "foo")
 
+    @pytest.mark.slow_0_01
     def test_image_allocate_no_name_or_datastore_id(self):
         """
         Tests that a SaltCloudSystemExit is raised when a neither a datastore_id
@@ -586,6 +599,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.image_clone, "function")
 
+    @pytest.mark.slow_0_01
     def test_image_clone_no_image_id_or_image_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when neither the image_id nor
@@ -617,6 +631,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(expected, ret)
 
+    @pytest.mark.slow_0_01
     def test_image_delete_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -638,6 +653,8 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.image_info, "foo")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_image_info_no_image_id_or_image_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when a neither an image_id
@@ -724,6 +741,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs=None,
         )
 
+    @pytest.mark.slow_0_01
     def test_image_snapshot_revert_no_image_name_or_image_id(self):
         """
         Tests that a SaltCloudSystemExit is raised when the image_id and image_name
@@ -769,6 +787,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"snapshot_id": 0},
         )
 
+    @pytest.mark.slow_0_01
     def test_image_update_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -867,6 +886,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.secgroup_clone, "function")
 
+    @pytest.mark.slow_0_01
     def test_secgroup_clone_no_secgroup_id_or_secgroup_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when the secgroup_id and
@@ -886,6 +906,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.secgroup_delete, "foo")
 
+    @pytest.mark.slow_0_01
     def test_secgroup_delete_no_secgroup_id_or_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when the secgroup_id and
@@ -907,6 +928,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.secgroup_info, "function")
 
+    @pytest.mark.slow_0_01
     def test_secgroup_update_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -933,6 +955,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"update_type": "foo"},
         )
 
+    @pytest.mark.slow_0_01
     def test_secgroup_update_no_secgroup_id_or_secgroup_name(self):
         """
         Tests that a SaltCloudSystemExit is raised when the secgroup_id and
@@ -996,6 +1019,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"name": "foo"},
         )
 
+    @pytest.mark.slow_0_01
     def test_template_delete_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -1037,6 +1061,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"vm_name": "test"},
         )
 
+    @pytest.mark.slow_0_01
     def test_template_update_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -1089,6 +1114,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vm_action, VM_NAME, call="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_action_no_action(self):
         """
         Tests that a SaltCloudSystemExit is raised when the action arg is missing
@@ -1203,6 +1229,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vm_detach_nic, VM_NAME, call="action"
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_disk_save_action_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -1311,6 +1338,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vm_disk_snapshot_revert, VM_NAME, call="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_disk_snapshot_revert_no_disk_id(self):
         """
         Tests that a SaltCloudSystemExit is raised when the disk_id arg is missing.
@@ -1323,6 +1351,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"snapshot_id": "0"},
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_disk_snapshot_revert_no_snapshot_id(self):
         """
         Tests that a SaltCloudSystemExit is raised when the snapshot_id arg is missing.
@@ -1386,6 +1415,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vm_monitoring, VM_NAME, call="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_resize_action_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -1483,6 +1513,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vm_update, VM_NAME, call="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_update_no_update_type(self):
         """
         Tests that a SaltCloudSystemExit is raised when the update_type arg
@@ -1509,6 +1540,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"update_type": "foo"},
         )
 
+    @pytest.mark.slow_0_01
     def test_vm_update_no_data_or_path(self):
         """
         Tests that a SaltCloudSystemExit is raised when the data and path args
@@ -1557,6 +1589,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, opennebula.vn_allocate, call="foo")
 
+    @pytest.mark.slow_0_01
     def test_vn_allocate_no_data_or_path(self):
         """
         Tests that a SaltCloudSystemExit is raised when the path and data
@@ -1609,6 +1642,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             kwargs={"ar_id": "0"},
         )
 
+    @pytest.mark.slow_0_01
     def test_vn_hold_function_error(self):
         """
         Tests that a SaltCloudSystemExit is raised when something other than
@@ -1669,6 +1703,7 @@ class OpenNebulaTestCase(TestCase, LoaderModuleMockMixin):
             SaltCloudSystemExit, opennebula.vn_release, call="function", kwargs=None
         )
 
+    @pytest.mark.slow_0_01
     def test_vn_release_no_data_or_path(self):
         """
         Tests that a SaltCloudSystemExit is raised when the data and path

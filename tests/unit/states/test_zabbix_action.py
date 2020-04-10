@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, unicode_literals
 
-import salt.states.zabbix_action as zabbix_action
+import pytest
+from salt.states import zabbix_action
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -194,6 +195,7 @@ class ZabbixActionTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(zabbix_action.present(name, {}), ret)
 
+    @pytest.mark.slow_0_01
     def test_present_update(self):
         """
         Test to ensure that named action is present but must be updated
@@ -256,6 +258,7 @@ class ZabbixActionTestCase(TestCase, LoaderModuleMockMixin):
                 }
                 self.assertDictEqual(zabbix_action.absent(name), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to ensure that named action is absent

@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import tests.support.napalm as napalm_test_support
+import pytest
+from tests.support import napalm as napalm_test_support
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -55,6 +56,7 @@ class NapalmProxyTestCase(TestCase, LoaderModuleMockMixin):
         ret = napalm_proxy.initialized()
         assert ret is True
 
+    @pytest.mark.slow_0_01
     def test_get_device(self):
         napalm_proxy.init(TEST_OPTS)
         ret = napalm_proxy.get_device()

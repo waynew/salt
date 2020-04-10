@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.guestfs as guestfs
+from salt.modules import guestfs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class GuestfsTestCase(TestCase, LoaderModuleMockMixin):
         return {guestfs: {}}
 
     # 'mount' function tests: 1
+    @pytest.mark.slow_0_01
     def test_mount(self):
         """
         Test if it mounts an image

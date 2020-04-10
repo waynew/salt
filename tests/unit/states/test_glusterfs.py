@@ -5,12 +5,13 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.glusterfs as mod_glusterfs
-
-# Import Salt Libs
-import salt.states.glusterfs as glusterfs
+import pytest
 import salt.utils.cloud
 import salt.utils.network
+from salt.modules import glusterfs as mod_glusterfs
+
+# Import Salt Libs
+from salt.states import glusterfs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -28,6 +29,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'peered' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_peered(self):
         """
         Test to verify if node is peered.
@@ -96,6 +98,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'volume_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_volume_present(self):
         """
         Test to ensure that a volume exists
@@ -209,6 +212,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'started' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_started(self):
         """
         Test to check if volume has been started
@@ -254,6 +258,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'add_volume_bricks' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_add_volume_bricks(self):
         """
         Test to add brick(s) to an existing volume
@@ -316,6 +321,7 @@ class GlusterfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'op_version' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_op_version(self):
         """
         Test setting the Glusterfs op-version

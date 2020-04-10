@@ -6,6 +6,8 @@
 # Import Salt Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import linode
 
@@ -24,6 +26,7 @@ class LinodeTestCase(TestCase, LoaderModuleMockMixin):
 
     # _validate_name tests
 
+    @pytest.mark.slow_0_01
     def test_validate_name_first_character_invalid(self):
         """
         Tests when name starts with an invalid character.

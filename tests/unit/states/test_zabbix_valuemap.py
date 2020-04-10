@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, unicode_literals
 
-import salt.states.zabbix_valuemap as zabbix_valuemap
+import pytest
+from salt.states import zabbix_valuemap
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -59,6 +60,7 @@ class ZabbixActionTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {zabbix_valuemap: {}}
 
+    @pytest.mark.slow_0_01
     def test_present_create(self):
         """
         Test to ensure that named value map is created
@@ -101,6 +103,7 @@ class ZabbixActionTestCase(TestCase, LoaderModuleMockMixin):
                 }
                 self.assertDictEqual(zabbix_valuemap.present(name, {}), ret)
 
+    @pytest.mark.slow_0_01
     def test_present_exists(self):
         """
         Test to ensure that named value map is present and not changed

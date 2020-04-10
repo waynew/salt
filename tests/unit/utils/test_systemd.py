@@ -6,9 +6,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import errno
 import os
 
-# Import Salt libs
-import salt.utils.systemd as _systemd
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt libs
+from salt.utils import systemd as _systemd
 from tests.support.mock import Mock, patch
 
 # Import Salt Testing libs
@@ -122,6 +124,7 @@ class SystemdTestCase(TestCase):
             self.assertTrue(_systemd.version(context))
             self.assertEqual(context, {"salt.utils.systemd.version": _version})
 
+    @pytest.mark.slow_0_01
     def test_version_return_from_context(self):
         """
         Test that the context data is returned when present. To ensure we're
@@ -141,6 +144,7 @@ class SystemdTestCase(TestCase):
         with self.assertRaises(SaltInvocationError):
             _systemd.version(99999)
 
+    @pytest.mark.slow_0_01
     def test_version_parse_problem(self):
         """
         Test with invalid context data. The context value must be a dict, so
@@ -195,6 +199,7 @@ class SystemdTestCase(TestCase):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_has_scope_systemd205(self):
         """
         Scopes are available in systemd>=205. Make sure that this function

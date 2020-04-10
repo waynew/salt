@@ -6,8 +6,9 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.states.libcloud_dns as libcloud_dns
+import pytest
 from salt.modules.libcloud_dns import _simple_record, _simple_zone
+from salt.states import libcloud_dns
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -89,6 +90,7 @@ class LibcloudDnsModuleTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertTrue(result)
 
+    @pytest.mark.slow_0_01
     def test_absent_record_exists(self):
         """
         Try and deny a record that already exists
@@ -139,6 +141,7 @@ class LibcloudDnsModuleTestCase(TestCase, LoaderModuleMockMixin):
         result = libcloud_dns.zone_present("test.com", "master", "test1")
         self.assertTrue(result)
 
+    @pytest.mark.slow_0_01
     def test_zone_absent(self):
         """
         Assert that a zone that did exist is absent

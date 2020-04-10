@@ -6,9 +6,11 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.aliases as aliases
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Libs
+from salt.modules import aliases
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -55,6 +57,7 @@ class AliasesTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(aliases.list_aliases(), ret)
 
+    @pytest.mark.slow_0_01
     def test_get_target(self):
         """
         Tests the target returned by an alias with one target
@@ -98,6 +101,7 @@ class AliasesTestCase(TestCase, LoaderModuleMockMixin):
             ret = aliases.has_target("foo", "bar@example.com")
             self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_has_target_no_alias(self):
         """
         Tests return of empty alias and known target

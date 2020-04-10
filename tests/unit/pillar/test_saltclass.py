@@ -5,8 +5,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.pillar.saltclass as saltclass
+from salt.pillar import saltclass
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -51,6 +53,8 @@ class SaltclassPillarTestCase(TestCase, LoaderModuleMockMixin):
         # Else give the parsed content result
         self.assertListEqual(parsed_ret, expected_ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_succeeds(self):
         ret = ["default.users", "default.motd", "default.empty", "default", "roles.app"]
         self._runner(ret)
@@ -82,6 +86,8 @@ class SaltclassPillarTestCaseListExpansion(TestCase, LoaderModuleMockMixin):
         # Else give the parsed content result
         self.assertListEqual(parsed_ret, expected_ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_succeeds(self):
         ret = [{"a": "192.168.10.10"}, "192.168.10.20"]
         self._runner(ret)

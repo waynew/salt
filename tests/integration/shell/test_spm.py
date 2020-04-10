@@ -5,6 +5,8 @@ from __future__ import absolute_import
 
 import os
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ShellCase, SPMCase
 
@@ -14,6 +16,9 @@ class SPMTest(ShellCase, SPMCase):
     Test spm script
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_spm_help(self):
         """
         test --help argument for spm
@@ -23,6 +28,9 @@ class SPMTest(ShellCase, SPMCase):
         for arg in expected_args:
             self.assertIn(arg, "".join(output))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_spm_bad_arg(self):
         """
         test correct output when bad argument passed
@@ -32,6 +40,10 @@ class SPMTest(ShellCase, SPMCase):
         for arg in expected_args:
             self.assertIn(arg, "".join(output))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_spm_assume_yes(self):
         """
         test spm install with -y arg
@@ -49,6 +61,10 @@ class SPMTest(ShellCase, SPMCase):
             os.path.exists(os.path.join(config["formula_path"], "apache", "apache.sls"))
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_spm_force(self):
         """
         test spm install with -f arg

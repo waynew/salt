@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.dig as dig
+from salt.modules import dig
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -73,6 +75,7 @@ class DigTestCase(TestCase, LoaderModuleMockMixin):
     def test_check_ip_empty(self):
         self.assertFalse(dig.check_ip(""), msg="Did not detect empty value as invalid")
 
+    @pytest.mark.slow_0_01
     def test_a(self):
         dig_mock = MagicMock(
             return_value={
@@ -112,6 +115,7 @@ class DigTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(dig.__salt__, {"cmd.run_all": dig_mock}):
             self.assertEqual(dig.AAAA("www.google.com"), ["2607:f8b0:400f:801::1014"])
 
+    @pytest.mark.slow_0_01
     def test_ns(self):
         with patch("salt.modules.dig.A", MagicMock(return_value=["ns4.google.com."])):
             dig_mock = MagicMock(
@@ -152,6 +156,7 @@ class DigTestCase(TestCase, LoaderModuleMockMixin):
                 dig.SPF("xmission.com"), ["198.60.22.0/24", "166.70.13.0/24"]
             )
 
+    @pytest.mark.slow_0_01
     def test_mx(self):
         dig_mock = MagicMock(
             return_value={

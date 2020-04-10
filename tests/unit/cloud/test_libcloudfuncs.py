@@ -7,8 +7,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.cloud.libcloudfuncs as libcloud
+from salt.cloud import libcloudfuncs as libcloud
 
 # Import Salt Testing Libs
 from tests.support.unit import TestCase
@@ -19,6 +21,7 @@ class LibcloudTestCase(TestCase):
         state = libcloud.node_state(2)
         self.assertEqual("TERMINATED", state)
 
+    @pytest.mark.slow_0_01
     def test_node_state_libcloud_100(self):
         state = libcloud.node_state("terminated")
         self.assertEqual("TERMINATED", state)

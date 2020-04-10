@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.aptpkg as aptpkg
+from salt.states import aptpkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class AptTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'held' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_held(self):
         """
         Test to set package in 'hold' state, meaning it will not be upgraded.

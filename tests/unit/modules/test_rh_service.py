@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import textwrap
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.rh_service as rh_service
+from salt.modules import rh_service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -99,6 +101,7 @@ class RhServiceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_enabled' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_enabled(self):
         """
         Test if it return the enabled services. Use the ``limit``
@@ -126,6 +129,8 @@ class RhServiceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_disabled' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_disabled(self):
         """
         Test if it return the disabled services. Use the ``limit``
@@ -232,6 +237,7 @@ class RhServiceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'reload_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_reload(self):
         """
         Test if it reload the specified service.
@@ -242,6 +248,7 @@ class RhServiceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'status' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_status(self):
         """
         Test if it return the status for a service,
@@ -285,6 +292,7 @@ class RhServiceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'disable' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_disable(self):
         """
         Test if it disable the named service to start at boot.

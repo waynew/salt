@@ -5,11 +5,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.states.grafana as grafana
+import pytest
 
 # Import Salt Libs
 import salt.utils.json
 from salt.exceptions import SaltInvocationError
+from salt.states import grafana
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +28,7 @@ class GrafanaTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'dashboard_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_dashboard_present(self):
         """
         Test to ensure the grafana dashboard exists and is managed.
@@ -120,6 +122,7 @@ class GrafanaTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'dashboard_absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_dashboard_absent(self):
         """
         Test to ensure the named grafana dashboard is deleted.

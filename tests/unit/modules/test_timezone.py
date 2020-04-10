@@ -6,13 +6,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 from tempfile import NamedTemporaryFile
 
-import salt.modules.timezone as timezone
+import pytest
 import salt.utils.platform
 import salt.utils.stringutils
 
 # Import Salt Libs
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.ext import six
+from salt.modules import timezone
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +48,7 @@ class TimezoneTestCase(TestCase, LoaderModuleMockMixin):
 
                 self.assertTrue(timezone.zone_compare("foo"))
 
+    @pytest.mark.slow_0_01
     def test_zone_compare_nonexistent(self):
         etc_localtime = self.create_tempfile_with_contents("a")
 
@@ -127,6 +129,7 @@ class TimezoneModuleTestCase(TestCase, LoaderModuleMockMixin):
                     assert timezone.get_zone() == self.TEST_TZ
 
     @patch("salt.utils.path.which", MagicMock(return_value=False))
+    @pytest.mark.slow_0_01
     def test_get_zone_os_family_debian_gentoo(self):
         """
         Test Debian and Gentoo are recognized

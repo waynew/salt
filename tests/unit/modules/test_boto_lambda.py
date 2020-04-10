@@ -9,16 +9,18 @@ import random
 import string
 from tempfile import NamedTemporaryFile
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
-import salt.modules.boto_lambda as boto_lambda
 import salt.utils.stringutils
 from salt.exceptions import SaltInvocationError
 
 # Import 3rd-party libs
 from salt.ext import six
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.modules import boto_lambda
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -36,8 +38,8 @@ except ImportError:
 # pylint: disable=import-error,no-name-in-module
 try:
     import boto3
-    from botocore.exceptions import ClientError
     from botocore import __version__ as found_botocore_version
+    from botocore.exceptions import ClientError
 
     HAS_BOTO = True
 except ImportError:
@@ -186,6 +188,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
     TestCase for salt.modules.boto_lambda module
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_function_exists_and_a_function_exists_the_function_exists_method_returns_true(
         self,
     ):
@@ -199,6 +202,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(func_exists_result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_function_exists_and_a_function_does_not_exist_the_function_exists_method_returns_false(
         self,
     ):
@@ -212,6 +216,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertFalse(func_exists_result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_a_function_exists_and_boto3_returns_an_error_the_function_exists_method_returns_error(
         self,
     ):
@@ -230,6 +235,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             error_message.format("list_functions"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_function_from_zipfile_succeeds_the_create_function_method_returns_true(
         self,
     ):
@@ -253,6 +259,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(lambda_creation_result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_function_from_s3_succeeds_the_create_function_method_returns_true(
         self,
     ):
@@ -276,6 +283,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(lambda_creation_result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_function_without_code_raises_a_salt_invocation_error(
         self,
     ):
@@ -298,6 +306,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
                     **conn_parameters
                 )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_function_with_zipfile_and_s3_raises_a_salt_invocation_error(
         self,
     ):
@@ -324,6 +333,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
                         **conn_parameters
                     )
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_function_fails_the_create_function_method_returns_error(
         self,
     ):
@@ -351,6 +361,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             error_message.format("create_function"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_function_succeeds_the_delete_function_method_returns_true(
         self,
     ):
@@ -367,6 +378,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_a_function_fails_the_delete_function_method_returns_false(
         self,
     ):
@@ -385,6 +397,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             )
         self.assertFalse(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_function_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -403,6 +416,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertEqual(result, {"function": function_ret})
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_function_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -420,6 +434,8 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertFalse(result["function"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_that_when_describing_lambda_on_client_error_it_returns_error(self):
         """
         Tests describing parameters failure
@@ -432,6 +448,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
         )
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_a_function_succeeds_the_update_function_method_returns_true(
         self,
     ):
@@ -451,6 +468,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_a_function_fails_the_update_function_method_returns_error(
         self,
     ):
@@ -472,6 +490,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             error_message.format("update_function"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_function_code_from_zipfile_succeeds_the_update_function_method_returns_true(
         self,
     ):
@@ -492,6 +511,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_function_code_from_s3_succeeds_the_update_function_method_returns_true(
         self,
     ):
@@ -512,6 +532,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_function_code_without_code_raises_a_salt_invocation_error(
         self,
     ):
@@ -533,6 +554,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
                     FunctionName="testfunction", **conn_parameters
                 )
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_function_code_fails_the_update_function_method_returns_error(
         self,
     ):
@@ -557,6 +579,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             error_message.format("update_function_code"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_function_versions_succeeds_the_list_function_versions_method_returns_true(
         self,
     ):
@@ -576,6 +599,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
 
         self.assertTrue(result["Versions"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_function_versions_fails_the_list_function_versions_method_returns_false(
         self,
     ):
@@ -592,6 +616,7 @@ class BotoLambdaFunctionTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin
             )
         self.assertFalse(result["Versions"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_function_versions_fails_the_list_function_versions_method_returns_error(
         self,
     ):
@@ -625,6 +650,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
     TestCase for salt.modules.boto_lambda module aliases
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_an_alias_succeeds_the_create_alias_method_returns_true(
         self,
     ):
@@ -641,6 +667,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertTrue(result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_an_alias_fails_the_create_alias_method_returns_error(
         self,
     ):
@@ -658,6 +685,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
             result.get("error", {}).get("message"), error_message.format("create_alias")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_an_alias_succeeds_the_delete_alias_method_returns_true(
         self,
     ):
@@ -670,6 +698,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_an_alias_fails_the_delete_alias_method_returns_false(
         self,
     ):
@@ -682,6 +711,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
         )
         self.assertFalse(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_alias_exists_and_the_alias_exists_the_alias_exists_method_returns_true(
         self,
     ):
@@ -694,6 +724,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
         )
         self.assertTrue(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_alias_exists_and_the_alias_does_not_exist_the_alias_exists_method_returns_false(
         self,
     ):
@@ -707,6 +738,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertFalse(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_alias_exists_and_boto3_returns_an_error_the_alias_exists_method_returns_error(
         self,
     ):
@@ -722,6 +754,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
             result.get("error", {}).get("message"), error_message.format("list_aliases")
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_alias_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -736,6 +769,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertEqual(result, {"alias": alias_ret})
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_alias_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -749,6 +783,8 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertFalse(result["alias"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_that_when_describing_lambda_on_client_error_it_returns_error(self):
         """
         Tests describing parameters failure
@@ -759,6 +795,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
         )
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_an_alias_succeeds_the_update_alias_method_returns_true(
         self,
     ):
@@ -775,6 +812,7 @@ class BotoLambdaAliasTestCase(BotoLambdaTestCaseBase, BotoLambdaTestCaseMixin):
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_an_alias_fails_the_update_alias_method_returns_error(
         self,
     ):
@@ -803,6 +841,7 @@ class BotoLambdaEventSourceMappingTestCase(
     TestCase for salt.modules.boto_lambda module mappings
     """
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_a_mapping_succeeds_the_create_event_source_mapping_method_returns_true(
         self,
     ):
@@ -819,6 +858,7 @@ class BotoLambdaEventSourceMappingTestCase(
 
         self.assertTrue(result["created"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_creating_an_event_source_mapping_fails_the_create_event_source_mapping_method_returns_error(
         self,
     ):
@@ -839,6 +879,7 @@ class BotoLambdaEventSourceMappingTestCase(
             error_message.format("create_event_source_mapping"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_mapping_ids_succeeds_the_get_event_source_mapping_ids_method_returns_true(
         self,
     ):
@@ -856,6 +897,7 @@ class BotoLambdaEventSourceMappingTestCase(
 
         self.assertTrue(result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_event_source_mapping_ids_fails_the_get_event_source_mapping_ids_versions_method_returns_false(
         self,
     ):
@@ -870,6 +912,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertFalse(result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_listing_event_source_mapping_ids_fails_the_get_event_source_mapping_ids_method_returns_error(
         self,
     ):
@@ -889,6 +932,7 @@ class BotoLambdaEventSourceMappingTestCase(
             error_message.format("list_event_source_mappings"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_an_event_source_mapping_by_UUID_succeeds_the_delete_event_source_mapping_method_returns_true(
         self,
     ):
@@ -917,6 +961,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertTrue(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_an_event_source_mapping_without_identifier_the_delete_event_source_mapping_method_raises_saltinvocationexception(
         self,
     ):
@@ -932,6 +977,7 @@ class BotoLambdaEventSourceMappingTestCase(
         ):
             result = boto_lambda.delete_event_source_mapping(**conn_parameters)
 
+    @pytest.mark.slow_0_01
     def test_that_when_deleting_an_event_source_mapping_fails_the_delete_event_source_mapping_method_returns_false(
         self,
     ):
@@ -946,6 +992,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertFalse(result["deleted"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_event_source_mapping_exists_and_the_event_source_mapping_exists_the_event_source_mapping_exists_method_returns_true(
         self,
     ):
@@ -959,6 +1006,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertTrue(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_event_source_mapping_exists_and_the_event_source_mapping_does_not_exist_the_event_source_mapping_exists_method_returns_false(
         self,
     ):
@@ -972,6 +1020,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertFalse(result["exists"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_checking_if_an_event_source_mapping_exists_and_boto3_returns_an_error_the_event_source_mapping_exists_method_returns_error(
         self,
     ):
@@ -989,6 +1038,7 @@ class BotoLambdaEventSourceMappingTestCase(
             error_message.format("list_event_source_mappings"),
         )
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_event_source_mapping_it_returns_the_dict_of_properties_returns_true(
         self,
     ):
@@ -1001,6 +1051,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertEqual(result, {"event_source_mapping": event_source_mapping_ret})
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_event_source_mapping_it_returns_the_dict_of_properties_returns_false(
         self,
     ):
@@ -1013,6 +1064,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertFalse(result["event_source_mapping"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_describing_event_source_mapping_on_client_error_it_returns_error(
         self,
     ):
@@ -1027,6 +1079,7 @@ class BotoLambdaEventSourceMappingTestCase(
         )
         self.assertTrue("error" in result)
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_an_event_source_mapping_succeeds_the_update_event_source_mapping_method_returns_true(
         self,
     ):
@@ -1042,6 +1095,7 @@ class BotoLambdaEventSourceMappingTestCase(
 
         self.assertTrue(result["updated"])
 
+    @pytest.mark.slow_0_01
     def test_that_when_updating_an_event_source_mapping_fails_the_update_event_source_mapping_method_returns_error(
         self,
     ):

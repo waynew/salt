@@ -10,6 +10,8 @@ import logging
 import os
 import shutil
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.stringutils
@@ -43,6 +45,10 @@ class HostTest(ModuleCase, SaltReturnAssertsMixin):
         self.addCleanup(self.__clear_hosts)
         super(HostTest, self).setUp()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_present(self):
         """
         host.present

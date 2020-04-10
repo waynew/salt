@@ -15,6 +15,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import time
 
+import pytest
 from tests.support.case import ModuleCase
 
 # Import Salt Testing libs
@@ -25,6 +26,12 @@ class LoaderOverridesTest(ModuleCase):
     def setUp(self):
         self.run_function("saltutil.sync_modules")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_overridden_internal(self):
         # To avoid a race condition on Windows, we need to make sure the
         # `override_test.py` file is present in the _modules directory before

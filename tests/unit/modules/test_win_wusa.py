@@ -6,11 +6,12 @@ Test the win_wusa execution module
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.win_wusa as win_wusa
+import pytest
 
 # Import Salt Libs
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError
+from salt.modules import win_wusa
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -143,6 +144,7 @@ class WinWusaTestCase(TestCase, LoaderModuleMockMixin):
             excinfo.exception.strerror,
         )
 
+    @pytest.mark.slow_0_01
     def test_install_error_other(self):
         """
         test install function on other unknown error
@@ -208,6 +210,7 @@ class WinWusaTestCase(TestCase, LoaderModuleMockMixin):
             ignore_retcode=True,
         )
 
+    @pytest.mark.slow_0_01
     def test_uninstall_already_uninstalled(self):
         """
         test uninstall function when KB already uninstalled

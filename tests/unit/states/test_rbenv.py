@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.rbenv as rbenv
+from salt.states import rbenv
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class RbenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'installed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_installed(self):
         """
         Test to verify that the specified ruby is installed with rbenv.
@@ -123,6 +126,7 @@ class RbenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
         Test to verify that the specified ruby is not installed with rbenv.

@@ -3,14 +3,17 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.utils.timed_subprocess as timed_subprocess
+from salt.utils import timed_subprocess
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
 
 
 class TestTimedSubprocess(TestCase):
+    @pytest.mark.slow_0_01
     def test_timedproc_with_shell_true_and_list_args(self):
         """
         This test confirms the fix for the regression introduced in 1f7d50d.

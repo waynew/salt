@@ -5,12 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.status as status
+import pytest
 
 # Import Salt Libs
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError
 from salt.ext import six
+from salt.modules import status
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -126,6 +127,7 @@ class StatusTestCase(TestCase, LoaderModuleMockMixin):
             ret = status.uptime()
             self.assertDictEqual(ret, m.ret)
 
+    @pytest.mark.slow_0_01
     def test_uptime_macos(self):
         """
         Test modules.status.uptime function for macOS
@@ -291,6 +293,7 @@ class StatusTestCase(TestCase, LoaderModuleMockMixin):
 
         return m
 
+    @pytest.mark.slow_0_01
     def test_meminfo_openbsd(self):
         m = self._set_up_test_meminfo_openbsd()
         vmstat = (

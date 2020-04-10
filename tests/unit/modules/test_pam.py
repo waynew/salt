@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pam as pam
+from salt.modules import pam
 from tests.support.mock import mock_open, patch
 
 # Import Salt Testing Libs
@@ -26,6 +28,7 @@ class PamTestCase(TestCase):
 
     # 'read_file' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_read_file(self):
         """
         Test if the parsing function works

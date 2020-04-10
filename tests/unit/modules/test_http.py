@@ -6,9 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.http as http
+import pytest
 import salt.utils.http
+
+# Import Salt Libs
+from salt.modules import http
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -31,6 +33,7 @@ class HttpTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(salt.utils.http, "query", return_value="A"):
             self.assertEqual(http.query("url"), "A")
 
+    @pytest.mark.slow_0_01
     def test_wait_for_with_interval(self):
         """
         Test for wait_for_successful_query waits for request_interval

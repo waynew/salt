@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.rsync as rsync
+from salt.states import rsync
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class RsyncTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {rsync: {}}
 
+    @pytest.mark.slow_0_01
     def test_syncronized_failed(self):
         """
         Test to perform an rsync.synchorized call that fails

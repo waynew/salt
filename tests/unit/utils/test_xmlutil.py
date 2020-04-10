@@ -5,10 +5,11 @@
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.utils.xmlutil as xml
+import pytest
 
 # Import Salt libs
 from salt._compat import ElementTree as ET
+from salt.utils import xmlutil as xml
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -107,6 +108,7 @@ class XMLUtilTestCase(TestCase):
         defaultdict = xml.to_dict(xmldata, False)
         self.assertEqual(defaultdict, self.cases["b"]["legacy"])
 
+    @pytest.mark.slow_0_01
     def test_xml_case_b_full(self):
         xmldata = ET.fromstring(self.cases["b"]["xml"])
         defaultdict = xml.to_dict(xmldata, True)
@@ -147,6 +149,7 @@ class XMLUtilTestCase(TestCase):
         defaultdict = xml.to_dict(xmldata)
         self.assertEqual(defaultdict, self.cases["e"]["legacy"])
 
+    @pytest.mark.slow_0_01
     def test_xml_case_e_legacy(self):
         xmldata = ET.fromstring(self.cases["e"]["xml"])
         defaultdict = xml.to_dict(xmldata, False)

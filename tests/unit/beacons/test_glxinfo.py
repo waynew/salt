@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.glxinfo as glxinfo
+from salt.beacons import glxinfo
 
 # Import test suite libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -76,6 +78,7 @@ class GLXInfoBeaconTestCase(TestCase, LoaderModuleMockMixin):
                 "DISPLAY=:0 glxinfo", runas="frank", python_shell=True
             )
 
+    @pytest.mark.slow_0_01
     def test_screen_state_missing(self):
         config = [{"screen_event": True, "user": "frank"}]
 

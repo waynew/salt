@@ -8,10 +8,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.modules.systemd_service as systemd
+import pytest
 import salt.utils.systemd
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import systemd_service as systemd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -140,6 +142,7 @@ class SystemdTestCase(TestCase, LoaderModuleMockMixin):
                                 ["bar", "service2", "timer2.timer"],
                             )
 
+    @pytest.mark.slow_0_01
     def test_get_all(self):
         """
         Test to return a list of all available services
@@ -188,6 +191,7 @@ class SystemdTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertTrue(systemd.available("sshd.service"))
                     self.assertFalse(systemd.available("bar.service"))
 
+    @pytest.mark.slow_0_01
     def test_missing(self):
         """
             Test to the inverse of service.available.
@@ -214,6 +218,7 @@ class SystemdTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertFalse(systemd.missing("sshd.service"))
                     self.assertTrue(systemd.missing("bar.service"))
 
+    @pytest.mark.slow_0_01
     def test_show(self):
         """
         Test to show properties of one or more units/jobs or the manager
@@ -231,6 +236,7 @@ class SystemdTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_execs(self):
         """
         Test to return a list of all files specified as ``ExecStart`` for all
@@ -242,6 +248,9 @@ class SystemdTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(systemd, "show", mock):
                 self.assertDictEqual(systemd.execs(), {"a": "c", "b": "c"})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_status(self):
         """
         Test to confirm that the function retries when the service is in the
@@ -629,6 +638,7 @@ class SystemdScopeTestCase(TestCase, LoaderModuleMockMixin):
         self._change_state("start", no_block=False)
         self._change_state("start", no_block=True)
 
+    @pytest.mark.slow_0_01
     def test_stop(self):
         self._change_state("stop", no_block=False)
         self._change_state("stop", no_block=True)
@@ -637,6 +647,7 @@ class SystemdScopeTestCase(TestCase, LoaderModuleMockMixin):
         self._change_state("restart", no_block=False)
         self._change_state("restart", no_block=True)
 
+    @pytest.mark.slow_0_01
     def test_reload(self):
         self._change_state("reload_", no_block=False)
         self._change_state("reload_", no_block=True)
@@ -649,6 +660,7 @@ class SystemdScopeTestCase(TestCase, LoaderModuleMockMixin):
         self._change_state("enable", no_block=False)
         self._change_state("enable", no_block=True)
 
+    @pytest.mark.slow_0_01
     def test_disable(self):
         self._change_state("disable", no_block=False)
         self._change_state("disable", no_block=True)
@@ -656,9 +668,11 @@ class SystemdScopeTestCase(TestCase, LoaderModuleMockMixin):
     def test_mask(self):
         self._mask_unmask("mask", False)
 
+    @pytest.mark.slow_0_01
     def test_mask_runtime(self):
         self._mask_unmask("mask", True)
 
+    @pytest.mark.slow_0_01
     def test_unmask(self):
         self._mask_unmask("unmask_", False)
 

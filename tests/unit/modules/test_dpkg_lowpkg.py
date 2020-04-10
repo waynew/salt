@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.dpkg_lowpkg as dpkg
+from salt.modules import dpkg_lowpkg as dpkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -61,6 +63,7 @@ class DpkgTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'file_list' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_file_list(self):
         """
         Test if it lists the files that belong to a package.
@@ -93,6 +96,7 @@ class DpkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(dpkg.__salt__, {"cmd.run_all": mock}):
             self.assertEqual(dpkg.file_dict("httpd"), "Error:  error")
 
+    @pytest.mark.slow_0_01
     def test_info(self):
         """
         Test package info

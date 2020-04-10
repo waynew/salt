@@ -6,6 +6,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.args
 
@@ -16,6 +18,10 @@ from tests.support.helpers import requires_salt_modules
 
 @requires_salt_modules("test.ping", "test.arg")
 class ArgumentTestCase(ModuleCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_unsupported_kwarg(self):
         """
         Test passing a non-supported keyword argument. The relevant code that
@@ -27,6 +33,10 @@ class ArgumentTestCase(ModuleCase):
             self.run_function("test.ping", foo="bar"),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_kwarg_name_containing_dashes(self):
         """
         Tests the arg parser to ensure that kwargs with dashes in the arg name
@@ -43,6 +53,10 @@ class ArgumentTestCase(ModuleCase):
             "baz",
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_argument_containing_pound_sign(self):
         """
         Tests the argument parsing to ensure that a CLI argument with a pound

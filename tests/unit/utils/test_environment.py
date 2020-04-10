@@ -4,6 +4,7 @@ Test case for utils/__init__.py
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.utils.environment
 from tests.support.unit import TestCase, skipIf
 
@@ -45,6 +46,7 @@ class UtilsTestCase(TestCase):
         }
         assert salt.utils.environment.get_module_environment(_globals) == expectation
 
+    @pytest.mark.slow_0_01
     def test_get_module_environment_pillars(self):
         """
         Test for salt.utils.get_module_environment
@@ -106,6 +108,7 @@ class UtilsTestCase(TestCase):
         _globals["__file__"] = "/route/jumping/interference.py"
         assert salt.utils.environment.get_module_environment(_globals) == expectation
 
+    @pytest.mark.slow_0_01
     def test_get_module_environment_mname_found(self):
         """
         Test for salt.utils.get_module_environment

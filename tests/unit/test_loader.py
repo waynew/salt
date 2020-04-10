@@ -21,6 +21,8 @@ import sys
 import tempfile
 import textwrap
 
+import pytest
+
 # Import Salt libs
 import salt.config
 import salt.loader
@@ -125,6 +127,8 @@ class LazyLoaderTest(TestCase):
         del cls.utils
         del cls.proxy
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_depends(self):
         """
         Test that the depends decorator works properly
@@ -172,6 +176,18 @@ class LazyLoaderVirtualEnabledTest(TestCase):
         del cls.utils
         del cls.proxy
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_basic(self):
         """
         Ensure that it only loads stuff when needed
@@ -189,6 +205,8 @@ class LazyLoaderVirtualEnabledTest(TestCase):
         # since the loader does the calling magically
         self.assertFalse("test.missing_func" in self.loader._dict)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_badkey(self):
         with self.assertRaises(KeyError):
             self.loader[None]  # pylint: disable=W0104
@@ -196,9 +214,19 @@ class LazyLoaderVirtualEnabledTest(TestCase):
         with self.assertRaises(KeyError):
             self.loader[1]  # pylint: disable=W0104
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_disable(self):
         self.assertNotIn("pillar.items", self.loader)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_len_load(self):
         """
         Since LazyLoader is a MutableMapping, if someone asks for len() we have
@@ -208,6 +236,11 @@ class LazyLoaderVirtualEnabledTest(TestCase):
         len(self.loader)  # force a load all
         self.assertNotEqual(self.loader._dict, {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_iter_load(self):
         """
         Since LazyLoader is a MutableMapping, if someone asks to iterate we have
@@ -219,6 +252,8 @@ class LazyLoaderVirtualEnabledTest(TestCase):
             break
         self.assertNotEqual(self.loader._dict, {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_context(self):
         """
         Make sure context is shared across modules
@@ -235,6 +270,8 @@ class LazyLoaderVirtualEnabledTest(TestCase):
                 self.loader["grains.get"].__globals__["__context__"]["foo"], "bar"
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_globals(self):
         func_globals = self.loader["test.ping"].__globals__
         self.assertEqual(func_globals["__grains__"], self.opts.get("grains", {}))
@@ -257,11 +294,19 @@ class LazyLoaderVirtualEnabledTest(TestCase):
                 continue
             self.assertEqual(self.opts[key], val)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pack(self):
         self.loader.pack["__foo__"] = "bar"
         func_globals = self.loader["test.ping"].__globals__
         self.assertEqual(func_globals["__foo__"], "bar")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_virtual(self):
         self.assertNotIn("test_virtual.ping", self.loader)
 
@@ -302,6 +347,12 @@ class LazyLoaderVirtualDisabledTest(TestCase):
         del cls.funcs
         del cls.proxy
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_virtual(self):
         self.assertTrue(inspect.isfunction(self.loader["test_virtual.ping"]))
 
@@ -342,6 +393,11 @@ class LazyLoaderWhitelistTest(TestCase):
         del cls.utils
         del cls.proxy
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_whitelist(self):
         self.assertTrue(inspect.isfunction(self.loader["test.ping"]))
         self.assertTrue(inspect.isfunction(self.loader["pillar.get"]))
@@ -360,6 +416,11 @@ class LazyLoaderGrainsBlacklistTest(TestCase):
     def tearDown(self):
         del self.opts
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_whitelist(self):
         opts = copy.deepcopy(self.opts)
         opts["grains_blacklist"] = ["master", "os*", "ipv[46]"]
@@ -406,6 +467,7 @@ class LazyLoaderSingleItem(TestCase):
     def tearDown(self):
         del self.loader
 
+    @pytest.mark.slow_0_01
     def test_single_item_no_dot(self):
         """
         Checks that a KeyError is raised when the function key does not contain a '.'
@@ -516,6 +578,12 @@ class LazyLoaderReloadingTest(TestCase):
     def module_path(self):
         return os.path.join(self.tmp_dir, "{0}.py".format(self.module_name))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_alias(self):
         """
         Make sure that you can access alias-d modules
@@ -531,6 +599,9 @@ class LazyLoaderReloadingTest(TestCase):
             )
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_clear(self):
         self.assertTrue(inspect.isfunction(self.loader["test.ping"]))
         self.update_module()  # write out out custom module
@@ -544,6 +615,12 @@ class LazyLoaderReloadingTest(TestCase):
         for k, v in six.iteritems(self.loader._dict):
             self.assertTrue(k.startswith(self.module_name))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_load(self):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key, self.loader)
@@ -551,6 +628,12 @@ class LazyLoaderReloadingTest(TestCase):
         self.update_module()
         self.assertTrue(inspect.isfunction(self.loader[self.module_key]))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test__load__(self):
         """
         If a module specifies __load__ we should only load/expose those modules
@@ -560,6 +643,12 @@ class LazyLoaderReloadingTest(TestCase):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key + "2", self.loader)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test__load__and_depends(self):
         """
         If a module specifies __load__ we should only load/expose those modules
@@ -569,6 +658,20 @@ class LazyLoaderReloadingTest(TestCase):
         self.assertNotIn(self.module_key + "3", self.loader)
         self.assertNotIn(self.module_key + "4", self.loader)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_reload(self):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key, self.loader)
@@ -657,6 +760,12 @@ class LazyLoaderVirtualAliasTest(TestCase):
     def module_path(self):
         return os.path.join(self.tmp_dir, "{0}.py".format(self.module_name))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_virtual_alias(self):
         """
         Test the __virtual_alias__ feature
@@ -798,6 +907,18 @@ class LazyLoaderSubmodReloadingTest(TestCase):
     def lib_path(self):
         return os.path.join(self.module_dir, "lib.py")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_basic(self):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key, self.loader)
@@ -807,6 +928,20 @@ class LazyLoaderSubmodReloadingTest(TestCase):
         self.loader.clear()
         self.assertIn(self.module_key, self.loader)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_reload(self):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key, self.loader)
@@ -848,6 +983,12 @@ class LazyLoaderSubmodReloadingTest(TestCase):
         self.loader.clear()
         self.assertNotIn(self.module_key, self.loader)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_reload_missing_lib(self):
         # ensure it doesn't exist
         self.assertNotIn(self.module_key, self.loader)
@@ -941,6 +1082,11 @@ class LazyLoaderModulePackageTest(TestCase):
     def rm_module(self, relative_path):
         self.rm_pyfile(os.path.join(self.tmp_dir, relative_path))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_module(self):
         # ensure it doesn't exist
         self.assertNotIn("foo", self.loader)
@@ -950,6 +1096,11 @@ class LazyLoaderModulePackageTest(TestCase):
         self.assertIn("foo.test", self.loader)
         self.assertEqual(self.loader["foo.test"](), 1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_package(self):
         # ensure it doesn't exist
         self.assertNotIn("foo", self.loader)
@@ -959,6 +1110,11 @@ class LazyLoaderModulePackageTest(TestCase):
         self.assertIn("foo.test", self.loader)
         self.assertEqual(self.loader["foo.test"](), 2)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_module_package_collision(self):
         # ensure it doesn't exist
         self.assertNotIn("foo", self.loader)
@@ -1085,6 +1241,18 @@ class LazyLoaderDeepSubmodReloadingTest(TestCase):
         # https://docs.python.org/2/library/sys.html#sys.dont_write_bytecode
         remove_bytecode(path)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_basic(self):
         self.assertIn("{0}.top".format(self.module_name), self.loader)
 
@@ -1097,6 +1265,20 @@ class LazyLoaderDeepSubmodReloadingTest(TestCase):
                 self.lib_count[lib],
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_reload(self):
         """
         Make sure that we can reload all libraries of arbitrary depth
@@ -1150,6 +1332,8 @@ class LoaderGlobalsTest(ModuleCase):
             for name in names:
                 self.assertIn(name, list(item.keys()))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_auth(self):
         """
         Test that auth mods have:
@@ -1160,6 +1344,8 @@ class LoaderGlobalsTest(ModuleCase):
         """
         self._verify_globals(salt.loader.auth(self.master_opts))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_runners(self):
         """
         Test that runners have:
@@ -1171,6 +1357,8 @@ class LoaderGlobalsTest(ModuleCase):
         """
         self._verify_globals(salt.loader.runner(self.master_opts))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_returners(self):
         """
         Test that returners have:
@@ -1182,6 +1370,8 @@ class LoaderGlobalsTest(ModuleCase):
         """
         self._verify_globals(salt.loader.returners(self.master_opts, {}))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pillars(self):
         """
         Test that pillars have:
@@ -1193,12 +1383,14 @@ class LoaderGlobalsTest(ModuleCase):
         """
         self._verify_globals(salt.loader.pillars(self.master_opts, {}))
 
+    @pytest.mark.slow_0_01
     def test_tops(self):
         """
         Test that tops have: []
         """
         self._verify_globals(salt.loader.tops(self.master_opts))
 
+    @pytest.mark.slow_0_01
     def test_outputters(self):
         """
         Test that outputters have:
@@ -1209,12 +1401,18 @@ class LoaderGlobalsTest(ModuleCase):
         """
         self._verify_globals(salt.loader.outputters(self.master_opts))
 
+    @pytest.mark.slow_0_01
     def test_serializers(self):
         """
         Test that serializers have: []
         """
         self._verify_globals(salt.loader.serializers(self.master_opts))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_states(self):
         """
         Test that states have:
@@ -1231,6 +1429,8 @@ class LoaderGlobalsTest(ModuleCase):
         funcs = salt.loader.minion_mods(opts, utils=utils, proxy=proxy)
         self._verify_globals(salt.loader.states(opts, funcs, utils, {}, proxy=proxy))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_renderers(self):
         """
         Test that renderers have:
@@ -1254,21 +1454,36 @@ class RawModTest(TestCase):
     def tearDown(self):
         del self.opts
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_basic(self):
         testmod = salt.loader.raw_mod(self.opts, "test", None)
         for k, v in six.iteritems(testmod):
             self.assertEqual(k.split(".")[0], "test")
 
+    @pytest.mark.slow_0_01
     def test_bad_name(self):
         testmod = salt.loader.raw_mod(self.opts, "module_we_do_not_have", None)
         self.assertEqual(testmod, {})
 
 
 class NetworkUtilsTestCase(ModuleCase):
+    @pytest.mark.slow_0_01
     def test_is_private(self):
         mod = salt.loader.raw_mod(self.minion_opts, "network", None)
         self.assertTrue(mod["network.is_private"]("10.0.0.1"), True)
 
+    @pytest.mark.slow_0_01
     def test_is_loopback(self):
         mod = salt.loader.raw_mod(self.minion_opts, "network", None)
         self.assertTrue(mod["network.is_loopback"]("127.0.0.1"), True)
@@ -1405,6 +1620,7 @@ class LazyLoaderOptimizationOrderTest(TestCase):
         basename = os.path.basename(filename)
         assert basename == self._expected(order[2]), basename
 
+    @pytest.mark.slow_0_01
     def test_optimization_order(self):
         """
         Test the optimization_order config param
@@ -1419,6 +1635,7 @@ class LazyLoaderOptimizationOrderTest(TestCase):
             self._test_optimization_order([2, 0, 1])
             self._test_optimization_order([2, 1, 0])
 
+    @pytest.mark.slow_0_01
     def test_load_source_file(self):
         """
         Make sure that .py files are preferred over .pyc files
@@ -1451,6 +1668,9 @@ class LoaderLoadCachedGrainsTest(TestCase):
         self.opts["grains_cache"] = True
         self.opts["grains"] = salt.loader.grains(self.opts)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_osrelease_info_has_correct_type(self):
         """
         Make sure osrelease_info is tuple after caching

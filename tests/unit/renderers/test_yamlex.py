@@ -3,11 +3,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.serializers.yamlex as yamlex
+import pytest
 
 # Import Salt libs
 import salt.state
 from salt.config import minion_config
+from salt.serializers import yamlex
 from salt.template import compile_template_str
 
 # Import Salt Testing libs
@@ -48,11 +49,15 @@ class RendererTests(TestCase, RendererMixin, LoaderModuleMockMixin):
         return {yamlex: {}}
 
     @skipIf(not yamlex.available, SKIP_MESSAGE % "yamlex")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_basic(self):
         sls_obj = self.render(basic_template)
         assert sls_obj == {"foo": "bar"}, sls_obj
 
     @skipIf(not yamlex.available, SKIP_MESSAGE % "yamlex")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_complex(self):
 
         sls_obj = self.render(complex_template)

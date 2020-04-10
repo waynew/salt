@@ -9,17 +9,19 @@ from __future__ import absolute_import, print_function, unicode_literals
 import glob
 import os
 
+import pytest
+
 # Import Salt Libs
 import salt.config
-
-# Import 3rd Party Libs
-import salt.ext.six as six
 import salt.loader
-import salt.modules.win_lgpo as win_lgpo
 import salt.states.win_lgpo
 import salt.utils.files
 import salt.utils.platform
 import salt.utils.stringutils
+
+# Import 3rd Party Libs
+from salt.ext import six
+from salt.modules import win_lgpo
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest
@@ -198,6 +200,7 @@ class WinLGPOTestCase(TestCase):
         value = win_lgpo._policy_info._multi_string_get_transform(item=test_value)
         self.assertEqual(value, test_value)
 
+    @pytest.mark.slow_0_01
     def test__multi_string_get_transform_none(self):
         """
         ``_multi_string_get_transform`` should return "Not Defined" when
@@ -263,6 +266,9 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return LOADER_DICTS
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name(self):
         result = win_lgpo.get_policy(
             policy_name="Allow Telemetry",
@@ -274,6 +280,10 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         expected = "Not Configured"
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_id(self):
         result = win_lgpo.get_policy(
             policy_name="AllowTelemetry",
@@ -285,6 +295,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         expected = "Not Configured"
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name_full_return_full_names(self):
         result = win_lgpo.get_policy(
             policy_name="Allow Telemetry",
@@ -299,6 +311,7 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_full_names(self):
         result = win_lgpo.get_policy(
             policy_name="AllowTelemetry",
@@ -313,6 +326,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name_full_return_ids(self):
         result = win_lgpo.get_policy(
             policy_name="Allow Telemetry",
@@ -324,6 +339,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         expected = {"AllowTelemetry": "Not Configured"}
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_ids(self):
         result = win_lgpo.get_policy(
             policy_name="AllowTelemetry",
@@ -335,6 +352,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         expected = {"AllowTelemetry": "Not Configured"}
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_ids_hierarchical(self):
         result = win_lgpo.get_policy(
             policy_name="AllowTelemetry",
@@ -356,6 +375,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name_return_full_names_hierarchical(self):
         result = win_lgpo.get_policy(
             policy_name="Allow Telemetry",
@@ -378,6 +399,8 @@ class WinLGPOGetPolicyADMXTestCase(TestCase, LoaderModuleMockMixin):
         self.assertDictEqual(result, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test__load_policy_definitions(self):
         """
         Test that unexpected files in the PolicyDefinitions directory won't
@@ -416,6 +439,9 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return LOADER_DICTS
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name(self):
         result = win_lgpo.get_policy(
             policy_name="Network firewall: Public: Settings: Display a " "notification",
@@ -427,6 +453,10 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         expected = "Not configured"
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_id(self):
         result = win_lgpo.get_policy(
             policy_name="WfwPublicSettingsNotification",
@@ -438,6 +468,7 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         expected = "Not configured"
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_policy_name_full_return(self):
         result = win_lgpo.get_policy(
             policy_name="Network firewall: Public: Settings: Display a " "notification",
@@ -451,6 +482,7 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return(self):
         result = win_lgpo.get_policy(
             policy_name="WfwPublicSettingsNotification",
@@ -464,6 +496,8 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_policy_name_full_return_ids(self):
         result = win_lgpo.get_policy(
             policy_name="Network firewall: Public: Settings: Display a " "notification",
@@ -477,6 +511,8 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_ids(self):
         result = win_lgpo.get_policy(
             policy_name="WfwPublicSettingsNotification",
@@ -488,6 +524,8 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         expected = {"WfwPublicSettingsNotification": "Not configured"}
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_ids_hierarchical(self):
         result = win_lgpo.get_policy(
             policy_name="WfwPublicSettingsNotification",
@@ -512,6 +550,7 @@ class WinLGPOGetPolicyFromPolicyInfoTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test_get_policy_id_full_return_full_names_hierarchical(self):
         result = win_lgpo.get_policy(
             policy_name="WfwPublicSettingsNotification",
@@ -561,6 +600,7 @@ class WinLGPOPolicyInfoMechanismsTestCase(TestCase, LoaderModuleMockMixin):
         ]
         return salt.modules.win_lgpo._get_policy_info_setting(policy_definition)
 
+    @pytest.mark.slow_0_01
     def test_registry_mechanism(self):
         """
         Test getting policy value using the Registry mechanism
@@ -574,6 +614,8 @@ class WinLGPOPolicyInfoMechanismsTestCase(TestCase, LoaderModuleMockMixin):
         ]
         self.assertListEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_secedit_mechanism(self):
         """
         Test getting policy value using the Secedit mechanism
@@ -583,6 +625,8 @@ class WinLGPOPolicyInfoMechanismsTestCase(TestCase, LoaderModuleMockMixin):
         expected = "Disabled"
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_netsh_mechanism(self):
         """
         Test getting the policy value using the NetSH mechanism
@@ -593,6 +637,8 @@ class WinLGPOPolicyInfoMechanismsTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(result, expected)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_adv_audit_mechanism(self):
         """
         Test getting the policy value using the AdvAudit mechanism
@@ -627,6 +673,7 @@ class WinLGPOPolicyInfoMechanismsTestCase(TestCase, LoaderModuleMockMixin):
         expected = 0
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test_lsa_rights_mechanism(self):
         """
         Test getting the policy value using the LsaRights mechanism
@@ -685,6 +732,8 @@ class WinLGPOGetPointAndPrintNCTestCase(TestCase, LoaderModuleMockMixin):
             )
         return "Policy Not Found"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_not_configured(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -695,6 +744,8 @@ class WinLGPOGetPointAndPrintNCTestCase(TestCase, LoaderModuleMockMixin):
         expected = {"PointAndPrint_Restrictions_Win7": "Not Configured"}
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_not_configured_hierarchical(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -711,6 +762,8 @@ class WinLGPOGetPointAndPrintNCTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_not_configured_full_names(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -721,6 +774,8 @@ class WinLGPOGetPointAndPrintNCTestCase(TestCase, LoaderModuleMockMixin):
         expected = {"Printers\\Point and Print Restrictions": "Not Configured"}
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_not_configured_full_names_hierarchical(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -789,6 +844,9 @@ class WinLGPOGetPointAndPrintENTestCase(TestCase, LoaderModuleMockMixin):
             return results
         return "Policy Not Found"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_point_and_print_enabled(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -807,6 +865,8 @@ class WinLGPOGetPointAndPrintENTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_enabled_hierarchical(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -831,6 +891,8 @@ class WinLGPOGetPointAndPrintENTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_enabled_full_names(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -849,6 +911,8 @@ class WinLGPOGetPointAndPrintENTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertDictEqual(result, expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_point_and_print_enabled_full_names_hierarchical(self):
         result = self._get_policy_adm_setting(
             policy_name="Point and Print Restrictions",
@@ -891,12 +955,14 @@ class WinLGPOGetPolicyFromPolicyResources(TestCase, LoaderModuleMockMixin):
         if self.adml_data is None:
             self.adml_data = win_lgpo._get_policy_resources("en-US")
 
+    @pytest.mark.slow_0_01
     def test__getAdmlPresentationRefId(self):
         ref_id = "LetAppsAccessAccountInfo_Enum"
         expected = "Default for all apps"
         result = win_lgpo._getAdmlPresentationRefId(self.adml_data, ref_id)
         self.assertEqual(result, expected)
 
+    @pytest.mark.slow_0_01
     def test__getAdmlPresentationRefId_result_text_is_none(self):
         ref_id = "LetAppsAccessAccountInfo_UserInControlOfTheseApps_List"
         expected = (

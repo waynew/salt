@@ -5,11 +5,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
 import salt.exceptions
+import salt.utils.platform
 
 # Import salt libs
-import salt.modules.vagrant as vagrant
-import salt.utils.platform
+from salt.modules import vagrant
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -46,6 +47,7 @@ class VagrantTestCase(TestCase, LoaderModuleMockMixin):
             with self.assertRaises(salt.exceptions.SaltInvocationError):
                 vagrant.get_vm_info("thisNameDoesNotExist")
 
+    @pytest.mark.slow_0_01
     def test_vagrant_init_positional(self):
         path_nowhere = os.path.join(os.sep, "tmp", "nowhere")
         if salt.utils.platform.is_windows():
@@ -102,6 +104,7 @@ class VagrantTestCase(TestCase, LoaderModuleMockMixin):
                 "sdb://vagrant_sdb_data/test2", expected, self.LOCAL_OPTS
             )
 
+    @pytest.mark.slow_0_01
     def test_vagrant_init_arg_override(self):
         testdict = dict(
             cwd="/tmp/there",
@@ -139,6 +142,7 @@ class VagrantTestCase(TestCase, LoaderModuleMockMixin):
                 with self.assertRaises(salt.exceptions.SaltInvocationError):
                     vagrant.get_ssh_config("test3")  # has not been started
 
+    @pytest.mark.slow_0_01
     def test_vagrant_destroy(self):
         path_mydir = os.path.join(os.sep, "my", "dir")
         if salt.utils.platform.is_windows():

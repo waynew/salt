@@ -9,6 +9,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import openstack
 
@@ -76,11 +78,13 @@ class OpenstackTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_get_configured_provider_bad(self):
         with patch.dict(openstack.__opts__, {"providers": {}}):
             result = openstack.get_configured_provider()
             self.assertEqual(result, False)
 
+    @pytest.mark.slow_0_01
     def test_get_configured_provider_auth(self):
         config = {
             "region_name": "westeros",

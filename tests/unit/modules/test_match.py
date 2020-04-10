@@ -6,12 +6,12 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.loader
-import salt.matchers.compound_match as compound_match
-import salt.matchers.glob_match as glob_match
-import salt.matchers.list_match as list_match
-import salt.modules.match as match
+from salt.matchers import compound_match, glob_match, list_match
+from salt.modules import match
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -42,6 +42,7 @@ class MatchTestCase(TestCase, LoaderModuleMockMixin):
             list_match: {"__opts__": {"id": MINION_ID}},
         }
 
+    @pytest.mark.slow_0_01
     def test_compound_with_minion_id(self):
         """
         Make sure that when a minion_id IS past, that it is contained in opts
@@ -127,6 +128,7 @@ class MatchTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(list_match.match("rest03", {"id": "rest03"}))
         self.assertFalse(list_match.match("rest03"))
 
+    @pytest.mark.slow_0_01
     def test_watch_for_opts_mismatch_compound_match(self):
         """
         Tests for situations where the compound matcher might reference __opts__ directly

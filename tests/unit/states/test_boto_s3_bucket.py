@@ -8,14 +8,15 @@ import random
 import string
 from copy import deepcopy
 
+import pytest
 import salt.loader
-import salt.states.boto_s3_bucket as boto_s3_bucket
 
 # Import Salt libs
 from salt.ext import six
 
 # Import 3rd-party libs
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.states import boto_s3_bucket
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -283,6 +284,11 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
     TestCase for salt.modules.boto_s3_bucket state.module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_when_bucket_does_not_exist(self):
         """
         Tests present on a bucket that does not exist.
@@ -306,6 +312,11 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
             config_ret["get_bucket_location"],
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_when_bucket_exists_no_mods(self):
         self.conn.list_buckets.return_value = deepcopy(list_ret)
         for key, value in six.iteritems(config_ret):
@@ -321,6 +332,11 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_when_bucket_exists_all_mods(self):
         self.conn.list_buckets.return_value = deepcopy(list_ret)
         for key, value in six.iteritems(config_ret):
@@ -338,6 +354,11 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
         self.assertTrue(result["result"])
         self.assertNotEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_present_with_failure(self):
         self.conn.head_bucket.side_effect = [not_found_error, None]
         self.conn.list_buckets.return_value = deepcopy(list_ret)
@@ -354,6 +375,8 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
         self.assertFalse(result["result"])
         self.assertTrue("Failed to create bucket" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_bucket_does_not_exist(self):
         """
         Tests absent on a bucket that does not exist.
@@ -363,11 +386,15 @@ class BotoS3BucketTestCase(BotoS3BucketStateTestCaseBase, BotoS3BucketTestCaseMi
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_bucket_exists(self):
         result = self.salt_states["boto_s3_bucket.absent"]("test", "testbucket")
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["bucket"], None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_failure(self):
         self.conn.delete_bucket.side_effect = ClientError(
             error_content, "delete_bucket"

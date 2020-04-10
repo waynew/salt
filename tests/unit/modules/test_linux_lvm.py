@@ -8,9 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
-# Import Salt Libs
-import salt.modules.linux_lvm as linux_lvm
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import linux_lvm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -57,6 +59,7 @@ class LinuxLVMTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_pvdisplay(self):
         """
         Tests information about the physical volume(s)
@@ -115,6 +118,7 @@ class LinuxLVMTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_vgdisplay(self):
         """
         Tests information about the volume group(s)
@@ -159,6 +163,7 @@ class LinuxLVMTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_lvdisplay(self):
         """
         Return information about the logical volume(s)
@@ -275,6 +280,7 @@ class LinuxLVMTestCase(TestCase, LoaderModuleMockMixin):
                     linux_lvm.vgcreate("A", "B"), {"Output from vgcreate": "A"}
                 )
 
+    @pytest.mark.slow_0_01
     def test_vgextend(self):
         """
         Tests add physical volumes to an LVM volume group
@@ -290,6 +296,7 @@ class LinuxLVMTestCase(TestCase, LoaderModuleMockMixin):
                     linux_lvm.vgextend("A", "B"), {"Output from vgextend": "A"}
                 )
 
+    @pytest.mark.slow_0_01
     def test_lvcreate(self):
         """
         Test create a new logical volume, with option

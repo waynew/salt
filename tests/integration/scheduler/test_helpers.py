@@ -7,6 +7,7 @@ import copy
 import logging
 import os
 
+import pytest
 import salt.utils.platform
 
 # Import Salt libs
@@ -47,6 +48,7 @@ class SchedulerHelpersTest(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         self.schedule.reset()
 
+    @pytest.mark.slow_0_01
     def test_get_schedule(self):
         """
         verify that the _get_schedule function works

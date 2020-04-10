@@ -7,9 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-# Import Salt Libs
-import salt.states.ports as ports
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Libs
+from salt.states import ports
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -52,6 +54,7 @@ class PortsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'installed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_installed(self):
         """
         Test to verify that the desired port is installed,

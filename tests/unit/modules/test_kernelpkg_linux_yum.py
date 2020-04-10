@@ -10,17 +10,19 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 try:
     # Import Salt Testing Libs
-    from tests.support.mixins import LoaderModuleMockMixin
-    from tests.support.unit import TestCase, skipIf
-    from tests.support.mock import MagicMock, patch
+    from salt.exceptions import CommandExecutionError
+    from salt.modules import kernelpkg_linux_yum as kernelpkg
+    from salt.modules import yumpkg as pkg
 
     # Import Salt Libs
     from tests.support.kernelpkg import KernelPkgTestCase
-    import salt.modules.kernelpkg_linux_yum as kernelpkg
-    import salt.modules.yumpkg as pkg
-    from salt.exceptions import CommandExecutionError
+    from tests.support.mixins import LoaderModuleMockMixin
+    from tests.support.mock import MagicMock, patch
+    from tests.support.unit import TestCase, skipIf
 
     HAS_MODULES = True
 except ImportError:
@@ -60,6 +62,7 @@ class YumKernelPkgTestCase(KernelPkgTestCase, TestCase, LoaderModuleMockMixin):
             pkg: {"__grains__": {"osarch": self.OS_ARCH}},
         }
 
+    @pytest.mark.slow_0_01
     def test_list_installed(self):
         """
         Test - Return the latest installed kernel version
@@ -76,6 +79,7 @@ class YumKernelPkgTestCase(KernelPkgTestCase, TestCase, LoaderModuleMockMixin):
         with patch.dict(self._kernelpkg.__salt__, {"pkg.version": mock}):
             self.assertListEqual(self._kernelpkg.list_installed(), [])
 
+    @pytest.mark.slow_0_01
     def test_remove_success(self):
         """
         Test - remove kernel package
@@ -95,6 +99,7 @@ class YumKernelPkgTestCase(KernelPkgTestCase, TestCase, LoaderModuleMockMixin):
                     )  # pylint: disable=protected-access
                     self.assertListEqual(result["removed"], [target])
 
+    @pytest.mark.slow_0_01
     def test_remove_error(self):
         """
         Test - remove kernel package

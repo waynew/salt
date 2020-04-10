@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.rbenv as rbenv
+from salt.modules import rbenv
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -93,6 +95,7 @@ class RbenvTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(rbenv, "_rbenv_exec", return_value="A\nBC\nD"):
             self.assertListEqual(rbenv.versions(), ["A", "BC", "D"])
 
+    @pytest.mark.slow_0_01
     def test_default(self):
         """
         Test for returns or sets the currently defined default ruby.
@@ -109,6 +112,7 @@ class RbenvTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(rbenv, "_rbenv_exec", return_value="A\nB\nCD\n"):
             self.assertListEqual(rbenv.list_(), ["A", "B", "CD"])
 
+    @pytest.mark.slow_0_01
     def test_rehash(self):
         """
         Test for run rbenv rehash to update the installed shims.
@@ -116,6 +120,7 @@ class RbenvTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(rbenv, "_rbenv_exec", return_value=None):
             self.assertTrue(rbenv.rehash())
 
+    @pytest.mark.slow_0_01
     def test_do_with_ruby(self):
         """
         Test for execute a ruby command with rbenv's shims using a

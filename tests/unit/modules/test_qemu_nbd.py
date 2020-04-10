@@ -10,8 +10,10 @@ import glob
 import os.path
 import tempfile
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.qemu_nbd as qemu_nbd
+from salt.modules import qemu_nbd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -29,6 +31,7 @@ class QemuNbdTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'connect' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_connect(self):
         """
         Test if it activate nbd for an image file.
@@ -66,6 +69,9 @@ class QemuNbdTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'init' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_init(self):
         """
         Test if it mount the named image via qemu-nbd

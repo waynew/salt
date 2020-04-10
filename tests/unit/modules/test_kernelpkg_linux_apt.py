@@ -12,16 +12,18 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import re
 
+import pytest
+
 try:
     # Import Salt Testing Libs
-    from tests.support.mixins import LoaderModuleMockMixin
-    from tests.support.unit import TestCase, skipIf
-    from tests.support.mock import MagicMock, patch
+    from salt.exceptions import CommandExecutionError
+    from salt.modules import kernelpkg_linux_apt as kernelpkg
 
     # Import Salt Libs
     from tests.support.kernelpkg import KernelPkgTestCase
-    import salt.modules.kernelpkg_linux_apt as kernelpkg
-    from salt.exceptions import CommandExecutionError
+    from tests.support.mixins import LoaderModuleMockMixin
+    from tests.support.mock import MagicMock, patch
+    from tests.support.unit import TestCase, skipIf
 
     HAS_MODULES = True
 except ImportError:
@@ -84,6 +86,7 @@ class AptKernelPkgTestCase(KernelPkgTestCase, TestCase, LoaderModuleMockMixin):
         with patch.dict(self._kernelpkg.__salt__, {"pkg.list_pkgs": mock}):
             self.assertListEqual(self._kernelpkg.list_installed(), [])
 
+    @pytest.mark.slow_0_01
     def test_remove_success(self):
         """
         Test - remove kernel package

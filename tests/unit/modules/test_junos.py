@@ -5,8 +5,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt modules
-import salt.modules.junos as junos
+from salt.modules import junos
 
 # Import test libs
 from tests.support.mixins import LoaderModuleMockMixin, XMLEqualityMixin
@@ -20,11 +22,11 @@ except ImportError:
     from salt._compat import ElementTree as etree
 
 try:
+    import jxmlease  # pylint: disable=unused-import
+    from jnpr.junos.device import Device
+    from jnpr.junos.exception import LockError, UnlockError
     from jnpr.junos.utils.config import Config
     from jnpr.junos.utils.sw import SW
-    from jnpr.junos.device import Device
-    import jxmlease  # pylint: disable=unused-import
-    from jnpr.junos.exception import LockError, UnlockError
 
     HAS_JUNOS = True
 except ImportError:
@@ -175,6 +177,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             calls = [call(), call(10), call(30)]
             mock_timeout.assert_has_calls(calls)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_facts_refresh(self):
         with patch("salt.modules.saltutil.sync_grains") as mock_sync_grains:
             ret = dict()
@@ -645,6 +649,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             junos.rollback(id=5)
             mock_rollback.assert_called_with(5)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_rollback_with_id_and_single_arg(self):
         with patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -913,6 +919,7 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             junos.cli("show version", format="")
             mock_cli.assert_called_with("show version", "text", warning=False)
 
+    @pytest.mark.slow_0_01
     def test_cli(self):
         with patch("jnpr.junos.device.Device.cli") as mock_cli:
             mock_cli.return_vale = "CLI result"
@@ -922,6 +929,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             junos.cli("show version")
             mock_cli.assert_called_with("show version", "text", warning=False)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_cli_format_xml(self):
         with patch("salt.modules.junos.jxmlease.parse") as mock_jxml, patch(
             "salt.modules.junos.etree.tostring"
@@ -954,12 +963,16 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             ret["out"] = False
             self.assertEqual(junos.cli("show version"), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_shutdown_without_args(self):
         ret = dict()
         ret["message"] = "Provide either one of the arguments: shutdown or reboot."
         ret["out"] = False
         self.assertEqual(junos.shutdown(), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_shutdown_with_reboot_args(self):
         with patch("salt.modules.junos.SW.reboot") as mock_reboot:
             ret = dict()
@@ -1089,6 +1102,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             ret["out"] = False
             self.assertEqual(junos.install_config("path"), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_install_config(self):
         with patch("jnpr.junos.utils.config.Config.commit") as mock_commit, patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -1117,6 +1132,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             self.assertEqual(junos.install_config("actual/path/config.set"), ret)
             mock_load.assert_called_with(path="test/path/config", format="set")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_install_config_xml_file(self):
         with patch("jnpr.junos.utils.config.Config.commit") as mock_commit, patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -1173,6 +1190,7 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             self.assertEqual(junos.install_config("actual/path/config"), ret)
             mock_load.assert_called_with(path="test/path/config", format="text")
 
+    @pytest.mark.slow_0_01
     def test_install_config_replace(self):
         with patch("jnpr.junos.utils.config.Config.commit") as mock_commit, patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -1216,6 +1234,7 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
                 path="test/path/config", format="set", merge=False
             )
 
+    @pytest.mark.slow_0_01
     def test_install_config_overwrite(self):
         with patch("jnpr.junos.utils.config.Config.commit") as mock_commit, patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -1339,6 +1358,7 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             ret["out"] = True
             self.assertEqual(junos.install_config("actual/path/config"), ret)
 
+    @pytest.mark.slow_0_01
     def test_install_config_write_diff(self):
         with patch("jnpr.junos.utils.config.Config.commit") as mock_commit, patch(
             "jnpr.junos.utils.config.Config.commit_check"
@@ -1745,6 +1765,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             ret["out"] = True
             self.assertEqual(junos.file_copy(dest="file", src="test/src/file"), ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_file_copy_exception(self):
         with patch("salt.modules.junos.SCP") as mock_scp, patch(
             "os.path.isfile"
@@ -1844,6 +1866,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
             )
             self.assertEqualXML(etree.tostring(args[0][0]), expected_rpc)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_rpc_get_chassis_inventory_filter_as_arg(self):
         with patch("salt.modules.junos.jxmlease.parse") as mock_jxmlease, patch(
             "salt.modules.junos.etree.tostring"
@@ -1888,6 +1912,8 @@ class Test_Junos_Module(TestCase, LoaderModuleMockMixin, XMLEqualityMixin):
                 writes = m_open.write_calls()
                 assert writes == ["json rpc reply"], writes
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_rpc_write_file(self):
         with patch("salt.modules.junos.jxmlease.parse") as mock_parse, patch(
             "salt.modules.junos.etree.tostring"

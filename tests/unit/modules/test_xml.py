@@ -2,12 +2,12 @@
 """
     Tests for xml module
 """
-
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 import tempfile
 
+import pytest
 from salt.modules import xml
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.unit import TestCase
@@ -36,6 +36,7 @@ class XmlTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {xml: {}}
 
+    @pytest.mark.slow_0_01
     def test_get_value(self):
         """
             Verify xml.get_value
@@ -49,6 +50,7 @@ class XmlTestCase(TestCase, LoaderModuleMockMixin):
 
         os.remove(xml_file.name)
 
+    @pytest.mark.slow_0_01
     def test_set_value(self):
         """
             Verify xml.set_value
@@ -80,6 +82,7 @@ class XmlTestCase(TestCase, LoaderModuleMockMixin):
 
         os.remove(xml_file.name)
 
+    @pytest.mark.slow_0_01
     def test_set_attribute(self):
         """
             Verify xml.set_value

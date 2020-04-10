@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pacmanpkg as pacman
+from salt.modules import pacmanpkg as pacman
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class PacmanTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {pacman: {}}
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs(self):
         """
         Test if it list the packages currently installed in a dict
@@ -102,6 +105,7 @@ class PacmanTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_group_info(self):
         """
         Test if it shows the packages in a group

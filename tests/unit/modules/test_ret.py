@@ -6,10 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.loader
 
 # Import Salt Libs
-import salt.modules.ret as ret
+from salt.modules import ret
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +28,7 @@ class RetTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_jid' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_jid(self):
         """
         Test if it return the information for a specified job id

@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.apache as apache
+import pytest
 import salt.utils.files
+
+# Import Salt Libs
+from salt.states import apache
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class ApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'configfile' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_configfile(self):
         """
         Test to allows for inputting a yaml dictionary into a file

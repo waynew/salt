@@ -10,8 +10,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.mysql as mysql
+from salt.modules import mysql
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -76,6 +78,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {mysql: {}}
 
+    @pytest.mark.slow_0_01
     def test_user_exists(self):
         """
         Test to see if mysql module properly forms the MySQL query to see if a user exists
@@ -201,6 +204,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                         ret = mysql.user_create("testuser")
                         self.assertEqual(False, ret)
 
+    @pytest.mark.slow_0_01
     def test_user_create(self):
         """
         Test the creation of a MySQL user in mysql exec module
@@ -273,6 +277,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                     unix_socket=True,
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_chpass(self):
         """
         Test changing a MySQL user password in mysql exec module
@@ -333,6 +338,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                 "testuser",
             )
 
+    @pytest.mark.slow_0_01
     def test_db_check(self):
         """
         Test MySQL db check function in mysql exec module
@@ -344,6 +350,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             "my`'\" table",
         )
 
+    @pytest.mark.slow_0_01
     def test_db_repair(self):
         """
         Test MySQL db repair function in mysql exec module
@@ -366,6 +373,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             "my`'\" table",
         )
 
+    @pytest.mark.slow_0_01
     def test_db_remove(self):
         """
         Test MySQL db remove function in mysql exec module
@@ -397,6 +405,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             'test%_`" db',
         )
 
+    @pytest.mark.slow_0_01
     def test_db_create(self):
         """
         Test MySQL db_create function in mysql exec module
@@ -407,6 +416,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             "test`'\" db",
         )
 
+    @pytest.mark.slow_0_01
     def test_user_list(self):
         """
         Test MySQL user_list function in mysql exec module
@@ -426,6 +436,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             "mytestuser",
         )
 
+    @pytest.mark.slow_0_01
     def test_user_grants(self):
         """
         Test to ensure the mysql user_grants function returns properly formed SQL for a basic query
@@ -460,6 +471,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(ret, True)
 
+    @pytest.mark.slow_0_01
     def test_grant_exists_false(self):
         """
         Test to ensure that we don't find a grant that doesn't exist
@@ -479,6 +491,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(ret, False)
 
+    @pytest.mark.slow_0_01
     def test_grant_exists_all(self):
         """
         Test to ensure that we can find a grant that exists
@@ -534,18 +547,21 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             "localhost",
         )
 
+    @pytest.mark.slow_0_01
     def test_processlist(self):
         """
         Test processlist function in mysql exec module
         """
         self._test_call(mysql.processlist, "SHOW FULL PROCESSLIST")
 
+    @pytest.mark.slow_0_01
     def test_get_master_status(self):
         """
         Test get_master_status in the mysql execution module
         """
         self._test_call(mysql.get_master_status, "SHOW MASTER STATUS")
 
+    @pytest.mark.slow_0_01
     def test_get_slave_status(self):
         """
         Test get_slave_status in the mysql execution module
@@ -572,6 +588,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
             mysql.query, "SELECT * FROM testdb", "testdb", "SELECT * FROM testdb"
         )
 
+    @pytest.mark.slow_0_01
     def test_query_error(self):
         connect_mock = MagicMock()
         with patch.object(mysql, "_connect", connect_mock):
@@ -598,6 +615,7 @@ class MySQLTestCase(TestCase, LoaderModuleMockMixin):
                 "auth_socket",
             )
 
+    @pytest.mark.slow_0_01
     def test_plugin_remove(self):
         """
         Test the removing/uninstalling a MySQL / MariaDB plugin

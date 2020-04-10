@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.pagerduty as pagerduty
+from salt.states import pagerduty
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class PagerdutyTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'create_event' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_create_event(self):
         """
         Test to create an event on the PagerDuty service.

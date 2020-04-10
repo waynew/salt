@@ -5,9 +5,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from textwrap import dedent
 
-# Import Salt libs
-import salt.renderers.gpg as gpg
+import pytest
 from salt.exceptions import SaltRenderError
+
+# Import Salt libs
+from salt.renderers import gpg
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class GPGTestCase(TestCase, LoaderModuleMockMixin):
         with patch("salt.utils.path.which", MagicMock(return_value=False)):
             self.assertRaises(SaltRenderError, gpg._get_gpg_exec)
 
+    @pytest.mark.slow_0_01
     def test__decrypt_ciphertext(self):
         """
         test _decrypt_ciphertext

@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.debian_service as debian_service
+from salt.modules import debian_service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -54,6 +56,7 @@ class DebianServicesTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(debian_service, "get_all", mock):
             self.assertFalse(debian_service.available("name"))
 
+    @pytest.mark.slow_0_01
     def test_missing(self):
         """
         Test for The inverse of service.available.
@@ -97,6 +100,7 @@ class DebianServicesTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(debian_service.__salt__, {"cmd.retcode": mock}):
                 self.assertFalse(debian_service.restart("name"))
 
+    @pytest.mark.slow_0_01
     def test_reload_(self):
         """
         Test for Reload the named service
@@ -129,6 +133,7 @@ class DebianServicesTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(debian_service.__salt__, {"cmd.retcode": mock}):
                 self.assertFalse(debian_service.status("name"))
 
+    @pytest.mark.slow_0_01
     def test_enable(self):
         """
         Test for Enable the named service to start at boot
@@ -159,6 +164,7 @@ class DebianServicesTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(debian_service, "get_enabled", mock):
             self.assertFalse(debian_service.enabled("name"))
 
+    @pytest.mark.slow_0_01
     def test_disabled(self):
         """
         Test for Return True if the named service is enabled, false otherwise

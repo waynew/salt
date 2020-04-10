@@ -15,7 +15,7 @@ import shutil
 import tempfile
 import time
 
-import salt.returners.local_cache as local_cache
+import pytest
 
 # Import Salt libs
 import salt.utils.files
@@ -23,6 +23,7 @@ import salt.utils.jid
 import salt.utils.job
 import salt.utils.platform
 from salt.ext import six
+from salt.returners import local_cache
 
 # Import Salt Testing libs
 from tests.support.mixins import (
@@ -68,6 +69,8 @@ class LocalCacheCleanOldJobsTestCase(TestCase, LoaderModuleMockMixin):
         with patch("os.path.exists", MagicMock(return_value=False)):
             self.assertEqual(local_cache.clean_old_jobs(), None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_clean_old_jobs_empty_jid_dir_removed(self):
         """
         Tests that an empty JID dir is removed when it is old enough to be deleted.
@@ -144,6 +147,8 @@ class LocalCacheCleanOldJobsTestCase(TestCase, LoaderModuleMockMixin):
         # while the 'jid' dir inside it should be gone
         self.assertEqual(False, os.path.exists(jid_dir_name))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_clean_old_jobs_jid_file_is_cleaned(self):
         """
         Test that the entire JID dir is removed when a job is old enough to be removed.
@@ -305,6 +310,9 @@ class Local_CacheTest(
             "Dir/file does not exist: ", self.JOB_CACHE_DIR_FILES, status="present"
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_clean_old_jobs(self):
         """
         test to ensure jobs are removed from job cache
@@ -318,6 +326,9 @@ class Local_CacheTest(
             "job cache was not removed: ", self.JOB_CACHE_DIR_FILES, status="removed"
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_not_clean_new_jobs(self):
         """
         test to ensure jobs are not removed when
@@ -332,6 +343,9 @@ class Local_CacheTest(
                 "job cache was removed: ", self.JOB_CACHE_DIR_FILES, status="present"
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_empty_jid_dir(self):
         """
         test to ensure removal of empty jid dir

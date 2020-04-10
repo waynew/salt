@@ -5,11 +5,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 
-# This is imported late so mock can do its job
-import salt.modules.win_status as status
+import pytest
 
 # Import Salt libs
 from salt.ext import six
+
+# This is imported late so mock can do its job
+from salt.modules import win_status as status
 from tests.support.mock import ANY, Mock, patch
 
 # Import Salt Testing libs
@@ -80,6 +82,7 @@ class TestProcsAttributes(TestProcsBase):
         self.call_procs()
         self.proc = self.result[pid]
 
+    @pytest.mark.slow_0_01
     def test_process_cmd_is_set(self):
         self.assertEqual(self.proc["cmd"], self._expected_cmd)
 
@@ -161,6 +164,7 @@ class TestEmptyCommandLine(TestProcsBase):
         self.call_procs()
         self.proc = self.result[pid]
 
+    @pytest.mark.slow_0_01
     def test_cmd_is_empty_string(self):
         self.assertEqual(self.proc["cmd"], "")
 

@@ -10,17 +10,18 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 from salt.ext import six
 
 try:
     # Import Salt Testing Libs
-    from tests.support.mixins import LoaderModuleMockMixin
-    from tests.support.unit import skipIf, TestCase
-    from tests.support.mock import MagicMock, patch
-
     # Import Salt Libs
-    import salt.states.kernelpkg as kernelpkg
+    from salt.states import kernelpkg
+    from tests.support.mixins import LoaderModuleMockMixin
+    from tests.support.mock import MagicMock, patch
+    from tests.support.unit import TestCase, skipIf
 
     HAS_MODULES = True
 except ImportError:
@@ -80,6 +81,7 @@ class KernelPkgTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertIsInstance(ret["comment"], six.text_type)
                     kernelpkg.__salt__["kernelpkg.upgrade"].assert_not_called()
 
+    @pytest.mark.slow_0_01
     def test_latest_installed_at_latest(self):
         """
         Test - latest_installed when no upgrade is available

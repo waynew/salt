@@ -8,9 +8,11 @@ Unit tests for AWS KMS Decryption Renderer.
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.exceptions
-import salt.renderers.aws_kms as aws_kms
+from salt.renderers import aws_kms
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,7 +29,7 @@ except ImportError:
     NO_BOTOCORE = True
 
 try:
-    import cryptography.fernet as fernet
+    from cryptography import fernet
 
     NO_FERNET = False
 except ImportError:
@@ -108,6 +110,7 @@ class AWSKMSTestCase(TestCase, LoaderModuleMockMixin):
             session.side_effect = botocore.exceptions.NoRegionError
             self.assertRaises(salt.exceptions.SaltConfigurationError, aws_kms._session)
 
+    @pytest.mark.slow_0_01
     def test__kms(self):  # pylint: disable=no-self-use
         """
         _kms calls boto3.Session.client with 'kms' as its only argument.
@@ -125,6 +128,7 @@ class AWSKMSTestCase(TestCase, LoaderModuleMockMixin):
             session.side_effect = botocore.exceptions.NoRegionError
             self.assertRaises(salt.exceptions.SaltConfigurationError, aws_kms._kms)
 
+    @pytest.mark.slow_0_01
     def test__api_decrypt(self):  # pylint: disable=no-self-use
         """
         _api_decrypt_response calls kms.decrypt with the
@@ -191,6 +195,7 @@ class AWSKMSTestCase(TestCase, LoaderModuleMockMixin):
             self.assertEqual(aws_kms._decrypt_ciphertext(crypted), PLAINTEXT_SECRET)
 
     @skipIf(NO_FERNET, "Failed to import cryptography.fernet")
+    @pytest.mark.slow_0_01
     def test__decrypt_object(self):
         """
         Test _decrypt_object

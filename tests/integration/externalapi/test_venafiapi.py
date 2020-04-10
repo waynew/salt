@@ -10,6 +10,7 @@ import random
 import string
 import tempfile
 
+import pytest
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
@@ -47,6 +48,9 @@ class VenafiTest(ShellCase):
     """
 
     @with_random_name
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_request(self, name):
         cn = "{0}.example.com".format(name)
 
@@ -88,6 +92,9 @@ class VenafiTest(ShellCase):
         assert pkey_public_key_pem == cert_public_key_pem
 
     @with_random_name
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_sign(self, name):
 
         csr_pem = """-----BEGIN CERTIFICATE REQUEST-----

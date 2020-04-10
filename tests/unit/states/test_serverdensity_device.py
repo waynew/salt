@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.serverdensity_device as serverdensity_device
+from salt.states import serverdensity_device
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,8 @@ class ServerdensityDeviceTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'monitored' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_monitored(self):
         """
         Test to device is monitored with Server Density.

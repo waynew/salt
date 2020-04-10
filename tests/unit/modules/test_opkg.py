@@ -10,10 +10,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import collections
 import copy
 
-import salt.modules.opkg as opkg
+import pytest
 
 # Import Salt Libs
 from salt.ext import six
+from salt.modules import opkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -134,6 +135,7 @@ class OpkgTestCase(TestCase, LoaderModuleMockMixin):
             with patch.multiple(opkg, **patch_kwargs):
                 self.assertEqual(opkg.install("vim:7.4"), INSTALLED)
 
+    @pytest.mark.slow_0_01
     def test_install_noaction(self):
         """
         Test - Install packages.
@@ -178,6 +180,7 @@ class OpkgTestCase(TestCase, LoaderModuleMockMixin):
             with patch.multiple(opkg, **patch_kwargs):
                 self.assertEqual(opkg.remove("vim"), REMOVED)
 
+    @pytest.mark.slow_0_01
     def test_remove_noaction(self):
         """
         Test - Remove packages.
@@ -213,6 +216,7 @@ class OpkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(opkg.__salt__, {"cmd.run_all": mock}):
             self.assertEqual(opkg.info_installed("vim"), expected_dict)
 
+    @pytest.mark.slow_0_01
     def test_version_clean(self):
         """
         Test - Return the information of version_clean

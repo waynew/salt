@@ -11,8 +11,10 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
-import salt.returners.slack_webhook_return as slack_webhook
+from salt.returners import slack_webhook_return as slack_webhook
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -145,6 +147,7 @@ class SlackWebhookReturnerTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(slack_webhook.__opts__, {"slack_webhook.webhook": ""}):
             self.assertEqual(slack_webhook.returner(self._RET), None)
 
+    @pytest.mark.slow_0_01
     def test_returner(self):
         """
         Test to see if the Slack Webhook returner sends a message

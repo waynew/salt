@@ -9,6 +9,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -41,6 +43,9 @@ class CronTest(ModuleCase):
         # Delete user
         self.run_state("user.absent", name="test_cron_user")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_managed(self):
         """
         file.managed

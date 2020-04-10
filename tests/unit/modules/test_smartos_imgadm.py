@@ -6,8 +6,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.smartos_imgadm as imgadm
+from salt.modules import smartos_imgadm as imgadm
 from salt.modules.smartos_imgadm import _parse_image_meta
 
 # Import Salt Testing Libs
@@ -193,6 +195,7 @@ class ImgadmTestCase(TestCase, LoaderModuleMockMixin):
         }
         self.assertEqual(_parse_image_meta(image_native, True), ret)
 
+    @pytest.mark.slow_0_01
     def test_parse_image_meta_lx(self):
         """
         Test the internal _parse_image_meta methode

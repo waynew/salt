@@ -5,10 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.cassandra as cassandra
+import pytest
 
 # Import Salt Libs
 from salt.ext import six
+from salt.modules import cassandra
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -48,6 +49,8 @@ class CassandraTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(cassandra, "_nodetool", mock):
             self.assertEqual(cassandra.netstats(), "A")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_tpstats(self):
         """
         Test for Return tpstats info
@@ -56,6 +59,7 @@ class CassandraTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(cassandra, "_nodetool", mock):
             self.assertEqual(cassandra.tpstats(), "A")
 
+    @pytest.mark.slow_0_01
     def test_info(self):
         """
         Test for Return cassandra node info

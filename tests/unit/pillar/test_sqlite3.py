@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.pillar.sqlite3 as sqlite3
+from salt.pillar import sqlite3
 
 # Import Salt Testing libs
 from tests.support.unit import TestCase
@@ -13,6 +15,7 @@ from tests.support.unit import TestCase
 class SQLite3PillarTestCase(TestCase):
     maxDiff = None
 
+    @pytest.mark.slow_0_01
     def test_001_extract_queries_list(self):
         return_data = sqlite3.SQLite3ExtPillar()
         args, kwargs = (
@@ -298,6 +301,7 @@ class SQLite3PillarTestCase(TestCase):
             qbuffer,
         )
 
+    @pytest.mark.slow_0_01
     def test_004_extract_queries_bogus_list(self):
         # This test is specifically checking that empty queries are dropped
         return_data = sqlite3.SQLite3ExtPillar()
@@ -490,6 +494,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [5, 6, 7, 8]])
         self.assertEqual({1: {2: {3: 4}}, 5: {6: {7: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_122_process_results_depth_1(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 1)
@@ -542,6 +547,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 4], [1, 6, 7, 8]])
         self.assertEqual({1: {2: {3: 4}, 6: {7: 8}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_133_process_results_overwrite_depth_0(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 0)
@@ -603,6 +609,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 7, 8]])
         self.assertEqual({1: {2: {"c": [3, 7], "d": [4, 8]}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_203_process_results_complexity_as_list_deeper(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.process_fields(["a", "b", "c", "d"], 0)
@@ -613,6 +620,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 8]])
         self.assertEqual({1: {2: {3: [4, 8]}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_204_process_results_complexity_as_list_mismatch_depth(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.as_list = True
@@ -665,6 +673,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 6, 7]])
         self.assertEqual({1: {2: {3: {6: 7}}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_208_process_results_complexity_collision_mismatch_depth_reversed(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.as_list = False
@@ -678,6 +687,7 @@ class SQLite3PillarTestCase(TestCase):
         return_data.process_results([[1, 2, 3, 5]])
         self.assertEqual({1: {2: {3: 5}}}, return_data.result)
 
+    @pytest.mark.slow_0_01
     def test_209_process_results_complexity_collision_mismatch_depth_weird_order(self):
         return_data = sqlite3.SQLite3ExtPillar()
         return_data.as_list = False

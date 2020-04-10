@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.mac_xattr as xattr
+from salt.states import mac_xattr as xattr
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class XAttrTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_exists_already(self):
         """
             Test that having the same value does nothing
@@ -120,6 +123,7 @@ class XAttrTestCase(TestCase, LoaderModuleMockMixin):
                 delete_mock.assert_called_once_with("/path/to/file", "key")
                 self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_delete_not(self):
         """
             Test deleting an attribute that doesn't exist from a file

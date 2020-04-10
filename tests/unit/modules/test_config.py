@@ -4,8 +4,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import fnmatch
 
+import pytest
+
 # Import Salt libs
-import salt.modules.config as config
+from salt.modules import config
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -61,6 +63,7 @@ class TestModulesConfig(TestCase, LoaderModuleMockMixin):
             opt = config.option(opt_name)
             self.assertEqual(opt, config.DEFAULTS[opt_name])
 
+    @pytest.mark.slow_0_01
     def test_no_match(self):
         """
         Make sure that the defa
@@ -84,6 +87,7 @@ class TestModulesConfig(TestCase, LoaderModuleMockMixin):
             ret = config.option(self.wildcard_opt_name)
             assert ret == "", ret
 
+    @pytest.mark.slow_0_01
     def test_omits(self):
         with patch.dict(config.DEFAULTS, DEFAULTS):
 

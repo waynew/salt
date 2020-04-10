@@ -9,8 +9,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 from inspect import ArgSpec
 
+import pytest
+
 # Import Salt Libs
-import salt.states.module as module
+from salt.states import module
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -134,6 +136,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
         if ret["comment"] != "Unavailable function: {0}.".format(CMD) or ret["result"]:
             self.fail("module.run did not fail as expected: {0}".format(ret))
 
+    @pytest.mark.slow_0_01
     def test_module_run_hidden_varargs(self):
         """
         Tests the return of module.run state when hidden varargs are used with
@@ -145,6 +148,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
             ret = module._run(CMD, m_names="anyname")
         self.assertEqual(ret["comment"], "'names' must be a list.")
 
+    @pytest.mark.slow_0_01
     def test_run_testmode(self):
         """
         Tests the return of the module.run state when test=True is passed.
@@ -185,6 +189,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
         if ret["comment"] != "{0}: Success".format(CMD) or not ret["result"]:
             self.fail("module.run failed: {0}".format(ret))
 
+    @pytest.mark.slow_0_01
     def test_run_state_apply_result_false(self):
         """
         Tests the 'result' of module.run that calls state.apply execution module
@@ -211,6 +216,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
         )
         self.assertFalse(ret["result"])
 
+    @pytest.mark.slow_0_01
     def test_run_args(self):
         """
         Test unnamed args.
@@ -296,6 +302,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
                 ret = module.run(**{CMD: [{"ret": val}]})
             self.assertTrue(ret["result"])
 
+    @pytest.mark.slow_0_01
     def test_run_batch_call(self):
         """
         Test batch call
@@ -317,6 +324,7 @@ class ModuleStateTest(TestCase, LoaderModuleMockMixin):
                 ret = module.run(**{f_name: None})
                 self.assertTrue(ret["result"])
 
+    @pytest.mark.slow_0_01
     def test_module_run_module_not_available(self):
         """
         Tests the return of module.run state when the module function

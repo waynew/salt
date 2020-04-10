@@ -3,6 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
 from salt.utils.aggregation import Map, Scalar, aggregate
 
@@ -53,6 +55,7 @@ class TestAggregation(TestCase):
 
         assert aggregate(a, b) == {"foo": {"bar": ["first", "second"]}}, aggregate(a, b)
 
+    @pytest.mark.slow_0_01
     def test_introspection(self):
 
         a = {"foo": {"lvl1": {"lvl2-a": "first", "lvl2-b": "first"}}}

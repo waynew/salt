@@ -6,15 +6,17 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.utils.etcd_util as etcd_util
+from salt.utils import etcd_util
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing Libs
 from tests.support.unit import TestCase, skipIf
 
 try:
-    from urllib3.exceptions import ReadTimeoutError, MaxRetryError
+    from urllib3.exceptions import MaxRetryError, ReadTimeoutError
 
     HAS_URLLIB3 = True
 except ImportError:
@@ -37,6 +39,7 @@ class EtcdUtilTestCase(TestCase):
 
     # 'get_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_read(self):
         """
         Test to make sure we interact with etcd correctly
@@ -75,6 +78,7 @@ class EtcdUtilTestCase(TestCase):
             etcd_client.read.side_effect = MaxRetryError(None, None)
             self.assertRaises(etcd.EtcdConnectionFailed, client.read, "salt")
 
+    @pytest.mark.slow_0_01
     def test_get(self):
         """
         Test if it get a value from etcd, by direct path
@@ -104,6 +108,7 @@ class EtcdUtilTestCase(TestCase):
                 mock.side_effect = Exception
                 self.assertRaises(Exception, client.get, "some-error")
 
+    @pytest.mark.slow_0_01
     def test_tree(self):
         """
         Test recursive gets
@@ -139,6 +144,7 @@ class EtcdUtilTestCase(TestCase):
                 mock.side_effect = Exception
                 self.assertRaises(Exception, client.tree, "some-error")
 
+    @pytest.mark.slow_0_01
     def test_ls(self):
         with patch("etcd.Client") as mock:
             client = etcd_util.EtcdClient({})
@@ -163,6 +169,7 @@ class EtcdUtilTestCase(TestCase):
                 mock.side_effect = Exception
                 self.assertRaises(Exception, client.tree, "some-error")
 
+    @pytest.mark.slow_0_01
     def test_write(self):
         with patch("etcd.Client", autospec=True) as mock:
             client = etcd_util.EtcdClient({})
@@ -221,6 +228,7 @@ class EtcdUtilTestCase(TestCase):
             etcd_client.write.side_effect = Exception
             self.assertRaises(Exception, client.set, "some-key", "some-val")
 
+    @pytest.mark.slow_0_01
     def test_flatten(self):
         with patch("etcd.Client", autospec=True) as mock:
             client = etcd_util.EtcdClient({})
@@ -260,6 +268,7 @@ class EtcdUtilTestCase(TestCase):
             self.assertEqual(client._flatten(some_data, path="/"), result_root)
             self.assertEqual(client._flatten(some_data), result_nopath)
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         with patch("etcd.Client", autospec=True) as mock:
             client = etcd_util.EtcdClient({})
@@ -300,6 +309,7 @@ class EtcdUtilTestCase(TestCase):
                 client._flatten.assert_called_with(some_data, "/test")
                 self.assertEqual(write_mock.call_count, 5)
 
+    @pytest.mark.slow_0_01
     def test_rm(self):
         with patch("etcd.Client", autospec=True) as mock:
             etcd_client = mock.return_value
@@ -326,6 +336,7 @@ class EtcdUtilTestCase(TestCase):
             etcd_client.delete.side_effect = Exception
             self.assertRaises(Exception, client.rm, "some-dir")
 
+    @pytest.mark.slow_0_01
     def test_watch(self):
         with patch("etcd.Client", autospec=True) as client_mock:
             client = etcd_util.EtcdClient({})

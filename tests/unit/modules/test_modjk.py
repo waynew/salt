@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.modjk as modjk
+from salt.modules import modjk
 from tests.support.mock import patch
 
 # Import Salt Testing Libs
@@ -32,6 +34,7 @@ class ModjkTestCase(TestCase):
 
     # 'get_running' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_running(self):
         """
         Test for get the current running config (not from disk)
@@ -104,6 +107,7 @@ class ModjkTestCase(TestCase):
 
     # 'reset_stats' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_reset_stats(self):
         """
         Test for reset all runtime statistics for the load balancer
@@ -155,6 +159,7 @@ class ModjkTestCase(TestCase):
 
     # 'bulk_recover' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_bulk_recover(self):
         """
         Test for recover all the given workers in the specific load balancer
@@ -221,6 +226,7 @@ class ModjkTestCase(TestCase):
 
     # 'worker_edit' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_worker_edit(self):
         """
         Test for edit the worker settings

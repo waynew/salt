@@ -6,10 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.mac_brew_pkg as mac_brew
+import pytest
 import salt.utils.pkg
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import mac_brew_pkg as mac_brew
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -55,6 +57,7 @@ class BrewTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertTrue(mac_brew._tap("homebrew/science"))
 
+    @pytest.mark.slow_0_01
     def test_tap_failure(self):
         """
         Tests if the tap installation failed
@@ -74,6 +77,7 @@ class BrewTestCase(TestCase, LoaderModuleMockMixin):
         ), patch("salt.modules.mac_brew_pkg._list_taps", MagicMock(return_value={})):
             self.assertFalse(mac_brew._tap("homebrew/test"))
 
+    @pytest.mark.slow_0_01
     def test_tap(self):
         """
         Tests adding unofficial GitHub repos to the list of brew taps
@@ -107,6 +111,7 @@ class BrewTestCase(TestCase, LoaderModuleMockMixin):
     # Only tested a few basics
     # Full functionality should be tested in integration phase
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs_removed(self):
         """
         Tests removed implementation
@@ -222,6 +227,7 @@ class BrewTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'refresh_db' function tests: 2
 
+    @pytest.mark.slow_0_01
     def test_refresh_db_failure(self):
         """
         Tests an update of homebrew package repository failure
@@ -239,6 +245,7 @@ class BrewTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(salt.utils.pkg, "clear_rtag", Mock()):
                 self.assertRaises(CommandExecutionError, mac_brew.refresh_db)
 
+    @pytest.mark.slow_0_01
     def test_refresh_db(self):
         """
         Tests a successful update of homebrew package repository

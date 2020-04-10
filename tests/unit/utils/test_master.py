@@ -3,6 +3,8 @@
 # Import python libs
 from __future__ import absolute_import, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.master
 from tests.support.mock import patch
@@ -45,6 +47,7 @@ class MasterPillarUtilTestCase(TestCase):
             ret = pillar.get_minion_pillar()
         assert ret[minion] == pillar_data[minion]
 
+    @pytest.mark.slow_0_01
     def test_get_minion_pillar_doesnotexist(self):
         """
         test get_minion_pillar when
@@ -74,6 +77,7 @@ class MasterPillarUtilTestCase(TestCase):
             ret = pillar.get_minion_pillar()
         assert minion not in ret
 
+    @pytest.mark.slow_0_01
     def test_get_minion_pillar_notgt(self):
         """
         test get_minion_pillar when

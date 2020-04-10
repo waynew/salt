@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.artifactory as artifactory
+from salt.states import artifactory
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class ArtifactoryTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'downloaded' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_downloaded(self):
         """
         Test to ensures that the artifact from artifactory exists at

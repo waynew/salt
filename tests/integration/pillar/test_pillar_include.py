@@ -4,10 +4,13 @@ Pillar include tests
 """
 from __future__ import absolute_import, unicode_literals
 
+import pytest
 from tests.support.case import ModuleCase
 
 
 class PillarIncludeTest(ModuleCase):
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pillar_include(self):
         """
         Test pillar include
@@ -18,6 +21,8 @@ class PillarIncludeTest(ModuleCase):
         assert "b" in ret["element"]
         assert ret["element"]["b"] == {"b": ["Entry B"]}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_pillar_glob_include(self):
         """
         Test pillar include via glob pattern

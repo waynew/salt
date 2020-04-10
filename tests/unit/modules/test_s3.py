@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.s3 as s3
+from salt.modules import s3
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -62,6 +64,7 @@ class S3TestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(s3.delete("bucket"), "A")
 
+    @pytest.mark.slow_0_01
     def test_get(self):
         """
         Test for list the contents of a bucket, or return an object from a

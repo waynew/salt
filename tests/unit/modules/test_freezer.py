@@ -8,8 +8,9 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.freezer as freezer
+import pytest
 from salt.exceptions import CommandExecutionError
+from salt.modules import freezer
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -110,6 +111,7 @@ class FreezerTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.modules.freezer.fopen")
     @patch("salt.modules.freezer.status")
     @patch("os.makedirs")
+    @pytest.mark.slow_0_01
     def test_freeze_success_new_state(self, makedirs, status, fopen, dump):
         """
         Test to freeze a current installation
@@ -162,6 +164,7 @@ class FreezerTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.utils.json.load")
     @patch("salt.modules.freezer.fopen")
     @patch("salt.modules.freezer.status")
+    @pytest.mark.slow_0_01
     def test_restore_add_missing_repo(self, status, fopen, load):
         """
         Test to restore an old state
@@ -192,6 +195,7 @@ class FreezerTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.utils.json.load")
     @patch("salt.modules.freezer.fopen")
     @patch("salt.modules.freezer.status")
+    @pytest.mark.slow_0_01
     def test_restore_add_missing_package(self, status, fopen, load):
         """
         Test to restore an old state
@@ -222,6 +226,7 @@ class FreezerTestCase(TestCase, LoaderModuleMockMixin):
     @patch("salt.utils.json.load")
     @patch("salt.modules.freezer.fopen")
     @patch("salt.modules.freezer.status")
+    @pytest.mark.slow_0_01
     def test_restore_remove_extra_package(self, status, fopen, load):
         """
         Test to restore an old state

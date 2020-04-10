@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.proxy as proxy
+from salt.modules import proxy
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +37,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with("networksetup -getwebproxy Ethernet")
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_get_https_proxy_macos(self):
         """
             Test to make sure that we correctly get the current proxy info
@@ -65,6 +68,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with("networksetup -getftpproxy Ethernet")
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_get_http_proxy_macos_none(self):
         """
             Test to make sure that we correctly return when theres no proxy set
@@ -205,6 +209,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
             assert not mock.called
             self.assertEqual(out, None)
 
+    @pytest.mark.slow_0_01
     def test_get_all_proxies_windows(self):
         """
         Test to make sure that we correctly get the current proxy info on
@@ -241,6 +246,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
                 mock.assert_has_calls(calls)
                 self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_set_http_proxy_windows(self):
         """
         Test to make sure that we correctly set the proxy info on Windows
@@ -361,6 +367,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
                 mock_cmd.assert_called_once_with("netsh winhttp import proxy source=ie")
                 self.assertTrue(out)
 
+    @pytest.mark.slow_0_01
     def test_set_proxy_windows(self):
         """
         Test to make sure that we correctly set the proxy info on Windows
@@ -401,6 +408,7 @@ class ProxyTestCase(TestCase, LoaderModuleMockMixin):
                 mock_cmd.assert_called_once_with("netsh winhttp import proxy source=ie")
                 self.assertTrue(out)
 
+    @pytest.mark.slow_0_01
     def test_set_proxy_windows_no_ftp(self):
         """
         Test to make sure that we correctly set the proxy info on Windows

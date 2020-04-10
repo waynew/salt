@@ -10,10 +10,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.parted_partition as parted
+import pytest
 
 # Import Salt libs
 from salt.exceptions import CommandExecutionError
+from salt.modules import parted_partition as parted
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -92,6 +93,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(err, ret)
 
+    @pytest.mark.slow_0_01
     def test_virtual(self):
         """
         On expected platform with correct utils in PATH, register "partition" module
@@ -114,6 +116,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
             parted.probe("/dev/sda")
             self.cmdrun.assert_called_once_with("partprobe -- /dev/sda")
 
+    @pytest.mark.slow_0_01
     def test_probe_w_multiple_args(self):
         with patch("salt.modules.parted_partition._validate_device", MagicMock()):
             parted.probe("/dev/sda", "/dev/sdb")
@@ -167,6 +170,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
     def test_list__without_device(self):
         self.assertRaises(TypeError, parted.list_)
 
+    @pytest.mark.slow_0_01
     def test_list__empty_cmd_output(self):
         with patch("salt.modules.parted_partition._validate_device", MagicMock()):
             self.cmdrun_stdout.return_value = self.parted_print_output("empty")
@@ -191,6 +195,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
         )
         self.assertFalse(self.cmdrun.called)
 
+    @pytest.mark.slow_0_01
     def test_list__bad_header(self):
         with patch("salt.modules.parted_partition._validate_device", MagicMock()):
             self.cmdrun_stdout.return_value = self.parted_print_output("bad_header")
@@ -366,6 +371,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(output, expected)
 
+    @pytest.mark.slow_0_01
     def test_list__valid_unit_valid_legacy_cmd_output(self):
         with patch("salt.modules.parted_partition._validate_device", MagicMock()):
             self.cmdrun_stdout.return_value = self.parted_print_output("valid_legacy")
@@ -406,6 +412,7 @@ class PartedTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(output, expected)
 
+    @pytest.mark.slow_0_01
     def test_disk_set(self):
         with patch("salt.modules.parted_partition._validate_device", MagicMock()):
             self.cmdrun.return_value = ""

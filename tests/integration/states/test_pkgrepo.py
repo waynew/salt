@@ -8,6 +8,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
 import salt.utils.files
 
 # Import Salt libs
@@ -82,6 +83,12 @@ class PkgrepoTest(ModuleCase, SaltReturnAssertsMixin):
 
     @requires_salt_states("pkgrepo.absent", "pkgrepo.managed")
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_pkgrepo_03_with_comments(self, grains):
         """
         Test adding a repo with comments
@@ -134,6 +141,10 @@ class PkgrepoTest(ModuleCase, SaltReturnAssertsMixin):
 
     @requires_salt_states("pkgrepo.managed")
     @requires_system_grains
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_pkgrepo_04_apt_with_architectures(self, grains):
         """
         Test managing a repo with architectures specified

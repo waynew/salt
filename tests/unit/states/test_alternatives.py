@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.alternatives as alternatives
+from salt.states import alternatives
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -128,6 +130,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'remove' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_remove(self):
         """
         Test to removes installed alternative for defined <name> and <path>
@@ -174,6 +177,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'auto' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_auto(self):
         """
         Test to instruct alternatives to use the highest priority
@@ -204,6 +208,7 @@ class AlternativesTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test to sets alternative for <name> to <path>, if <path> is defined

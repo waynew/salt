@@ -7,8 +7,10 @@ from __future__ import absolute_import
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.nagios as nagios
+from salt.modules import nagios
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -65,6 +67,7 @@ class NagiosTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(nagios, "_execute_pillar", return_value="A"):
             self.assertEqual(nagios.run_pillar("pillar"), "A")
 
+    @pytest.mark.slow_0_01
     def test_run_all_pillar(self):
         """
         Test for Run one or more nagios plugins from pillar data

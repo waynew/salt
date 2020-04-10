@@ -11,6 +11,7 @@ import os
 import shutil
 import socket
 
+import pytest
 from tests.support.case import ModuleCase
 from tests.support.mixins import SaltReturnAssertsMixin
 
@@ -48,6 +49,9 @@ class SvnTest(ModuleCase, SaltReturnAssertsMixin):
         # Reset the dns timeout after the test is over
         socket.setdefaulttimeout(None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_latest(self):
         """
         svn.latest
@@ -60,6 +64,9 @@ class SvnTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertSaltStateChangesEqual(ret, self.name, keys=["new"])
         self.assertSaltStateChangesEqual(ret, self.new_rev, keys=["revision"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_latest_failure(self):
         """
         svn.latest
@@ -73,6 +80,9 @@ class SvnTest(ModuleCase, SaltReturnAssertsMixin):
         self.assertSaltFalseReturn(ret)
         self.assertFalse(os.path.isdir(os.path.join(self.target, ".svn")))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_latest_empty_dir(self):
         """
         svn.latest

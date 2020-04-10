@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.osquery as osquery
+from salt.modules import osquery
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -163,6 +165,7 @@ class OSQueryTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(osquery.__grains__, {"os_family": "Debian"}):
                 self.assertEqual(osquery.kernel_modules(), _os_query_results)
 
+    @pytest.mark.slow_0_01
     def test_kernel_modules_with_attrs(self):
         """
         Test the results returned from the kernel_modules function
@@ -237,6 +240,7 @@ class OSQueryTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.dict(osquery.__grains__, {"os_family": "Debian"}):
                     self.assertEqual(osquery.osquery_info(), _os_query_results)
 
+    @pytest.mark.slow_0_01
     def test_osquery_info_with_attrs(self):
         """
         Test the results returned from the kernel_modules function

@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.oracle as oracle
+from salt.modules import oracle
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class OracleTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {oracle: {"cx_Oracle": object()}}
 
+    @pytest.mark.slow_0_01
     def test_run_query(self):
         """
         Test for Run SQL query and return result
@@ -58,6 +61,7 @@ class OracleTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(oracle, "cx_Oracle", MagicMock(side_effect=MagicMock())):
             self.assertEqual(oracle.client_version(), "")
 
+    @pytest.mark.slow_0_01
     def test_show_pillar(self):
         """
         Test for Show Pillar segment oracle.*

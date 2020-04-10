@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.ipset as ipset
+from salt.states import ipset
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -155,6 +157,7 @@ class IpsetSetAbsentTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, check_set=False, delete_set=None)
 
+    @pytest.mark.slow_0_01
     def test_remove_test_mode(self):
         ret = {
             "name": self.fake_name,
@@ -164,6 +167,7 @@ class IpsetSetAbsentTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, test=True, delete_set=None)
 
+    @pytest.mark.slow_0_01
     def test_remove_fails(self):
         ret = {
             "name": self.fake_name,
@@ -259,6 +263,7 @@ class IpsetPresentTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, add="Error", add_assertion=True)
 
+    @pytest.mark.slow_0_01
     def test_success(self):
         ret = {
             "name": self.fake_name,
@@ -347,6 +352,7 @@ class IpsetAbsentTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, test=True, check=True)
 
+    @pytest.mark.slow_0_01
     def test_del_fails(self):
         ret = {
             "name": self.fake_name,
@@ -357,6 +363,7 @@ class IpsetAbsentTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, check=True, delete="Error", delete_assertion=True)
 
+    @pytest.mark.slow_0_01
     def test_success(self):
         ret = {
             "name": self.fake_name,
@@ -439,6 +446,7 @@ class IpsetFlushTestCase(TestCase, LoaderModuleMockMixin):
         }
         self._runner(ret, flush=False)
 
+    @pytest.mark.slow_0_01
     def test_success(self):
         ret = {
             "name": self.fake_name,

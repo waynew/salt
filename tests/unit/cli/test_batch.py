@@ -6,6 +6,8 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cli.batch import Batch
 from tests.support.mock import MagicMock, patch
@@ -36,6 +38,8 @@ class BatchTestCase(TestCase):
 
     # get_bnum tests
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_bnum_str(self):
         """
         Tests passing batch value as a number(str)
@@ -52,6 +56,7 @@ class BatchTestCase(TestCase):
         self.batch.minions = ["foo", "bar"]
         self.assertEqual(Batch.get_bnum(self.batch), 2)
 
+    @pytest.mark.slow_0_01
     def test_get_bnum_percentage(self):
         """
         Tests passing batch value as percentage
@@ -60,6 +65,7 @@ class BatchTestCase(TestCase):
         self.batch.minions = ["foo"]
         self.assertEqual(Batch.get_bnum(self.batch), 1)
 
+    @pytest.mark.slow_0_01
     def test_get_bnum_high_percentage(self):
         """
         Tests passing batch value as percentage over 100%

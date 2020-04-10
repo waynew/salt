@@ -11,6 +11,8 @@ import logging
 import random
 import string
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -30,8 +32,8 @@ from tests.support.mixins import SaltReturnAssertsMixin
 from tests.support.unit import skipIf
 
 try:
-    import pwd
     import grp
+    import pwd
 except ImportError:
     pwd, grp = None, None
 
@@ -72,6 +74,10 @@ class UserAuthTest(ModuleCase, SaltReturnAssertsMixin, ShellCase):
         ret = self.run_state("user.absent", name=self.user)
         self.assertSaltTrueReturn(ret)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_pam_auth_valid_user(self):
         """
         test that pam auth mechanism works with a valid user
@@ -92,6 +98,9 @@ class UserAuthTest(ModuleCase, SaltReturnAssertsMixin, ShellCase):
         log.debug("resp = %s", resp)
         self.assertIn("minion", [r.strip(": ") for r in resp])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_pam_auth_invalid_user(self):
         """
         test pam auth mechanism errors for an invalid user
@@ -135,6 +144,10 @@ class GroupAuthTest(ModuleCase, SaltReturnAssertsMixin, ShellCase):
         self.assertSaltTrueReturn(ret0)
         self.assertSaltTrueReturn(ret1)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_pam_auth_valid_group(self):
         """
         test that pam auth mechanism works for a valid group

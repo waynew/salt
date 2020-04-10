@@ -6,11 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.launchctl_service as launchctl
+import pytest
 import salt.utils.stringutils
 
 # Import Salt Libs
 from salt.ext import six
+from salt.modules import launchctl_service as launchctl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -103,6 +104,7 @@ class LaunchctlTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(launchctl, "_service_by_name", return_value=None):
             self.assertFalse(launchctl.stop("job_label"))
 
+    @pytest.mark.slow_0_01
     def test_start(self):
         """
         Test for Start the specified service
@@ -118,6 +120,7 @@ class LaunchctlTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(launchctl, "_service_by_name", return_value=None):
             self.assertFalse(launchctl.start("job_label"))
 
+    @pytest.mark.slow_0_01
     def test_restart(self):
         """
         Test for Restart the named service

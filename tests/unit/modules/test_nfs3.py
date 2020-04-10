@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.nfs3 as nfs3
+from salt.modules import nfs3
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -31,6 +33,7 @@ class NfsTestCase(TestCase, LoaderModuleMockMixin):
             exports = nfs3.list_exports()
             assert exports == {"A": [{"hosts": "B1", "options": ["23"]}]}, exports
 
+    @pytest.mark.slow_0_01
     def test_del_export(self):
         """
         Test for Remove an export

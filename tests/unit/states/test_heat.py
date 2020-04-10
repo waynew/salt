@@ -5,15 +5,16 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.file as file_
+import pytest
 import salt.modules.heat
-import salt.modules.win_file as win_file
-import salt.states.heat as heat
 import salt.utils.platform
-import salt.utils.win_dacl as dacl
 
 # Import Salt Libs
 import tests.unit.modules.test_heat
+from salt.modules import file as file_
+from salt.modules import win_file
+from salt.states import heat
+from salt.utils import win_dacl as dacl
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -60,6 +61,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
                 "salt.modules.file.check_perms", win_file.check_perms
             )
 
+    @pytest.mark.slow_0_01
     def test_heat_deployed(self):
         """
         Test salt.states.heat.deployed method
@@ -105,6 +107,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == exp_ret
 
+    @pytest.mark.slow_0_01
     def test_heat_deployed_environment(self):
         """
         Test salt.states.heat.deployed method
@@ -154,6 +157,7 @@ class HeatTestCase(TestCase, LoaderModuleMockMixin):
             )
         assert ret == exp_ret
 
+    @pytest.mark.slow_0_01
     def test_heat_deployed_environment_error(self):
         """
         Test salt.states.heat.deployed method

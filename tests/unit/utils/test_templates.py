@@ -10,6 +10,7 @@ import logging
 import os
 import sys
 
+import pytest
 import salt.utils.files
 
 # Import Salt libs
@@ -61,11 +62,13 @@ class RenderTestCase(TestCase):
         res = salt.utils.templates.render_mako_tmpl(tmpl, dict(self.context))
         self.assertEqual(res, "OK")
 
+    @pytest.mark.slow_0_01
     def test_render_mako_evaluate(self):
         tmpl = """${ "OK" }"""
         res = salt.utils.templates.render_mako_tmpl(tmpl, dict(self.context))
         self.assertEqual(res, "OK")
 
+    @pytest.mark.slow_0_01
     def test_render_mako_evaluate_multi(self):
         tmpl = """
         % if 1:
@@ -130,6 +133,7 @@ class RenderTestCase(TestCase):
         res = salt.utils.templates.render_genshi_tmpl(tmpl, dict(self.context))
         self.assertEqual(res, "<RU>OK</RU>")
 
+    @pytest.mark.slow_0_01
     def test_render_genshi_evaluate(self):
         tmpl = """<RU>${ "OK" }</RU>"""
         res = salt.utils.templates.render_genshi_tmpl(tmpl, dict(self.context))
@@ -148,6 +152,7 @@ class RenderTestCase(TestCase):
         res = salt.utils.templates.render_genshi_tmpl(tmpl, ctx)
         self.assertEqual(res, "<RU>OK</RU>")
 
+    @pytest.mark.slow_0_01
     def test_render_genshi_variable_replace(self):
         tmpl = """<RU xmlns:py="http://genshi.edgewall.org/" py:content="var">not ok</RU>"""
 
@@ -162,6 +167,7 @@ class RenderTestCase(TestCase):
         res = salt.utils.templates.render_cheetah_tmpl(tmpl, dict(self.context))
         self.assertEqual(res, "OK")
 
+    @pytest.mark.slow_0_01
     def test_render_cheetah_evaluate(self):
         tmpl = """<%="OK"%>"""
         res = salt.utils.templates.render_cheetah_tmpl(tmpl, dict(self.context))
@@ -177,6 +183,7 @@ class RenderTestCase(TestCase):
         stripped = res.strip()
         self.assertEqual(stripped, "OK")
 
+    @pytest.mark.slow_0_01
     def test_render_cheetah_evaluate_text(self):
         tmpl = """
         #if 1
@@ -219,6 +226,7 @@ class WrapRenderTestCase(TestCase):
         assert render.context["tpldir"] == "foo/bar", render.context["tpldir"]
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
     def test_wrap_issue_56119_b(self, tempdir):
         slsfile = os.path.join(tempdir, "foo")
         with salt.utils.files.fopen(slsfile, "w") as fp:

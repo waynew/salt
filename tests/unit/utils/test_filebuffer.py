@@ -12,6 +12,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import salt libs
 from salt.utils.filebuffer import BufferedReader, InvalidFileMode
 from tests.support.paths import BASE_FILES
@@ -21,6 +23,7 @@ from tests.support.unit import TestCase
 
 
 class TestFileBuffer(TestCase):
+    @pytest.mark.slow_0_01
     def test_read_only_mode(self):
         with self.assertRaises(InvalidFileMode):
             BufferedReader("/tmp/foo", mode="a")

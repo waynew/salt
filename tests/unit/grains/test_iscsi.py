@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import errno
 import textwrap
 
+import pytest
+
 # Import Salt Libs
-import salt.grains.iscsi as iscsi
+from salt.grains import iscsi
 from tests.support.mock import MagicMock, mock_open, patch
 
 # Import Salt Testing Libs
@@ -47,6 +49,7 @@ class IscsiGrainsTestCase(TestCase):
 
         self.assertEqual(_grains.get("iscsi_iqn"), ["iqn.localhost.hostid.7f000001"])
 
+    @pytest.mark.slow_0_01
     def test_linux_iscsi_iqn_grains(self):
         _iscsi_file = textwrap.dedent(
             """\

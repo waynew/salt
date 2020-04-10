@@ -14,6 +14,8 @@ import stat
 import sys
 import tempfile
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.platform
@@ -60,6 +62,7 @@ class TestVerify(TestCase):
         opts = {"pki_dir": "/tmp/whatever"}
         self.assertFalse(valid_id(opts, None))
 
+    @pytest.mark.slow_0_01
     def test_valid_id_pathsep(self):
         """
         Path separators in id should make it invalid
@@ -70,6 +73,7 @@ class TestVerify(TestCase):
         for pathsep in ("/", "\\"):
             self.assertFalse(valid_id(opts, pathsep.join(("..", "foobar"))))
 
+    @pytest.mark.slow_0_01
     def test_zmq_verify(self):
         self.assertTrue(zmq_version())
 
@@ -82,6 +86,7 @@ class TestVerify(TestCase):
     def test_user(self):
         self.assertTrue(check_user(getpass.getuser()))
 
+    @pytest.mark.slow_0_01
     def test_no_user(self):
         # Catch sys.stderr here since no logging is configured and
         # check_user WILL write to sys.stderr
@@ -107,6 +112,7 @@ class TestVerify(TestCase):
             sys.stderr.write(writer.output)
 
     @skipIf(salt.utils.platform.is_windows(), "No verify_env Windows")
+    @pytest.mark.slow_0_01
     def test_verify_env(self):
         root_dir = tempfile.mkdtemp(dir=RUNTIME_VARS.TMP)
         var_dir = os.path.join(root_dir, "var", "log", "salt")
@@ -136,6 +142,8 @@ class TestVerify(TestCase):
                 # not support IPv6.
                 pass
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_max_open_files(self):
         with TstSuiteLoggingHandler() as handler:
             logmsg_dbg = "DEBUG:This salt-master instance has accepted {0} minion keys."
@@ -254,6 +262,8 @@ class TestVerify(TestCase):
                     resource.setrlimit(resource.RLIMIT_NOFILE, (mof_s, mof_h))
                 shutil.rmtree(tempdir)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_verify_log(self):
         """
         Test that verify_log works as expected

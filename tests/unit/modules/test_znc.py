@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.znc as znc
+from salt.modules import znc
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -59,6 +61,7 @@ class ZncTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'rehashconf' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_rehashconf(self):
         """
         Tests rehash the active configuration state from config file

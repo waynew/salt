@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.purefb as purefb
+from salt.modules import purefb
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -51,6 +53,7 @@ class PureFBTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(purefb, "fs_extend", return_value=True):
             self.assertEqual(purefb.fs_extend("test", "33G"), True)
 
+    @pytest.mark.slow_0_01
     def test_snap_create(self):
         """
         Test for creation of a filesystem snapshot
@@ -65,6 +68,7 @@ class PureFBTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(purefb, "snap_delete", return_value=True):
             self.assertEqual(purefb.snap_delete("test", suffix="suffix"), True)
 
+    @pytest.mark.slow_0_01
     def test_snap_eradicate(self):
         """
         Test for eradication of a deleted filesystem snapshot

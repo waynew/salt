@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.data as data
+from salt.modules import data
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class DataTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'clear' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_clear(self):
         """
         Test if it clear out all of the data in the minion datastore
@@ -34,6 +37,7 @@ class DataTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'load' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_load(self):
         """
         Test if it return all of the data in the minion datastore
@@ -115,6 +119,7 @@ class DataTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertFalse(data.cas("salt3", "SALT", "SALTSTACK"))
 
+    @pytest.mark.slow_0_01
     def test_cas_not_equal(self):
         """
         Test if it check and set a value in the minion datastore

@@ -13,6 +13,8 @@ import functools
 import logging
 import os
 
+import pytest
+
 # Import salt libs
 import salt.config
 import salt.loader
@@ -783,6 +785,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         Should be a bool or converted to one
         """
 
+    @pytest.mark.slow_0_01
     def test_binds(self):
         """
         Test the "binds" kwarg. Any volumes not defined in the "volumes" kwarg
@@ -813,6 +816,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         )
 
     @assert_int(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_blkio_weight(self):
         """
         Should be an int or converted to one
@@ -869,6 +873,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_cmd(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_command(self):
         """
         Can either be a string or a comma-separated or Python list of strings.
@@ -893,6 +898,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_int(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_cpu_period(self):
         """
         Should be an int or converted to one
@@ -911,6 +917,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_device_rates(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_device_read_bps(self):
         """
         CLI input is a list of PATH:RATE pairs, but the API expects a list of
@@ -925,6 +932,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_device_rates(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_device_write_bps(self):
         """
         CLI input is a list of PATH:RATE pairs, but the API expects a list of
@@ -956,6 +964,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         Should be a list of strings or converted to one
         """
 
+    @pytest.mark.slow_0_01
     def test_dns(self):
         """
         While this is a stringlist, it also supports IP address validation, so
@@ -991,6 +1000,7 @@ class TranslateContainerInputTestCase(TranslateBase):
             )
 
     @assert_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_domainname(self):
         """
         Should be a list of strings or converted to one
@@ -1058,6 +1068,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_ipc_mode(self):
         """
         Should be a string or converted to one
@@ -1083,6 +1094,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         ultimately end up as a dictionary.
         """
 
+    @pytest.mark.slow_0_01
     def test_log_config(self):
         """
         This is a mixture of log_driver and log_opt, which get combined into a
@@ -1135,6 +1147,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_int_or_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_mem_limit(self):
         """
         Should be a string or converted to one
@@ -1183,6 +1196,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_pid_mode(self):
         """
         Should be a string or converted to one
@@ -1194,6 +1208,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         Should be an int or converted to one
         """
 
+    @pytest.mark.slow_0_01
     def test_port_bindings(self):
         """
         This has several potential formats and can include port ranges. It
@@ -1532,6 +1547,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         Should be a bool or converted to one
         """
 
+    @pytest.mark.slow_0_01
     def test_restart_policy(self):
         """
         Input is in the format "name[:retry_count]", but the API wants it
@@ -1596,6 +1612,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_stop_signal(self):
         """
         Should be a string or converted to one
@@ -1634,6 +1651,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         Should be a bool or converted to one
         """
 
+    @pytest.mark.slow_0_01
     def test_ulimits(self):
         """
         Input is in the format "name=soft_limit[:hard_limit]", but the API
@@ -1730,6 +1748,7 @@ class TranslateContainerInputTestCase(TranslateBase):
         """
 
     @assert_string(salt.utils.docker.translate.container)
+    @pytest.mark.slow_0_01
     def test_working_dir(self):
         """
         Should be a single absolute path
@@ -1763,6 +1782,7 @@ class TranslateNetworkInputTestCase(TranslateBase):
         """
 
     @assert_key_equals_value(salt.utils.docker.translate.network)
+    @pytest.mark.slow_0_01
     def test_options(self):
         """
         Can be passed in several formats but must end up as a dictionary
@@ -1893,6 +1913,7 @@ class TranslateNetworkInputTestCase(TranslateBase):
         """
 
     @assert_subnet(salt.utils.docker.translate.network)
+    @pytest.mark.slow_0_01
     def test_iprange(self):
         """
         Must be an IPv4 or IPv6 subnet
@@ -1931,6 +1952,7 @@ class TranslateNetworkInputTestCase(TranslateBase):
             )
 
     @assert_key_equals_value(salt.utils.docker.translate.network)
+    @pytest.mark.slow_0_01
     def test_aux_addresses(self):
         """
         Must be a mapping of hostnames to IP addresses

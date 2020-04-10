@@ -9,8 +9,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.win_pki as win_pki
+from salt.modules import win_pki
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -108,6 +110,7 @@ class WinPkiTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(win_pki.get_certs(), CERTS)
 
+    @pytest.mark.slow_0_01
     def test_get_cert_file(self):
         """
         Test - Get the details of the certificate file.

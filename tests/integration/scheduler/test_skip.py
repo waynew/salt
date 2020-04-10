@@ -7,10 +7,11 @@ import copy
 import logging
 import os
 
-import dateutil.parser as dateutil_parser
+import pytest
 
 # Import Salt libs
 import salt.utils.schedule
+from dateutil import parser as dateutil_parser
 from salt.modules.test import ping
 
 # Import Salt Testing libs
@@ -47,6 +48,9 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         self.schedule.reset()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_skip(self):
         """
         verify that scheduled job is skipped at the specified time
@@ -86,6 +90,9 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_skip_during_range(self):
         """
         verify that scheduled job is skipped during the specified range
@@ -126,6 +133,7 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
     def test_skip_during_range_invalid_datestring(self):
         """
         verify that scheduled job is not not and returns the right error string
@@ -187,6 +195,9 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
         ).format(job_name2)
         self.assertEqual(ret["_error"], _expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_skip_during_range_global(self):
         """
         verify that scheduled job is skipped during the specified range
@@ -224,6 +235,9 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_run_after_skip_range(self):
         """
         verify that scheduled job is skipped during the specified range
@@ -260,6 +274,9 @@ class SchedulerSkipTest(ModuleCase, SaltReturnAssertsMixin):
         ret = self.schedule.job_status(job_name)
         self.assertEqual(ret["_last_run"], run_time)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_run_seconds_skip(self):
         """
         verify that scheduled job is skipped during the specified range

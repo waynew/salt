@@ -5,12 +5,14 @@ from __future__ import absolute_import
 
 import textwrap
 
-# Import Salt Libs
-import salt.modules.parallels as parallels
+import pytest
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 
 # Import third party libs
 from salt.ext import six
+
+# Import Salt Libs
+from salt.modules import parallels
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -147,6 +149,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 cap_fcn.assert_called_once_with(cap_cmd, runas=runas)
 
+    @pytest.mark.slow_0_01
     def test_list_vms(self):
         """
         Test parallels.list_vms
@@ -246,6 +249,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(parallels, "list_vms", mock_list):
             self.assertFalse(parallels.exists("winvm", runas=runas))
 
+    @pytest.mark.slow_0_01
     def test_start(self):
         """
         Test parallels.start
@@ -327,6 +331,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
                 "exec", [name, "find", "/etc/paths.d"], runas=runas
             )
 
+    @pytest.mark.slow_0_01
     def test_snapshot_id_to_name(self):
         """
         Test parallels.snapshot_id_to_name
@@ -437,6 +442,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
                     strict=True,
                 )
 
+    @pytest.mark.slow_0_01
     def test__validate_snap_name(self):
         """
         Test parallels._validate_snap_name
@@ -479,6 +485,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
                 name, u"e_ν", strict=False, runas=None
             )
 
+    @pytest.mark.slow_0_01
     def test_list_snapshots(self):
         """
         Test parallels.list_snapshots
@@ -529,6 +536,7 @@ class ParallelsTestCase(TestCase, LoaderModuleMockMixin):
                     self.assertIn(snap_name, ret)
                 mock_prlctl.assert_called_once_with("snapshot-list", [name], runas=None)
 
+    @pytest.mark.slow_0_01
     def test_snapshot(self):
         """
         Test parallels.snapshot

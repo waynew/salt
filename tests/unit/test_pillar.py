@@ -13,6 +13,7 @@ from __future__ import absolute_import
 import shutil
 import tempfile
 
+import pytest
 import salt.exceptions
 
 # Import salt libs
@@ -63,6 +64,7 @@ class PillarTestCase(TestCase):
             except AttributeError:
                 continue
 
+    @pytest.mark.slow_0_01
     def test_pillarenv_from_saltenv(self):
         with patch("salt.pillar.compile_template") as compile_template:
             opts = {
@@ -83,6 +85,7 @@ class PillarTestCase(TestCase):
             self.assertEqual(pillar.opts["saltenv"], "dev")
             self.assertEqual(pillar.opts["pillarenv"], "dev")
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_no_extra_minion_data_val_dict(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -125,6 +128,7 @@ class PillarTestCase(TestCase):
             "mocked-minion", "fake_pillar", arg="foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_no_extra_minion_data_val_list(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -163,6 +167,7 @@ class PillarTestCase(TestCase):
             "mocked-minion", "fake_pillar", "foo"
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_no_extra_minion_data_val_elem(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -201,6 +206,7 @@ class PillarTestCase(TestCase):
             "mocked-minion", "fake_pillar", "fake_val"
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_with_extra_minion_data_val_dict(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -248,6 +254,7 @@ class PillarTestCase(TestCase):
             extra_minion_data={"fake_key": "foo"},
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_with_extra_minion_data_val_list(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -288,6 +295,7 @@ class PillarTestCase(TestCase):
             "mocked-minion", "fake_pillar", "bar", extra_minion_data={"fake_key": "foo"}
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_with_extra_minion_data_val_elem(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -328,6 +336,7 @@ class PillarTestCase(TestCase):
             "mocked-minion", "fake_pillar", "bar", extra_minion_data={"fake_key": "foo"}
         )
 
+    @pytest.mark.slow_0_01
     def test_ext_pillar_first(self):
         """
         test when using ext_pillar and ext_pillar_first
@@ -377,6 +386,8 @@ class PillarTestCase(TestCase):
         finally:
             shutil.rmtree(tempdir, ignore_errors=True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_dynamic_pillarenv(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -397,6 +408,7 @@ class PillarTestCase(TestCase):
             {"base": ["/srv/pillar/base"], "dev": ["/srv/pillar/__env__"]},
         )
 
+    @pytest.mark.slow_0_01
     def test_ignored_dynamic_pillarenv(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -415,6 +427,8 @@ class PillarTestCase(TestCase):
         self.assertEqual(pillar.opts["pillar_roots"], {"base": ["/srv/pillar/base"]})
 
     @patch("salt.fileclient.Client.list_states")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_malformed_pillar_sls(self, mock_list_states):
         with patch("salt.pillar.compile_template") as compile_template:
             opts = {
@@ -527,6 +541,8 @@ class PillarTestCase(TestCase):
                 ({"foo": "bar", "nested": {"level": {"foo": "bar2"}}}, []),
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_includes_override_sls(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -590,6 +606,8 @@ class PillarTestCase(TestCase):
                 pillar.render_pillar({"base": ["foo.sls"]}), ({"foo": "bar"}, [])
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_topfile_order(self):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -739,6 +757,8 @@ generic:
         }
 
     @with_tempdir()
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_include(self, tempdir):
         opts = {
             "optimization_order": [0, 1, 2],
@@ -951,6 +971,7 @@ class RemotePillarTestCase(TestCase):
         pillar = salt.pillar.RemotePillar(opts, self.grains, "mocked-minion", "dev")
         self.assertEqual(pillar.pillar_override, {})
 
+    @pytest.mark.slow_0_01
     def test_malformed_add_to_pillar(self):
         opts = {
             "renderer": "json",
@@ -967,6 +988,7 @@ class RemotePillarTestCase(TestCase):
             excinfo.exception.strerror, "'pass_to_ext_pillars' config is malformed."
         )
 
+    @pytest.mark.slow_0_01
     def test_pillar_send_extra_minion_data_from_config(self):
         opts = {
             "renderer": "json",
@@ -1032,6 +1054,7 @@ class AsyncRemotePillarTestCase(TestCase):
             salt.pillar.RemotePillar({}, self.grains, "mocked-minion", "dev")
         mock_get_extra_minion_data.assert_called_once_with({"saltenv": "dev"})
 
+    @pytest.mark.slow_0_01
     def test_pillar_send_extra_minion_data_from_config(self):
         opts = {
             "renderer": "json",

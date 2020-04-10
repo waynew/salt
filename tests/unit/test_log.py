@@ -14,6 +14,7 @@ from __future__ import absolute_import
 
 import logging
 
+import pytest
 from salt._logging.handlers import StreamHandler
 
 # Import Salt libs
@@ -73,6 +74,7 @@ class TestLog(TestCase):
             # Remove the testing handler
             log.removeHandler(handler)
 
+    @pytest.mark.slow_0_01
     def test_exc_info_on_loglevel(self):
         def raise_exception_on_purpose():
             1 / 0  # pylint: disable=pointless-statement

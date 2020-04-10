@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.lvm as lvm
+from salt.states import lvm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -66,6 +68,7 @@ class LvmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'vg_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_vg_present(self):
         """
         Test to create an LVM volume group
@@ -109,6 +112,7 @@ class LvmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'lv_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_lv_present(self):
         """
         Test to create a new logical volume

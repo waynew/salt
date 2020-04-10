@@ -15,6 +15,8 @@ from __future__ import absolute_import
 import logging
 import os
 
+import pytest
+
 # Import Salt libs
 import salt.defaults.exitcodes
 import salt.utils.files
@@ -33,6 +35,9 @@ class SaltTest(testprogram.TestProgramCase):
     """
 
     # pylint: disable=invalid-name
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_exit_status_unknown_argument(self):
         """
         Ensure correct exit status when an unknown argument is passed to salt-run.
@@ -51,6 +56,9 @@ class SaltTest(testprogram.TestProgramCase):
         )
         # runner.shutdown() should be unnecessary since the start-up should fail
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_exit_status_correct_usage(self):
         """
         Ensure correct exit status when salt-run starts correctly.
@@ -119,6 +127,10 @@ class RetcodeTestCase(ShellCase):
         retcode = _run('test.echo "{foo: bar, success: False}"')
         assert retcode == self.error_status, retcode
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_zero_exit_code(self):
         """
         Test that a zero exit code is set when there are no errors and there is
@@ -130,6 +142,12 @@ class RetcodeTestCase(ShellCase):
         retcode = self._salt_call("test.ping")
         assert retcode == 0, retcode
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_context_retcode(self):
         """
         Test that a nonzero retcode set in the context dunder will cause the
@@ -166,6 +184,12 @@ class RetcodeTestCase(ShellCase):
         )
         assert retcode == self.state_compiler_error, retcode
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_salt_error(self):
         """
         Test that we return the expected retcode when a minion function raises
@@ -174,6 +198,10 @@ class RetcodeTestCase(ShellCase):
         self._test_error()
         self._test_error(salt_call=True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_missing_minion(self):
         """
         Test that a minion which doesn't respond results in a nonzeo exit code

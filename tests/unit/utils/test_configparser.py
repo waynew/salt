@@ -13,6 +13,7 @@ import errno
 import logging
 import os
 
+import pytest
 import salt.utils.configparser
 
 # Import salt libs
@@ -153,6 +154,7 @@ class TestGitConfigParser(TestCase):
         self.conf.set("http", "useragent", "myawesomeagent")
         self.assertEqual(self.conf.get("http", "useragent"), "myawesomeagent")
 
+    @pytest.mark.slow_0_01
     def test_add_section(self):
         """
         Test adding a section and adding an item to that section
@@ -170,6 +172,7 @@ class TestGitConfigParser(TestCase):
         self.conf.set("http", "sslVerify", "true")
         self.assertEqual(self.conf.get("http", "sslverify"), "true")
 
+    @pytest.mark.slow_0_01
     def test_set_multivar(self):
         """
         Test setting a multivar and then writing the resulting file
@@ -194,6 +197,7 @@ class TestGitConfigParser(TestCase):
         # pylint: enable=string-substitution-usage-error
         self.assertEqual(self.get_lines(self.new_config), expected)
 
+    @pytest.mark.slow_0_01
     def test_remove_option(self):
         """
         test removing an option, including all items from a multivar
@@ -254,6 +258,7 @@ class TestGitConfigParser(TestCase):
             salt.utils.configparser.NoOptionError, self.conf.get, self.remote, "fetch"
         )
 
+    @pytest.mark.slow_0_01
     def test_write(self):
         """
         Test writing using non-binary filehandle

@@ -16,6 +16,8 @@ import os
 import sys
 import warnings
 
+import pytest
+
 # Import Salt libs
 import salt.modules.cmdmod
 import salt.utils.platform
@@ -104,6 +106,9 @@ class VersionTestCase(TestCase):
             )
 
     @skipIf(not salt.utils.platform.is_linux(), "only need to run on linux")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_spelling_version_name(self):
         """
         check the spelling of the version name for the release
@@ -162,6 +167,7 @@ class VersionFuncsTestCase(TestCase):
         # Test invalid version arg
         self.assertRaises(RuntimeError, salt.utils.versions.kwargs_warn_until, {}, [])
 
+    @pytest.mark.slow_0_01
     def test_warn_until_warning_raised(self):
         # We *always* want *all* warnings thrown on this module
         warnings.filterwarnings("always", "", DeprecationWarning, __name__)
@@ -266,6 +272,7 @@ class VersionFuncsTestCase(TestCase):
                 six.text_type(recorded_warnings[0].message),
             )
 
+    @pytest.mark.slow_0_01
     def test_kwargs_warn_until_warning_raised(self):
         # We *always* want *all* warnings thrown on this module
         warnings.filterwarnings("always", "", DeprecationWarning, __name__)

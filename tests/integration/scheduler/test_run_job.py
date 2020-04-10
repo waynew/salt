@@ -7,6 +7,7 @@ import copy
 import logging
 import os
 
+import pytest
 import salt.utils.platform
 
 # Import Salt libs
@@ -54,6 +55,7 @@ class SchedulerRunJobTest(ModuleCase, SaltReturnAssertsMixin):
     def tearDown(self):
         self.schedule.reset()
 
+    @pytest.mark.slow_0_01
     def test_run_job(self):
         """
         verify that scheduled job runs

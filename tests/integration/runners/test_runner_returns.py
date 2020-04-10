@@ -10,6 +10,8 @@ import os
 import socket
 import tempfile
 
+import pytest
+
 # Import salt libs
 import salt.payload
 import salt.utils.args
@@ -77,6 +79,9 @@ class RunnerReturnsTest(ShellCase):
         self.conf.flush()
         self.conf.close()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_runner_returns_disabled(self):
         """
         Test with runner_returns enabled
@@ -97,6 +102,9 @@ class RunnerReturnsTest(ShellCase):
         )
         self.assertFalse(os.path.isfile(serialized_return))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_runner_returns_enabled(self):
         """
         Test with runner_returns enabled

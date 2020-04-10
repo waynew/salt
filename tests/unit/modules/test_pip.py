@@ -6,11 +6,12 @@ from __future__ import absolute_import
 import os
 import sys
 
-import salt.modules.pip as pip
+import pytest
 
 # Import salt libs
 import salt.utils.platform
 from salt.exceptions import CommandExecutionError
+from salt.modules import pip
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -34,6 +35,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
         ret = pip._pip_bin_env(cwd, "C:/Users/ch44d/Documents/salt/tests/pip.exe")
         self.assertEqual(ret, cwd)
 
+    @pytest.mark.slow_0_01
     def test__pip_bin_env_no_bin_env(self):
         ret = pip._pip_bin_env(None, None)
         self.assertIsNone(ret)
@@ -93,6 +95,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_multiple_pkgs_and_editables(self):
         pkgs = ["pep8", "salt"]
         editables = [
@@ -201,6 +204,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_install_with_multiple_find_links(self):
         find_links = [
             "http://g.pypi.python.org",
@@ -318,6 +322,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_install_venv(self):
         with patch("os.path") as mock_path:
 
@@ -385,6 +390,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(pip.__salt__, {"cmd.run_all": mock}):
                 self.assertRaises(IOError, pip.install, pkg, log=log_path)
 
+    @pytest.mark.slow_0_01
     def test_install_timeout_argument_in_resulting_command(self):
         # Passing an int
         pkg = "pep8"
@@ -465,6 +471,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_build_argument_in_resulting_command(self):
         pkg = "pep8"
         build = "/tmp/foo"
@@ -476,6 +483,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_target_argument_in_resulting_command(self):
         pkg = "pep8"
         target = "/tmp/foo"
@@ -516,6 +524,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_download_cache_dir_arguments_in_resulting_command(self):
         pkg = "pep8"
         cache_dir_arg_mapping = {
@@ -559,6 +568,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                         python_shell=False,
                     )
 
+    @pytest.mark.slow_0_01
     def test_install_source_argument_in_resulting_command(self):
         pkg = "pep8"
         source = "/tmp/foo"
@@ -600,6 +610,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 CommandExecutionError, pip.install, pkg, exists_action="d"
             )
 
+    @pytest.mark.slow_0_01
     def test_install_install_options_argument_in_resulting_command(self):
         install_options = ["--exec-prefix=/foo/bar", "--install-scripts=/foo/bar/bin"]
         pkg = "pep8"
@@ -642,6 +653,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_global_options_argument_in_resulting_command(self):
         global_options = ["--quiet", "--no-user-cfg"]
         pkg = "pep8"
@@ -728,6 +740,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_no_deps_argument_in_resulting_command(self):
         pkg = "pep8"
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -738,6 +751,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_no_install_argument_in_resulting_command(self):
         pkg = "pep8"
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -876,6 +890,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_install_extra_args_arguments_in_resulting_command(self):
         pkg = "pep8"
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -897,6 +912,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 expected, saltenv="base", runas=None, use_vt=False, python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_install_extra_args_arguments_recursion_error(self):
         pkg = "pep8"
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -1013,6 +1029,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_uninstall_proxy_false_argument_in_resulting_command(self):
         """
         Checking that there is no proxy set if proxy arg is set to False
@@ -1040,6 +1057,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_uninstall_log_argument_in_resulting_command(self):
         pkg = "pep8"
         log_path = "/tmp/pip-install.log"
@@ -1148,6 +1166,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     CommandExecutionError, pip.freeze,
                 )
 
+    @pytest.mark.slow_0_01
     def test_freeze_command_with_all(self):
         eggs = [
             "M2Crypto==0.21.1",
@@ -1176,6 +1195,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     CommandExecutionError, pip.freeze,
                 )
 
+    @pytest.mark.slow_0_01
     def test_list_command(self):
         eggs = [
             "M2Crypto==0.21.1",
@@ -1215,6 +1235,8 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     CommandExecutionError, pip.list_,
                 )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_list_command_with_all(self):
         eggs = [
             "M2Crypto==0.21.1",
@@ -1278,6 +1300,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertEqual(ret, {"bbfreeze-loader": "1.1.0", "bbfreeze": "1.1.0"})
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades_legacy(self):
         eggs = [
             "apache-libcloud (Current: 1.1.0 Latest: 2.2.1 [wheel])",
@@ -1302,6 +1325,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades_gt9(self):
         eggs = """[{"latest_filetype": "wheel", "version": "1.1.0", "name": "apache-libcloud", "latest_version": "2.2.1"},
                 {"latest_filetype": "wheel", "version": "1.4.1", "name": "appdirs", "latest_version": "1.4.3"},
@@ -1353,6 +1377,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_is_installed_false(self):
         eggs = [
             "M2Crypto==0.21.1",
@@ -1374,6 +1399,7 @@ class PipTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertFalse(ret)
 
+    @pytest.mark.slow_0_01
     def test_install_pre_argument_in_resulting_command(self):
         pkg = "pep8"
         # Lower than 1.4 versions don't end up with `--pre` in the resulting output

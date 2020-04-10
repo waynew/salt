@@ -3,10 +3,11 @@
 # Import Salt Testing Libs
 from __future__ import absolute_import
 
-import salt.modules.selinux as selinux
+import pytest
 
 # Import Salt libs
 from salt.exceptions import SaltInvocationError
+from salt.modules import selinux
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 from tests.support.unit import TestCase
@@ -144,6 +145,7 @@ class SelinuxModuleTestCase(TestCase, LoaderModuleMockMixin):
                 case["port"],
             )
 
+    @pytest.mark.slow_0_01
     def test_port_get_policy_parsing(self):
         """
         Test to verify that the parsing of the semanage port output into fields is correct.

@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.keystone as keystone
+from salt.states import keystone
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -24,6 +26,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'user_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_user_present(self):
         """
         Test to ensure that the keystone user is present
@@ -158,6 +161,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'tenant_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_tenant_present(self):
         """
         Test to ensures that the keystone tenant exists
@@ -249,6 +253,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'role_present' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_role_present(self):
         """
         Test to ensures that the keystone role exists
@@ -273,6 +278,7 @@ class KeystoneTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'role_absent' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_role_absent(self):
         """
         Test to ensure that the keystone role is absent.

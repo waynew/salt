@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from datetime import datetime
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.redismod as redismod
+from salt.modules import redismod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -278,6 +280,7 @@ class RedismodTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_bgrewriteaof(self):
         """
         Test to asynchronously rewrite the append-only file
@@ -332,12 +335,14 @@ class RedismodTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertEqual(redismod.expireat("key", "timestamp"), "A")
 
+    @pytest.mark.slow_0_01
     def test_flushall(self):
         """
         Test to remove all keys from all databases
         """
         self.assertEqual(redismod.flushall(), "A")
 
+    @pytest.mark.slow_0_01
     def test_flushdb(self):
         """
         Test to remove all keys from the selected database
@@ -380,6 +385,7 @@ class RedismodTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertEqual(redismod.key_type("key"), "A")
 
+    @pytest.mark.slow_0_01
     def test_lastsave(self):
         """
         Test to get the UNIX time in seconds of the last successful
@@ -393,6 +399,7 @@ class RedismodTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertEqual(redismod.llen("key"), "A")
 
+    @pytest.mark.slow_0_01
     def test_lrange(self):
         """
         Test to get a range of values from a list in Redis

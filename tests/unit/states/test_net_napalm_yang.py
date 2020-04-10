@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.net_napalm_yang as netyang
+from salt.states import net_napalm_yang as netyang
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -20,6 +22,7 @@ class NetyangTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {netyang: {}}
 
+    @pytest.mark.slow_0_01
     def test_managed(self):
         ret = {"changes": {}, "comment": "Loaded.", "name": "test", "result": False}
         parse = MagicMock(return_value="abcdef")

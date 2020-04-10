@@ -6,6 +6,8 @@ Tests for salt.utils.yamlencoding
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.yaml
 import salt.utils.yamlencoding
@@ -13,6 +15,7 @@ from tests.support.unit import TestCase
 
 
 class YamlEncodingTestCase(TestCase):
+    @pytest.mark.slow_0_01
     def test_yaml_dquote(self):
         for teststr in (r'"\ []{}"',):
             self.assertEqual(
@@ -32,6 +35,7 @@ class YamlEncodingTestCase(TestCase):
         teststr = "'" * 100
         self.assertNotIn("\n", salt.utils.yamlencoding.yaml_squote(teststr))
 
+    @pytest.mark.slow_0_01
     def test_yaml_encode(self):
         for testobj in (
             None,

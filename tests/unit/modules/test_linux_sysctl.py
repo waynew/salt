@@ -6,10 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.linux_sysctl as linux_sysctl
-import salt.modules.systemd_service as systemd
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import linux_sysctl
+from salt.modules import systemd_service as systemd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -86,6 +88,7 @@ class LinuxSysctlTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(linux_sysctl.__salt__, {"cmd.run_all": mock_cmd}):
                 self.assertEqual(linux_sysctl.assign("net.ipv4.ip_forward", 1), ret)
 
+    @pytest.mark.slow_0_01
     def test_persist_no_conf_failure(self):
         """
         Tests adding of config file failure
@@ -144,6 +147,7 @@ class LinuxSysctlTestCase(TestCase, LoaderModuleMockMixin):
                 writes = m_open.write_calls()
                 assert writes == ["#\n# Kernel sysctl configuration\n#\n"], writes
 
+    @pytest.mark.slow_0_01
     def test_persist_read_conf_success(self):
         """
         Tests sysctl.conf read success

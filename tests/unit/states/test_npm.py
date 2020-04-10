@@ -5,9 +5,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.states.npm as npm
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.states import npm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'installed' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_installed(self):
         """
         Test to verify that the given package is installed
@@ -105,6 +108,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'bootstrap' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_bootstrap(self):
         """
         Test to bootstraps a node.js application.
@@ -131,6 +135,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'bootstrap' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_cache_cleaned(self):
         """
         Test to verify that the npm cache is cleaned.

@@ -10,9 +10,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import re
 
-# Import salt libs
-import salt.modules.portage_config as portage_config
+import pytest
 import salt.utils.files
+
+# Import salt libs
+from salt.modules import portage_config
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -60,6 +62,7 @@ class PortageConfigTestCase(TestCase, LoaderModuleMockMixin):
             self.addCleanup(delattr, self, "portage")
             return {portage_config: {"portage": self.portage}}
 
+    @pytest.mark.slow_0_01
     def test_get_config_file_wildcards(self):
         pairs = [
             ("*/*::repo", "/etc/portage/package.mask/repo"),
@@ -72,6 +75,8 @@ class PortageConfigTestCase(TestCase, LoaderModuleMockMixin):
         for (atom, expected) in pairs:
             self.assertEqual(portage_config._get_config_file("mask", atom), expected)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_enforce_nice_config(self):
         atoms = [
             ("*/*::repo", "repo"),

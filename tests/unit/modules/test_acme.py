@@ -12,10 +12,12 @@ import os
 # Import Python libs
 import textwrap
 
-# Import Salt Module
-import salt.modules.acme as acme
+import pytest
 import salt.utils.dictupdate
 from salt.exceptions import SaltInvocationError
+
+# Import Salt Module
+from salt.modules import acme
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -45,6 +47,8 @@ class AcmeTestCase(TestCase, LoaderModuleMockMixin):
         ), patch("os.path.isdir", side_effect=[False, True, True]):
             self.assertEqual(acme.certs(), ["test_expired", "test_valid"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_has(self):
         """
         Test checking if certificate (does not) exist.
@@ -99,6 +103,7 @@ class AcmeTestCase(TestCase, LoaderModuleMockMixin):
                 SaltInvocationError, acme.needs_renewal, "test_valid", window="foo"
             )
 
+    @pytest.mark.slow_0_01
     def test_expires(self):
         """
         Test if expires function functions properly.
@@ -189,6 +194,7 @@ class AcmeTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertEqual(acme.info("test"), {"text": "foo"})
 
+    @pytest.mark.slow_0_01
     def test_cert(self):
         """
         Test certificate retrieval/renewal

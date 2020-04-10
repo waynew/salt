@@ -6,11 +6,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.pagerduty as pagerduty
+import pytest
 
 # Import Salt Libs
 import salt.utils.json
 import salt.utils.pagerduty
+from salt.modules import pagerduty
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -28,6 +29,7 @@ class PagerdutyTestCase(TestCase, LoaderModuleMockMixin):
             pagerduty: {"__salt__": {"config.option": MagicMock(return_value=None)}}
         }
 
+    @pytest.mark.slow_0_01
     def test_list_services(self):
         """
         Test for List services belonging to this account
@@ -70,6 +72,7 @@ class PagerdutyTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(salt.utils.pagerduty, "list_items", return_value="A"):
             self.assertEqual(pagerduty.list_policies(), "A")
 
+    @pytest.mark.slow_0_01
     def test_create_event(self):
         """
         Test for Create an event in PagerDuty. Designed for use in states.

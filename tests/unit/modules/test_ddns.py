@@ -7,10 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import textwrap
 
-import salt.modules.ddns as ddns
+import pytest
 
 # Import Salt Libs
 import salt.utils.json
+from salt.modules import ddns
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +48,7 @@ class DDNSTestCase(TestCase, LoaderModuleMockMixin):
             ddns_update.return_value = True
             self.assertTrue(ddns.add_host(zone="A", name="B", ttl=1, ip="172.27.0.0"))
 
+    @pytest.mark.slow_0_01
     def test_delete_host(self):
         """
         Tests for delete the forward and reverse records for a host.
@@ -57,6 +59,7 @@ class DDNSTestCase(TestCase, LoaderModuleMockMixin):
                 mock.answer = [{"address": "localhost"}]
                 self.assertFalse(ddns.delete_host(zone="A", name="B"))
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         """
         Test to add, replace, or update a DNS record.

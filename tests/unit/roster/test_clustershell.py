@@ -5,6 +5,7 @@ unit tests for clustershell roster
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing libraries
@@ -28,6 +29,7 @@ class ClusterShellTestCase(TestCase):
     Test cases for clustershell roster
     """
 
+    @pytest.mark.slow_0_01
     def test_targets(self):
         mock_socket = MagicMock()
         mock_nodeset = MagicMock()
@@ -46,6 +48,7 @@ class ClusterShellTestCase(TestCase):
                 # Reimports are necessary to re-init the namespace.
                 # pylint: disable=unused-import
                 import socket
+
                 from ClusterShell.NodeSet import NodeSet
 
                 # pylint: enable=unused-import

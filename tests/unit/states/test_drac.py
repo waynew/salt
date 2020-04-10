@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.drac as drac
+from salt.states import drac
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class DracTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'network' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_network(self):
         """
         Test to ensure the DRAC network settings are consistent

@@ -12,6 +12,7 @@ import os
 import socket
 import threading
 
+import pytest
 import salt.config
 import salt.exceptions
 import salt.ext.tornado.gen
@@ -128,6 +129,8 @@ class IPCMessageClient(BaseIPCReqCase):
         self.wait()
         self.assertEqual(self.payloads[0], msg)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_many_send(self):
         msgs = []
         self.server_channel.stream_handler = MagicMock()
@@ -141,6 +144,7 @@ class IPCMessageClient(BaseIPCReqCase):
         self.wait()
         self.assertEqual(self.payloads[:-1], msgs)
 
+    @pytest.mark.slow_0_01
     def test_very_big_message(self):
         long_str = "".join([six.text_type(num) for num in range(10 ** 5)])
         msg = {"long_str": long_str, "stop": True}

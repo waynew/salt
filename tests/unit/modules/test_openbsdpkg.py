@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.openbsdpkg as openbsdpkg
+from salt.modules import openbsdpkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -66,6 +68,7 @@ class OpenbsdpkgTestCase(TestCase, LoaderModuleMockMixin):
             "pkg_info -q -a", output_loglevel="trace"
         )
 
+    @pytest.mark.slow_0_01
     def test_install_pkgs(self):
         """
         Test package install behavior for the following conditions:
@@ -127,6 +130,7 @@ class OpenbsdpkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch("salt.modules.openbsdpkg.latest_version", ret):
             self.assertFalse(openbsdpkg.upgrade_available("zsh"))
 
+    @pytest.mark.slow_0_01
     def test_upgrade(self):
         """
         Test upgrading packages.

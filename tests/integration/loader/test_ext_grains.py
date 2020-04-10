@@ -12,6 +12,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import time
 
+import pytest
+
 # Import salt libs
 import salt.config
 import salt.loader
@@ -32,6 +34,12 @@ class LoaderGrainsTest(ModuleCase):
     #    self.opts['disable_modules'] = ['pillar']
     #    self.opts['grains'] = grains(self.opts)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_grains_overwrite(self):
         # Force a grains sync
         self.run_function("saltutil.sync_grains")

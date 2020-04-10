@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.event as event
+from salt.states import event
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class EventTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {event: {}}
 
+    @pytest.mark.slow_0_01
     def test_send(self):
         """
             Test to send an event to the Salt Master

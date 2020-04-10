@@ -5,6 +5,8 @@ from __future__ import absolute_import, unicode_literals
 
 import sys
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.minions
 from tests.support.mock import MagicMock, patch
@@ -82,6 +84,7 @@ class CkMinionsTestCase(TestCase):
     def setUp(self):
         self.ckminions = salt.utils.minions.CkMinions({"minion_data_cache": True})
 
+    @pytest.mark.slow_0_01
     def test_spec_check(self):
         # Test spec-only rule
         auth_list = ["@runner"]
@@ -268,6 +271,7 @@ class CkMinionsTestCase(TestCase):
         "salt.utils.minions.CkMinions._pki_minions",
         MagicMock(return_value=["alpha", "beta", "gamma"]),
     )
+    @pytest.mark.slow_0_01
     def test_auth_check(self):
         # Test function-only rule
         auth_list = ["test.ping"]
@@ -414,6 +418,7 @@ class TargetParseTestCase(TestCase):
         ret = salt.utils.minions.parse_target(e_tgt)
         self.assertDictEqual(ret, {"engine": "E", "pattern": "a:b", "delimiter": None})
 
+    @pytest.mark.slow_0_01
     def test_parse_range_target(self):
         """
         Ensure proper parsing for range matching

@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.keyboard as keyboard
+from salt.modules import keyboard
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -25,6 +27,7 @@ class KeyboardTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'get_sys' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_get_sys(self):
         """
         Test if it get current system keyboard setting
@@ -36,6 +39,7 @@ class KeyboardTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'set_sys' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_set_sys(self):
         """
         Test if it set current system keyboard setting

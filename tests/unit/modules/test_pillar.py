@@ -3,10 +3,11 @@
 # Import Python libs
 from __future__ import absolute_import
 
-import salt.modules.pillar as pillarmod
+import pytest
 
 # Import Salt libs
 from salt.ext import six
+from salt.modules import pillar as pillarmod
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing libs
@@ -21,6 +22,7 @@ class PillarModuleTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {pillarmod: {}}
 
+    @pytest.mark.slow_0_01
     def test_obfuscate_inner_recursion(self):
         self.assertEqual(
             pillarmod._obfuscate_inner(
@@ -51,6 +53,7 @@ class PillarModuleTestCase(TestCase, LoaderModuleMockMixin):
             else:
                 self.assertEqual(ls, ["a", "b"])
 
+    @pytest.mark.slow_0_01
     def test_pillar_get_default_merge(self):
         defaults = {
             "int": 1,

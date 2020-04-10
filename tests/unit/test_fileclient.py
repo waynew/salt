@@ -11,6 +11,8 @@ import logging
 import os
 import shutil
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 from salt import fileclient
@@ -45,6 +47,7 @@ class FileclientTestCase(TestCase):
 
         return Mock(side_effect=_side_effect)
 
+    @pytest.mark.slow_0_01
     def test_cache_skips_makedirs_on_race_condition(self):
         """
         If cache contains already a directory, do not raise an exception.
@@ -59,6 +62,7 @@ class FileclientTestCase(TestCase):
                             ["__test__", "files", "base", "testfile"]
                         )
 
+    @pytest.mark.slow_0_01
     def test_cache_raises_exception_on_non_eexist_ioerror(self):
         """
         If makedirs raises other than EEXIST errno, an exception should be raised.
@@ -71,6 +75,8 @@ class FileclientTestCase(TestCase):
                     ) as c_ref_itr:
                         assert c_ref_itr == "/__test__/files/base/testfile"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_extrn_path_with_long_filename(self):
         safe_file_name = os.path.split(
             fileclient.Client(self.opts)._extrn_path(
@@ -126,6 +132,7 @@ class FileClientTest(
     def tearDown(self):
         del self.file_client
 
+    @pytest.mark.slow_0_01
     def test_file_list_emptydirs(self):
         """
         Ensure that the fileclient class won't allow a direct call to file_list_emptydirs()
@@ -133,6 +140,7 @@ class FileClientTest(
         with self.assertRaises(NotImplementedError):
             self.file_client.file_list_emptydirs()
 
+    @pytest.mark.slow_0_01
     def test_get_file(self):
         """
         Ensure that the fileclient class won't allow a direct call to get_file()
@@ -140,6 +148,8 @@ class FileClientTest(
         with self.assertRaises(NotImplementedError):
             self.file_client.get_file(None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_get_file_client(self):
         minion_opts = self.get_temp_config("minion")
         minion_opts["file_client"] = "remote"
@@ -218,6 +228,8 @@ class FileclientCacheTest(
         # Create the CACHE_ROOT
         _new_dir(self.CACHE_ROOT)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_cache_dir(self):
         """
         Ensure entire directory is cached to correct location
@@ -256,6 +268,8 @@ class FileclientCacheTest(
                     self.assertTrue(SUBDIR in content)
                     self.assertTrue(saltenv in content)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_cache_dir_with_alternate_cachedir_and_absolute_path(self):
         """
         Ensure entire directory is cached to correct location when an alternate
@@ -292,6 +306,8 @@ class FileclientCacheTest(
                     self.assertTrue(SUBDIR in content)
                     self.assertTrue(saltenv in content)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_cache_dir_with_alternate_cachedir_and_relative_path(self):
         """
         Ensure entire directory is cached to correct location when an alternate
@@ -333,6 +349,7 @@ class FileclientCacheTest(
                     self.assertTrue(SUBDIR in content)
                     self.assertTrue(saltenv in content)
 
+    @pytest.mark.slow_0_01
     def test_cache_file(self):
         """
         Ensure file is cached to correct location
@@ -362,6 +379,7 @@ class FileclientCacheTest(
                 log.debug("content = %s", content)
                 self.assertTrue(saltenv in content)
 
+    @pytest.mark.slow_0_01
     def test_cache_file_with_alternate_cachedir_and_absolute_path(self):
         """
         Ensure file is cached to correct location when an alternate cachedir is
@@ -391,6 +409,7 @@ class FileclientCacheTest(
                 log.debug("content = %s", content)
                 self.assertTrue(saltenv in content)
 
+    @pytest.mark.slow_0_01
     def test_cache_file_with_alternate_cachedir_and_relative_path(self):
         """
         Ensure file is cached to correct location when an alternate cachedir is

@@ -12,9 +12,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 
-# Import salt libs
-import salt.modules.virtualenv_mod as virtualenv_mod
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import salt libs
+from salt.modules import virtualenv_mod
 from tests.support.helpers import ForceImportErrorOn, TstSuiteLoggingHandler
 
 # Import Salt Testing libs
@@ -44,6 +46,7 @@ class VirtualenvTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_issue_6029_deprecated_distribute(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
 
@@ -150,6 +153,7 @@ class VirtualenvTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_unapplicable_options(self):
         # ----- Virtualenv using pyvenv options ----------------------------->
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
@@ -285,6 +289,7 @@ class VirtualenvTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_prompt_argument(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
         with patch.dict(virtualenv_mod.__salt__, {"cmd.run_all": mock}):
@@ -314,6 +319,7 @@ class VirtualenvTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_clear_argument(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
         with patch.dict(virtualenv_mod.__salt__, {"cmd.run_all": mock}):
@@ -359,6 +365,7 @@ class VirtualenvTestCase(TestCase, LoaderModuleMockMixin):
                 ret = virtualenv_mod.virtualenv_ver(venv_bin="pyenv")
         assert ret == (1, 9, 1)
 
+    @pytest.mark.slow_0_01
     def test_virtualenv_ver_importerror_cmd_error(self):
         """
         test virtualenv_ver when there is an ImportError

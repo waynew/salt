@@ -8,12 +8,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import textwrap
 
-import salt.modules.mount as mount
+import pytest
 
 # Import Salt Libs
 import salt.utils.files
 import salt.utils.path
 from salt.exceptions import CommandExecutionError
+from salt.modules import mount
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -31,6 +32,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {mount: {}}
 
+    @pytest.mark.slow_0_01
     def test_active(self):
         """
         List the active mounts.
@@ -96,6 +98,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(mount, "_active_mounts_aix", mock):
                 self.assertEqual(mount.active(), {})
 
+    @pytest.mark.slow_0_01
     def test_fstab(self):
         """
         List the content of the fstab
@@ -210,6 +213,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 with patch("salt.utils.files.fopen", mock_open()):
                     self.assertTrue(mount.rm_fstab("name", "device"))
 
+    @pytest.mark.slow_0_01
     def test_set_fstab(self):
         """
         Tests to verify that this mount is represented in the fstab,
@@ -257,6 +261,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(mount, "fstab", mock):
             self.assertTrue(mount.rm_automaster("name", "device"))
 
+    @pytest.mark.slow_0_01
     def test_set_automaster(self):
         """
         Verify that this mount is represented in the auto_salt, change the mount
@@ -303,6 +308,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertDictEqual(mount.automaster(), {})
 
+    @pytest.mark.slow_0_01
     def test_rm_filesystems(self):
         """
         Remove the mount point from the filesystems
@@ -336,6 +342,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
         ), patch("salt.utils.files.fopen", mock_open(read_data=file_data)):
             self.assertTrue(mount.rm_filesystems("/name", "device"))
 
+    @pytest.mark.slow_0_01
     def test_set_filesystems(self):
         """
         Tests to verify that this mount is represented in the filesystems,
@@ -356,6 +363,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                         CommandExecutionError, mount.set_filesystems, "A", "B", "C"
                     )
 
+    @pytest.mark.slow_0_01
     def test_mount(self):
         """
         Mount a device
@@ -460,6 +468,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.object(mount, "mount", mock):
                     self.assertTrue(mount.remount("name", "device"))
 
+    @pytest.mark.slow_0_01
     def test_remount_already_mounted_no_fstype(self):
         """
         Attempt to remount a device already mounted that do not provides
@@ -540,6 +549,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                         runas=None,
                     )
 
+    @pytest.mark.slow_0_01
     def test_umount(self):
         """
         Attempt to unmount a device by specifying the directory it is
@@ -561,6 +571,8 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(mount.__salt__, {"cmd.run_all": mock}):
                 self.assertTrue(mount.umount("name"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_is_fuse_exec(self):
         """
         Returns true if the command passed is a fuse mountable application
@@ -657,6 +669,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 }
             }, swaps
 
+    @pytest.mark.slow_0_01
     def test_swapon(self):
         """
         Activate a swap disk
@@ -703,6 +716,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                         mount.swapon("name"), {"stats": "name", "new": True}
                     )
 
+    @pytest.mark.slow_0_01
     def test_swapoff(self):
         """
         Deactivate a named swap mount

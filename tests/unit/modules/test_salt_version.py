@@ -6,11 +6,12 @@ Unit tests for salt/modules/salt_version.py
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.salt_version as salt_version
+import pytest
 import salt.version
 
 # Import Salt libs
 from salt.ext import six
+from salt.modules import salt_version
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing libs
@@ -86,6 +87,7 @@ class SaltVersionTestCase(TestCase):
 
     @patch("salt.version.SaltStackVersion.LNAMES", {"foo": (3000,)})
     @patch("salt.version.SaltStackVersion", MagicMock(return_value="3000.1"))
+    @pytest.mark.slow_0_01
     def test_equal_success_new_version(self):
         """
         Test that the current version is equal to the codename
@@ -120,6 +122,7 @@ class SaltVersionTestCase(TestCase):
         {"fluorine": (salt.version.MAX_SIZE - 100, 0)},
     )
     @patch("salt.version.SaltStackVersion", MagicMock(return_value="2018.3.2"))
+    @pytest.mark.slow_0_01
     def test_equal_newer_codename(self):
         """
         Test that when a newer codename is passed in, the function returns False
@@ -132,6 +135,7 @@ class SaltVersionTestCase(TestCase):
         "salt.modules.salt_version.get_release_number", MagicMock(return_value="2017.7")
     )
     @patch("salt.version.SaltStackVersion", MagicMock(return_value="2018.3.2"))
+    @pytest.mark.slow_0_01
     def test_greater_than_success(self):
         """
         Test that the current version is newer than the codename
@@ -203,6 +207,7 @@ class SaltVersionTestCase(TestCase):
 
     @patch("salt.version.SaltStackVersion", MagicMock(return_value="2018.3.2"))
     @patch("salt.version.SaltStackVersion.LNAMES", {"oxygen": (2018, 3)})
+    @pytest.mark.slow_0_01
     def test_less_than_with_equal_codename(self):
         """
         Test that when an equal codename is passed in, the function returns False.
@@ -224,6 +229,7 @@ class SaltVersionTestCase(TestCase):
         MagicMock(return_value="No version assigned."),
     )
     @patch("salt.version.SaltStackVersion", MagicMock(return_value="2018.3.2"))
+    @pytest.mark.slow_0_01
     def test_less_than_with_unassigned_codename(self):
         """
         Test that when an unassigned codename greater than the current version.

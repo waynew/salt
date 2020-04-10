@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.cpan as cpan
+from salt.modules import cpan
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -82,6 +84,7 @@ class CpanTestCase(TestCase, LoaderModuleMockMixin):
                 cpan.remove("Alloy"), {"error": "This package does not seem to exist"}
             )
 
+    @pytest.mark.slow_0_01
     def test_remove_noninstalled_error(self):
         """
         Test if it remove non installed module using cpan
@@ -90,6 +93,7 @@ class CpanTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(cpan, "show", mock):
             self.assertDictEqual(cpan.remove("Alloy"), {"new": None, "old": None})
 
+    @pytest.mark.slow_0_01
     def test_remove_nopan_error(self):
         """
         Test if it gives no cpan error while removing
@@ -133,6 +137,8 @@ class CpanTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'show_config' function tests: 1
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_show_config(self):
         """
         Test if it return a dict of CPAN configuration values

@@ -6,6 +6,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import shutil
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.user
@@ -56,9 +58,13 @@ class LinuxAclModuleTest(ModuleCase, AdaptedConfigurationTestCaseMixin):
         shutil.rmtree(self.mydir, ignore_errors=True)
         super(LinuxAclModuleTest, self).tearDown()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_version(self):
         self.assertRegex(self.run_function("acl.version"), r"\d+\.\d+\.\d+")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_getfacl_w_single_file_without_acl(self):
         ret = self.run_function("acl.getfacl", arg=[self.myfile])
         user = salt.utils.user.get_user()

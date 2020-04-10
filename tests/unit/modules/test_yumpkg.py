@@ -5,13 +5,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
-import salt.modules.pkg_resource as pkg_resource
-import salt.modules.rpm_lowpkg as rpm
-import salt.modules.yumpkg as yumpkg
+import pytest
 
 # Import Salt libs
 from salt.exceptions import CommandExecutionError
 from salt.ext import six
+from salt.modules import pkg_resource
+from salt.modules import rpm_lowpkg as rpm
+from salt.modules import yumpkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -75,6 +76,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
             pkg_resource: {},
         }
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs(self):
         """
         Test packages listing.
@@ -130,6 +132,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertTrue(pkgs.get(pkg_name))
                 self.assertEqual(pkgs[pkg_name], [pkg_version])
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs_with_attr(self):
         """
         Test packages listing with the attr parameter
@@ -393,6 +396,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                     _patch in patches["my-fake-patch-installed-1234"]["summary"]
                 )
 
+    @pytest.mark.slow_0_01
     def test_latest_version_with_options(self):
         with patch.object(yumpkg, "list_pkgs", MagicMock(return_value={})):
 
@@ -485,6 +489,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                         python_shell=False,
                     )
 
+    @pytest.mark.slow_0_01
     def test_list_repo_pkgs_with_options(self):
         """
         Test list_repo_pkgs with and without fromrepo
@@ -633,6 +638,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                         else:
                             self.fail("repo '{0}' not checked".format(repo))
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades_dnf(self):
         """
         The subcommand should be "upgrades" with dnf
@@ -686,6 +692,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades_yum(self):
         """
         The subcommand should be "updates" with yum
@@ -738,6 +745,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_refresh_db_with_options(self):
 
         with patch("salt.utils.pkg.clear_rtag", Mock()):
@@ -890,6 +898,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_install_with_options(self):
         parse_targets = MagicMock(return_value=({"foo": None}, "repository"))
         with patch.object(
@@ -961,6 +970,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                     redirect_stderr=True,
                 )
 
+    @pytest.mark.slow_0_01
     def test_install_with_epoch(self):
         """
         Tests that we properly identify a version containing an epoch as an
@@ -1078,6 +1088,7 @@ class YumTestCase(TestCase, LoaderModuleMockMixin):
                     python_shell=False,
                 )
 
+    @pytest.mark.slow_0_01
     def test_info_installed_with_all_versions(self):
         """
         Test the return information of all versions for the named package(s), installed on the system.
@@ -1192,6 +1203,7 @@ class YumUtilsTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_call_yum_default(self):
         """
         Call default Yum/Dnf.
@@ -1227,6 +1239,7 @@ class YumUtilsTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_call_yum_with_kwargs(self):
         """
         Call Yum/Dnf with the optinal keyword arguments.

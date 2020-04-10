@@ -6,10 +6,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import tempfile
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.platform
-import salt.utils.win_dacl as win_dacl
-import salt.utils.win_reg as win_reg
+from salt.utils import win_dacl, win_reg
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest, generate_random_name, patch
@@ -70,6 +71,7 @@ class WinDaclTestCase(TestCase):
         self.assertTrue(isinstance(sid_obj, pywintypes.SIDType))
         self.assertEqual(win_dacl.get_sid_string(sid_obj), "S-1-0-0")
 
+    @pytest.mark.slow_0_01
     def test_get_name(self):
         """
         Get the name
@@ -125,6 +127,7 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_primary_group(self):
         """
         Test the set_primary_group function
@@ -143,6 +146,8 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_set_permissions(self):
         """
         Test the set_permissions function
@@ -178,6 +183,8 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_permissions(self):
         """
         Test the get_permissions function
@@ -213,6 +220,7 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_has_permission(self):
         """
         Test the has_permission function
@@ -252,6 +260,7 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_rm_permissions(self):
         """
         Test the rm_permissions function
@@ -284,6 +293,7 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_inheritance(self):
         """
         Test the set_inheritance function
@@ -313,6 +323,8 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_check_perms(self):
         """
         Test the check_perms function
@@ -402,6 +414,8 @@ class WinDaclRegTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_check_perms_test_true(self):
         """
         Test the check_perms function
@@ -521,6 +535,7 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_primary_group(self):
         """
         Test the set_primary_group function
@@ -539,6 +554,8 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_set_permissions(self):
         """
         Test the set_permissions function
@@ -574,6 +591,8 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_permissions(self):
         """
         Test the get_permissions function
@@ -609,6 +628,7 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_has_permission(self):
         """
         Test the has_permission function
@@ -648,6 +668,7 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_rm_permissions(self):
         """
         Test the rm_permissions function
@@ -680,6 +701,7 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_inheritance(self):
         """
         Test the set_inheritance function
@@ -709,6 +731,8 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_check_perms(self):
         """
         Test the check_perms function
@@ -808,6 +832,8 @@ class WinDaclFileTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_check_perms_test_true(self):
         """
         Test the check_perms function

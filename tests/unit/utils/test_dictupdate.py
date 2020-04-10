@@ -5,9 +5,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
-# Import Salt libs
-import salt.utils.dictupdate as dictupdate
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import Salt libs
+from salt.utils import dictupdate
 from salt.utils.odict import OrderedDict
 
 # Import Salt Testing libs
@@ -18,6 +20,7 @@ class UtilDictupdateTestCase(TestCase):
 
     dict1 = {"A": "B", "C": {"D": "E", "F": {"G": "H", "I": "J"}}}
 
+    @pytest.mark.slow_0_01
     def test_update(self):
 
         # level 1 value changes
@@ -280,6 +283,7 @@ class UtilDeepDictUpdateTestCase(TestCase):
         res = dictupdate.extend_dict_key_value(sdict, "bar:baz", {"qux": "quux"})
         self.assertEqual({"bar": {"baz": [1, 2, 42, 42, "qux"]}}, res)
 
+    @pytest.mark.slow_0_01
     def test_deep_extend_illegal_addition(self):
         """
         Test errorhandling extending lists with illegal types.
@@ -330,6 +334,7 @@ class UtilDeepDictUpdateTestCase(TestCase):
         )
         self.assertEqual({"foo": {"bar": {"baz": {"qux": "quux"}}}}, res)
 
+    @pytest.mark.slow_0_01
     def test_deep_update_illegal_update(self):
         """
         Test errorhandling updating a (sub)dict with illegal types.

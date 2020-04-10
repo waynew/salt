@@ -9,6 +9,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import dimensiondata
 from salt.exceptions import SaltCloudSystemExit
@@ -112,6 +114,8 @@ class DimensionDataTestCase(ExtendedTestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, dimensiondata.avail_sizes, call="action")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_list_nodes_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call list_nodes
@@ -119,6 +123,7 @@ class DimensionDataTestCase(ExtendedTestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(SaltCloudSystemExit, dimensiondata.list_nodes, call="action")
 
+    @pytest.mark.slow_0_01
     def test_destroy_call(self):
         """
         Tests that a SaltCloudSystemExit is raised when trying to call destroy
@@ -131,6 +136,7 @@ class DimensionDataTestCase(ExtendedTestCase, LoaderModuleMockMixin):
     @skipIf(
         HAS_LIBCLOUD is False, "Install 'libcloud' to be able to run this unit test."
     )
+    @pytest.mark.slow_0_01
     def test_avail_sizes(self):
         """
         Tests that avail_sizes returns an empty dictionary.

@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.states.mount as mount
+from salt.states import mount
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -26,6 +28,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'mounted' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_mounted(self):
         """
         Test to verify that a device is mounted.
@@ -298,6 +301,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'swap' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_swap(self):
         """
         Test to activates a swap device.
@@ -477,6 +481,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'unmounted' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_unmounted(self):
         """
         Test to verify that a device is not mounted
@@ -607,6 +612,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertDictEqual(mount.mod_watch(name, sfun="unmount"), ret)
 
+    @pytest.mark.slow_0_01
     def test_mounted_multiple_mounts(self):
         """
         Test to verify that a device is mounted.
@@ -674,6 +680,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
         """
         assert mount._convert_to("/dev/sda1", None) == "/dev/sda1"
 
+    @pytest.mark.slow_0_01
     def test__convert_to_fast_device(self):
         """
         Test the device name conversor
@@ -723,6 +730,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
             assert mount._convert_to(uuid, "device") == "/dev/sda1"
             salt_mock["disk.blkid"].assert_called_with(token=uuid)
 
+    @pytest.mark.slow_0_01
     def test_fstab_present_macos_test_present(self):
         """
         Test fstab_present
@@ -843,6 +851,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 not_change=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_fstab_present_test_change(self):
         """
         Test fstab_present
@@ -932,6 +941,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 not_change=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_fstab_present_aix_present(self):
         """
         Test fstab_present
@@ -1051,6 +1061,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 not_change=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_fstab_present_fail(self):
         """
         Test fstab_present
@@ -1101,6 +1112,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
             assert mount.fstab_absent("/dev/sda1", "/home") == ret
             salt_mock["mount.automaster"].assert_called_with("/etc/auto_salt")
 
+    @pytest.mark.slow_0_01
     def test_fstab_absent_aix_test_absent(self):
         """
         Test fstab_absent
@@ -1141,6 +1153,7 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
             assert mount.fstab_absent("/dev/sda1", "/home") == ret
             salt_mock["mount.fstab"].assert_called_with("/etc/fstab")
 
+    @pytest.mark.slow_0_01
     def test_fstab_absent_test_present(self):
         """
         Test fstab_absent
@@ -1213,6 +1226,8 @@ class MountTestCase(TestCase, LoaderModuleMockMixin):
                 name="/home", device="/dev/sda1", config="/etc/filesystems"
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_fstab_absent_present(self):
         """
         Test fstab_absent

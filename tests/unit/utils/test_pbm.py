@@ -10,6 +10,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
 import salt.utils.pbm
 
 # Import Salt libraries
@@ -25,7 +26,7 @@ from tests.support.mock import MagicMock, PropertyMock, patch
 from tests.support.unit import TestCase, skipIf
 
 try:
-    from pyVmomi import vim, vmodl, pbm  # pylint: disable=no-name-in-module
+    from pyVmomi import pbm, vim, vmodl  # pylint: disable=no-name-in-module
 
     HAS_PYVMOMI = True
 except ImportError:
@@ -76,6 +77,7 @@ class GetProfileManagerTestCase(TestCase):
         ):
             delattr(self, attr)
 
+    @pytest.mark.slow_0_01
     def test_get_new_service_stub(self):
         mock_get_new_service_stub = MagicMock()
         with patch(
@@ -96,6 +98,8 @@ class GetProfileManagerTestCase(TestCase):
         ret = salt.utils.pbm.get_profile_manager(self.mock_si)
         self.assertEqual(ret, self.mock_prof_mgr)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_profile_manager_raises_no_permissions(self):
         exc = vim.fault.NoPermission()
         exc.privilegeId = "Fake privilege"
@@ -115,6 +119,7 @@ class GetProfileManagerTestCase(TestCase):
             salt.utils.pbm.get_profile_manager(self.mock_si)
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
     def test_profile_manager_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"
@@ -164,6 +169,7 @@ class GetPlacementSolverTestCase(TestCase):
         ):
             delattr(self, attr)
 
+    @pytest.mark.slow_0_01
     def test_get_new_service_stub(self):
         mock_get_new_service_stub = MagicMock()
         with patch(
@@ -195,6 +201,7 @@ class GetPlacementSolverTestCase(TestCase):
             "Not enough permissions. Required privilege: " "Fake privilege",
         )
 
+    @pytest.mark.slow_0_01
     def test_placement_solver_raises_vim_fault(self):
         exc = vim.fault.VimFault()
         exc.msg = "VimFault msg"
@@ -240,6 +247,7 @@ class GetCapabilityDefinitionsTestCase(TestCase):
         for attr in ("mock_res_type", "mock_cap_cats", "mock_prof_mgr"):
             delattr(self, attr)
 
+    @pytest.mark.slow_0_01
     def test_get_res_type(self):
         mock_get_res_type = MagicMock()
         with patch("salt.utils.pbm.pbm.profile.ResourceType", mock_get_res_type):
@@ -265,6 +273,7 @@ class GetCapabilityDefinitionsTestCase(TestCase):
             "Not enough permissions. Required privilege: " "Fake privilege",
         )
 
+    @pytest.mark.slow_0_01
     def test_fetch_capabilities_raises_vim_fault(self):
         exc = vim.fault.VimFault()
         exc.msg = "VimFault msg"
@@ -332,6 +341,7 @@ class GetPoliciesByIdTestCase(TestCase):
             salt.utils.pbm.get_policies_by_id(self.mock_prof_mgr, self.policy_ids)
         self.assertEqual(excinfo.exception.strerror, "RuntimeFault msg")
 
+    @pytest.mark.slow_0_01
     def test_return_policies(self):
         ret = salt.utils.pbm.get_policies_by_id(self.mock_prof_mgr, self.policy_ids)
         self.assertEqual(ret, self.mock_policies)
@@ -381,6 +391,7 @@ class GetStoragePoliciesTestCase(TestCase):
         ):
             delattr(self, attr)
 
+    @pytest.mark.slow_0_01
     def test_get_res_type(self):
         mock_get_res_type = MagicMock()
         with patch("salt.utils.pbm.pbm.profile.ResourceType", mock_get_res_type):
@@ -395,6 +406,7 @@ class GetStoragePoliciesTestCase(TestCase):
         salt.utils.pbm.get_storage_policies(self.mock_prof_mgr)
         mock_retrieve_policy_ids.assert_called_once_with(self.mock_res_type)
 
+    @pytest.mark.slow_0_01
     def test_retrieve_policy_ids_raises_no_permissions(self):
         exc = vim.fault.NoPermission()
         exc.privilegeId = "Fake privilege"
@@ -414,6 +426,7 @@ class GetStoragePoliciesTestCase(TestCase):
             salt.utils.pbm.get_storage_policies(self.mock_prof_mgr)
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
     def test_retrieve_policy_ids_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"
@@ -422,6 +435,8 @@ class GetStoragePoliciesTestCase(TestCase):
             salt.utils.pbm.get_storage_policies(self.mock_prof_mgr)
         self.assertEqual(excinfo.exception.strerror, "RuntimeFault msg")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policies_by_id(self):
         mock_get_policies_by_id = MagicMock(return_value=self.mock_policies)
         with patch("salt.utils.pbm.get_policies_by_id", mock_get_policies_by_id):
@@ -430,12 +445,14 @@ class GetStoragePoliciesTestCase(TestCase):
             self.mock_prof_mgr, self.mock_policy_ids
         )
 
+    @pytest.mark.slow_0_01
     def test_return_all_policies(self):
         ret = salt.utils.pbm.get_storage_policies(
             self.mock_prof_mgr, get_all_policies=True
         )
         self.assertEqual(ret, self.mock_policies)
 
+    @pytest.mark.slow_0_01
     def test_return_filtered_policies(self):
         ret = salt.utils.pbm.get_storage_policies(
             self.mock_prof_mgr, policy_names=["fake_policy1", "fake_policy3"]
@@ -482,6 +499,8 @@ class CreateStoragePolicyTestCase(TestCase):
             )
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_create_policy_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"
@@ -537,6 +556,8 @@ class UpdateStoragePolicyTestCase(TestCase):
             )
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_create_policy_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"
@@ -603,6 +624,7 @@ class GetDefaultStoragePolicyOfDatastoreTestCase(TestCase):
         )
         mock_query_prof.assert_called_once_with(self.mock_hub)
 
+    @pytest.mark.slow_0_01
     def test_query_default_requirement_profile_raises_no_permissions(self):
         exc = vim.fault.NoPermission()
         exc.privilegeId = "Fake privilege"
@@ -626,6 +648,7 @@ class GetDefaultStoragePolicyOfDatastoreTestCase(TestCase):
             )
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
     def test_query_default_requirement_profile_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"
@@ -636,6 +659,8 @@ class GetDefaultStoragePolicyOfDatastoreTestCase(TestCase):
             )
         self.assertEqual(excinfo.exception.strerror, "RuntimeFault msg")
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_01
     def test_get_policies_by_id(self):
         mock_get_policies_by_id = MagicMock()
         with patch("salt.utils.pbm.get_policies_by_id", mock_get_policies_by_id):
@@ -700,6 +725,7 @@ class AssignDefaultStoragePolicyToDatastoreTestCase(TestCase):
             hubId="fake_ds_moid", hubType="Datastore"
         )
 
+    @pytest.mark.slow_0_01
     def test_assign_default_requirement_profile(self):
         mock_assign_prof = MagicMock()
         self.mock_prof_mgr.AssignDefaultRequirementProfile = mock_assign_prof
@@ -710,6 +736,8 @@ class AssignDefaultStoragePolicyToDatastoreTestCase(TestCase):
             self.mock_policy.profileId, [self.mock_hub]
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_assign_default_requirement_profile_raises_no_permissions(self):
         exc = vim.fault.NoPermission()
         exc.privilegeId = "Fake privilege"
@@ -723,6 +751,7 @@ class AssignDefaultStoragePolicyToDatastoreTestCase(TestCase):
             "Not enough permissions. Required privilege: " "Fake privilege",
         )
 
+    @pytest.mark.slow_0_01
     def test_assign_default_requirement_profile_raises_vim_fault(self):
         exc = vim.fault.VimFault()
         exc.msg = "VimFault msg"
@@ -733,6 +762,7 @@ class AssignDefaultStoragePolicyToDatastoreTestCase(TestCase):
             )
         self.assertEqual(excinfo.exception.strerror, "VimFault msg")
 
+    @pytest.mark.slow_0_01
     def test_assign_default_requirement_profile_raises_runtime_fault(self):
         exc = vmodl.RuntimeFault()
         exc.msg = "RuntimeFault msg"

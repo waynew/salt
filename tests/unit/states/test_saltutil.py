@@ -7,10 +7,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import inspect
 
-import salt.modules.saltutil as saltutil_module
+import pytest
+from salt.modules import saltutil as saltutil_module
 
 # Import Salt Libs
-import salt.states.saltutil as saltutil_state
+from salt.states import saltutil as saltutil_state
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -132,6 +133,7 @@ class Saltutil(TestCase, LoaderModuleMockMixin):
             result = saltutil_state.sync_all(state_id, refresh=True)
             self.assertEqual(result, state_result)
 
+    @pytest.mark.slow_0_01
     def test_saltutil_sync_states_should_match_saltutil_module(self):
         module_functions = [
             f[0]

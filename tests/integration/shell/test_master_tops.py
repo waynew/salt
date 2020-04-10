@@ -7,6 +7,8 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import ShellCase
 
@@ -15,6 +17,10 @@ class MasterTopsTest(ShellCase):
 
     _call_binary_ = "salt"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_custom_tops_gets_utilized(self):
         resp = self.run_call("state.show_top")
         self.assertTrue(any("master_tops_test" in _x for _x in resp))

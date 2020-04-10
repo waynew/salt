@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_certutil as certutil
+from salt.states import win_certutil as certutil
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +49,7 @@ class CertUtilTestCase(TestCase, LoaderModuleMockMixin):
             add_mock.assert_called_once_with("/path/to/cert.cer", "TrustedPublisher")
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_add_serial_missing(self):
         """
             Test adding a certificate to specified certificate store when the file doesn't exist
@@ -171,6 +174,7 @@ class CertUtilTestCase(TestCase, LoaderModuleMockMixin):
             del_mock.assert_called_once_with("/tmp/cert.cer", "TrustedPublisher")
             self.assertEqual(expected, out)
 
+    @pytest.mark.slow_0_01
     def test_del_serial_missing(self):
         """
             Test deleting a certificate to specified certificate store when the file doesn't exist

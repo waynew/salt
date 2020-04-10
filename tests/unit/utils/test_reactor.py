@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import, print_function, unicode_literals
 
 import codecs
@@ -8,11 +7,12 @@ import logging
 import os
 import textwrap
 
+import pytest
 import salt.loader
 import salt.utils.data
 import salt.utils.files
-import salt.utils.reactor as reactor
 import salt.utils.yaml
+from salt.utils import reactor
 from tests.support.mixins import AdaptedConfigurationTestCaseMixin
 from tests.support.mock import MagicMock, Mock, mock_open, patch
 from tests.support.unit import TestCase
@@ -410,6 +410,7 @@ class TestReactor(TestCase, AdaptedConfigurationTestCaseMixin):
         del cls.reactor
         del cls.render_pipe
 
+    @pytest.mark.slow_0_01
     def test_list_reactors(self):
         """
         Ensure that list_reactors() returns the correct list of reactor SLS
@@ -422,6 +423,7 @@ class TestReactor(TestCase, AdaptedConfigurationTestCaseMixin):
                     self.reactor.list_reactors(tag), self.reaction_map[tag]
                 )
 
+    @pytest.mark.slow_0_01
     def test_reactions(self):
         """
         Ensure that the correct reactions are built from the configured SLS
@@ -476,6 +478,8 @@ class TestReactWrap(TestCase, AdaptedConfigurationTestCaseMixin):
     def tearDownClass(cls):
         del cls.wrap
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_runner(self):
         """
         Test runner reactions using both the old and new config schema
@@ -491,6 +495,7 @@ class TestReactWrap(TestCase, AdaptedConfigurationTestCaseMixin):
                 self.wrap.client_cache["runner"].low, args=WRAPPER_CALLS[tag]
             )
 
+    @pytest.mark.slow_0_01
     def test_wheel(self):
         """
         Test wheel reactions using both the old and new config schema
@@ -537,6 +542,7 @@ class TestReactWrap(TestCase, AdaptedConfigurationTestCaseMixin):
                 *WRAPPER_CALLS[tag]["args"], **WRAPPER_CALLS[tag]["kwargs"]
             )
 
+    @pytest.mark.slow_0_01
     def test_caller(self):
         """
         Test caller reactions using both the old and new config schema

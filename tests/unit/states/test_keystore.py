@@ -5,8 +5,10 @@ Test cases for keystore state
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.keystore as keystore
+from salt.states import keystore
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class KeystoreTestCase(TestCase, LoaderModuleMockMixin):
         return {keystore: {"__opts__": {"test": False}}}
 
     @patch("os.path.exists", MagicMock(return_value=True))
+    @pytest.mark.slow_0_01
     def test_cert_already_present(self):
         """
         Test for existing value_present
@@ -285,6 +288,7 @@ class KeystoreTestCase(TestCase, LoaderModuleMockMixin):
                 )
 
     @patch("os.path.exists", MagicMock(return_value=True))
+    @pytest.mark.slow_0_01
     def test_force_remove(self):
         """
         Test for existing value_present

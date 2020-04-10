@@ -12,11 +12,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 import copy
 import textwrap
 
-import salt.modules.aptpkg as aptpkg
+import pytest
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 
 # Import Salt Libs
 from salt.ext import six
+from salt.modules import aptpkg
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -171,6 +172,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(aptpkg.__salt__, {"pkg_resource.version": mock}):
             self.assertEqual(aptpkg.version(*["wget"]), version)
 
+    @pytest.mark.slow_0_01
     def test_upgrade_available(self):
         """
         Test - Check whether or not an upgrade is available for a given package.
@@ -213,6 +215,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(aptpkg.__salt__, {"cmd.run_all": mock}):
             self.assertEqual(aptpkg.get_repo_keys(), REPO_KEYS)
 
+    @pytest.mark.slow_0_01
     def test_file_dict(self):
         """
         Test - List the files that belong to a package, grouped by package.
@@ -287,6 +290,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 self.assertEqual(aptpkg.refresh_db(), refresh_db)
 
+    @pytest.mark.slow_0_01
     def test_refresh_db_failed(self):
         """
         Test - Update the APT database using unreachable repositories.
@@ -300,6 +304,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 self.assertRaises(CommandExecutionError, aptpkg.refresh_db, **kwargs)
 
+    @pytest.mark.slow_0_01
     def test_autoremove(self):
         """
         Test - Remove packages not required by another package.
@@ -326,6 +331,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch("salt.modules.aptpkg._uninstall", MagicMock(return_value=UNINSTALL)):
             self.assertEqual(aptpkg.remove(name="tmux"), UNINSTALL)
 
+    @pytest.mark.slow_0_01
     def test_purge(self):
         """
         Test - Remove packages along with all configuration files.
@@ -333,6 +339,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
         with patch("salt.modules.aptpkg._uninstall", MagicMock(return_value=UNINSTALL)):
             self.assertEqual(aptpkg.purge(name="tmux"), UNINSTALL)
 
+    @pytest.mark.slow_0_01
     def test_upgrade(self):
         """
         Test - Upgrades all packages.
@@ -351,6 +358,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
                 with patch.multiple(aptpkg, **patch_kwargs):
                     self.assertEqual(aptpkg.upgrade(), dict())
 
+    @pytest.mark.slow_0_01
     def test_upgrade_downloadonly(self):
         """
         Tests the download-only options for upgrade.
@@ -394,6 +402,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
                     # --download-only should be in the args list and we should have at least on True in the list.
                     self.assertTrue(any(args_matching))
 
+    @pytest.mark.slow_0_01
     def test_show(self):
         """
         Test that the pkg.show function properly parses apt-cache show output.
@@ -525,6 +534,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
             self.assert_called_once(refresh_mock)
             refresh_mock.reset_mock()
 
+    @pytest.mark.slow_0_01
     def test_mod_repo_enabled(self):
         """
         Checks if a repo is enabled or disabled depending on the passed kwargs.
@@ -567,6 +577,7 @@ class AptPkgTestCase(TestCase, LoaderModuleMockMixin):
         "fnmatch.filter",
         MagicMock(return_value=["/var/cache/apt/archive/test_package.rpm"]),
     )
+    @pytest.mark.slow_0_01
     def test_list_downloaded(self):
         """
         Test downloaded packages listing.
@@ -605,6 +616,7 @@ class AptUtilsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {aptpkg: {}}
 
+    @pytest.mark.slow_0_01
     def test_call_apt_default(self):
         """
         Call default apt.
@@ -640,6 +652,7 @@ class AptUtilsTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_call_apt_with_kwargs(self):
         """
         Call apt with the optinal keyword arguments.

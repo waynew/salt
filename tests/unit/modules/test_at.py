@@ -6,10 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.at as at
+import pytest
 
 # Import Salt Libs
 import salt.utils.path
+from salt.modules import at
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -53,6 +54,7 @@ class AtTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(at.__grains__, {"os_family": ""}):
                 self.assertEqual(at.atq(), "'at.atq' is not available.")
 
+    @pytest.mark.slow_0_01
     def test_atq_no_jobs_available(self):
         """
         Tests the no jobs available for any type of os_family.
@@ -64,6 +66,7 @@ class AtTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(at.__grains__, {"os_family": ""}):
                 self.assertDictEqual(at.atq(), {"jobs": []})
 
+    @pytest.mark.slow_0_01
     def test_atq_list(self):
         """
         Tests the list all queued and running jobs.
@@ -126,6 +129,7 @@ class AtTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_atrm(self):
         """
         Tests for remove jobs from the queue.
@@ -182,6 +186,7 @@ class AtTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_at(self):
         """
         Tests for add a job to the queue.

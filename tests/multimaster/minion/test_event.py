@@ -3,6 +3,7 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.modules.iptables
 
 # Import Salt Testing libs
@@ -26,6 +27,9 @@ class TestHandleEvents(
     Validate the events handling in multimaster environment
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_hangs_on_master_failure_50814(self):
         """
         Check minion handling events for the alive master when another master is dead.

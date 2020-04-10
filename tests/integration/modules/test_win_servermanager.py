@@ -3,6 +3,8 @@
 # Import Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Import Salt libs
 import salt.utils.platform
 
@@ -17,6 +19,10 @@ class WinServermanagerTest(ModuleCase):
     Test for salt.modules.win_servermanager
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_list_available(self):
         """
         Test list available features to install

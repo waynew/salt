@@ -5,6 +5,7 @@ import re
 import sys
 import textwrap
 
+import pytest
 import salt.utils.stringutils
 
 # Import 3rd-party libs
@@ -90,6 +91,7 @@ fi
 
 
 class TestBuildWhitespaceRegex(TestCase):
+    @pytest.mark.slow_0_01
     def test_single_quotes(self):
         regex = salt.utils.stringutils.build_whitespace_split_regex(SINGLE_TXT)
         self.assertTrue(re.search(regex, MATCH))
@@ -98,10 +100,12 @@ class TestBuildWhitespaceRegex(TestCase):
         regex = salt.utils.stringutils.build_whitespace_split_regex(DOUBLE_TXT)
         self.assertTrue(re.search(regex, MATCH))
 
+    @pytest.mark.slow_0_01
     def test_single_and_double_quotes(self):
         regex = salt.utils.stringutils.build_whitespace_split_regex(SINGLE_DOUBLE_TXT)
         self.assertTrue(re.search(regex, MATCH))
 
+    @pytest.mark.slow_0_01
     def test_issue_2227(self):
         regex = salt.utils.stringutils.build_whitespace_split_regex(
             SINGLE_DOUBLE_SAME_LINE_TXT
@@ -222,6 +226,7 @@ class StringutilsTestCase(TestCase):
                     salt.utils.stringutils.to_str("Ψ"), "Ψ".encode("utf-8")
                 )
 
+    @pytest.mark.slow_0_01
     def test_to_bytes(self):
         for x in (123, (1, 2, 3), [1, 2, 3], {1: 23}, None):
             self.assertRaises(TypeError, salt.utils.stringutils.to_bytes, x)
@@ -240,6 +245,7 @@ class StringutilsTestCase(TestCase):
             self.assertEqual(salt.utils.stringutils.to_bytes(bytearray(BYTES)), BYTES)
             self.assertEqual(salt.utils.stringutils.to_bytes(UNICODE, "utf-8"), BYTES)
 
+    @pytest.mark.slow_0_01
     def test_to_unicode(self):
         self.assertEqual(
             salt.utils.stringutils.to_unicode(EGGS, normalize=True), "яйца"
@@ -320,6 +326,7 @@ class StringutilsTestCase(TestCase):
         expected = "---\n[...]\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_get_context_at_top_of_file(self):
         template = "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf"
         context = salt.utils.stringutils.get_context(template, 1)
@@ -346,6 +353,7 @@ class StringutilsTestCase(TestCase):
         expected = "---\n[...]\n6\n7\n8 <---\n9\na\n[...]\n---"
         self.assertEqual(expected, context)
 
+    @pytest.mark.slow_0_01
     def test_expr_match(self):
         val = "foo/bar/baz"
         # Exact match
@@ -359,6 +367,7 @@ class StringutilsTestCase(TestCase):
         # Regex non-match
         self.assertFalse(salt.utils.stringutils.expr_match(val, r"foo/\w/baz"))
 
+    @pytest.mark.slow_0_01
     def test_check_whitelist_blacklist(self):
         """
         Ensure that whitelist matching works on both PY2 and PY3

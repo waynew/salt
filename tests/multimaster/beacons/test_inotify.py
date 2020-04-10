@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import time
 
+import pytest
 import salt.config
 
 # Import salt libs
@@ -40,6 +41,10 @@ class TestBeaconsInotify(MultimasterModuleCase, AdaptedConfigurationTestCaseMixi
         self.tmpdir = salt.utils.stringutils.to_unicode(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmpdir, ignore_errors=True)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_beacons_duplicate_53344(self):
         # Also add a status beacon to use it for interval checks
         res = self.run_function(

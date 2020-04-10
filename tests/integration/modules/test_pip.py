@@ -14,6 +14,8 @@ import shutil
 import sys
 import tempfile
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.path
@@ -113,6 +115,11 @@ class PipModuleTest(ModuleCase):
 
         return expect.issubset(set(success_for))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_issue_2087_missing_pip(self):
         # Let's create the testing virtualenv
         self._create_virtualenv(self.venv_dir)
@@ -144,6 +151,11 @@ class PipModuleTest(ModuleCase):
                 ret,
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_requirements_as_list_of_chains__cwd_set__absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -189,6 +201,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_requirements_as_list_of_chains__cwd_not_set__absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -232,6 +249,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_requirements_as_list__absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -267,6 +289,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_requirements_as_list__non_absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -311,6 +338,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_chained_requirements__absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -344,6 +376,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_chained_requirements__non_absolute_file_path(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -384,6 +421,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_issue_4805_nested_requirements(self):
         self._create_virtualenv(self.venv_dir)
 
@@ -421,6 +463,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_pip_uninstall(self):
         # Let's create the testing virtualenv
         self._create_virtualenv(self.venv_dir)
@@ -463,6 +510,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_pip_install_upgrade(self):
         # Create the testing virtualenv
         self._create_virtualenv(self.venv_dir)
@@ -529,6 +581,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_pip_install_multiple_editables(self):
         editables = [
             "git+https://github.com/jek/blinker.git#egg=Blinker",
@@ -563,6 +620,11 @@ class PipModuleTest(ModuleCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_pip_install_multiple_editables_and_pkgs(self):
         editables = [
             "git+https://github.com/jek/blinker.git#egg=Blinker",

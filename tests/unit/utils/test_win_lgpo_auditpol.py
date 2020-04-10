@@ -5,10 +5,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import random
 
+import pytest
+
 # Import Salt Libs
 import salt.modules.cmdmod
 import salt.utils.platform
-import salt.utils.win_lgpo_auditpol as win_lgpo_auditpol
+from salt.utils import win_lgpo_auditpol
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -28,6 +30,7 @@ class WinLgpoAuditpolTestCase(TestCase, LoaderModuleMockMixin):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_get_settings(self):
         names = win_lgpo_auditpol._get_valid_names()
         ret = win_lgpo_auditpol.get_settings(category="All")
@@ -39,12 +42,16 @@ class WinLgpoAuditpolTestCase(TestCase, LoaderModuleMockMixin):
             KeyError, win_lgpo_auditpol.get_settings, category="Fake Category"
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_get_setting(self):
         names = win_lgpo_auditpol._get_valid_names()
         for name in names:
             ret = win_lgpo_auditpol.get_setting(name)
             self.assertIn(ret, settings)
 
+    @pytest.mark.slow_0_01
     def test_get_setting_invalid_name(self):
         self.assertRaises(KeyError, win_lgpo_auditpol.get_setting, name="Fake Name")
 
@@ -95,6 +102,7 @@ class WinLgpoAuditpolTestCase(TestCase, LoaderModuleMockMixin):
                 value="Fake Value",
             )
 
+    @pytest.mark.slow_0_01
     def test_get_auditpol_dump(self):
         names = win_lgpo_auditpol._get_valid_names()
         dump = win_lgpo_auditpol.get_auditpol_dump()

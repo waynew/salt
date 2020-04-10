@@ -6,6 +6,8 @@ integration tests for mac_softwareupdate
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -60,6 +62,11 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
 
         super(MacSoftwareUpdateModuleTest, self).tearDown()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_list_available(self):
         """
         Test softwareupdate.list_available
@@ -69,6 +76,11 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         self.assertIsInstance(self.run_function("softwareupdate.list_available"), dict)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_ignore(self):
         """
         Test softwareupdate.ignore
@@ -88,6 +100,11 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         self.assertIn("squidward", self.run_function("softwareupdate.list_ignored"))
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_schedule(self):
         """
         Test softwareupdate.schedule_enable
@@ -102,6 +119,12 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         self.assertFalse(self.run_function("softwareupdate.schedule_enabled"))
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_update(self):
         """
         Test softwareupdate.update_all
@@ -126,6 +149,12 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
             self.run_function("softwareupdate.update", ["spongebob"]),
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_list_downloads(self):
         """
         Test softwareupdate.list_downloads
@@ -133,6 +162,12 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         self.assertIsInstance(self.run_function("softwareupdate.list_downloads"), list)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_download(self):
         """
         Test softwareupdate.download
@@ -147,6 +182,12 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_download_all(self):
         """
         Test softwareupdate.download_all
@@ -154,6 +195,11 @@ class MacSoftwareUpdateModuleTest(ModuleCase):
         self.assertIsInstance(self.run_function("softwareupdate.download_all"), list)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
     def test_get_set_reset_catalog(self):
         """
         Test softwareupdate.download_all

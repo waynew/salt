@@ -9,8 +9,7 @@ from __future__ import absolute_import
 import os
 from xml.dom import minidom
 
-import salt.modules.pkg_resource as pkg_resource
-import salt.modules.zypperpkg as zypper
+import pytest
 
 # Import Salt libs
 import salt.utils.files
@@ -20,6 +19,8 @@ from salt.ext import six
 
 # Import 3rd-party libs
 from salt.ext.six.moves import configparser
+from salt.modules import pkg_resource
+from salt.modules import zypperpkg as zypper
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -88,6 +89,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
         del self.new_repo_config
         del self.zypper_patcher_config
 
+    @pytest.mark.slow_0_01
     def test_list_upgrades(self):
         """
         List package upgrades
@@ -115,6 +117,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
         "salt.utils.environment.get_module_environment",
         MagicMock(return_value={"SALT_RUNNING": "1"}),
     )
+    @pytest.mark.slow_0_01
     def test_zypper_caller(self):
         """
         Test Zypper caller.
@@ -251,6 +254,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
             ):
                 zypper.list_upgrades(refresh=False)
 
+    @pytest.mark.slow_0_01
     def test_list_products(self):
         """
         List products test.
@@ -524,6 +528,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
                 for info in pkg_info_list:
                     self.assertTrue(info["arch"] in ("x86_64", "i686"))
 
+    @pytest.mark.slow_0_01
     def test_info_available(self):
         """
         Test return the information of the named package available for the system.
@@ -572,6 +577,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
                 {"vim": "7.4.326-2.62", "fakepkg": ""},
             )
 
+    @pytest.mark.slow_0_01
     def test_upgrade_success(self):
         """
         Test system upgrade and dist-upgrade success.
@@ -710,6 +716,7 @@ class ZypperTestCase(TestCase, LoaderModuleMockMixin):
                         "--no-allow-vendor-change",
                     )
 
+    @pytest.mark.slow_0_01
     def test_upgrade_kernel(self):
         """
         Test kernel package upgrade success.
@@ -815,6 +822,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 self.assertFalse(zypper.upgrade_available(pkg_name))
             self.assertTrue(zypper.upgrade_available("vim"))
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs(self):
         """
         Test packages listing.
@@ -862,6 +870,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 self.assertTrue(pkgs.get(pkg_name))
                 self.assertEqual(pkgs[pkg_name], pkg_version)
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs_with_attr(self):
         """
         Test packages listing with the attr parameter
@@ -986,6 +995,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 self.assertTrue(pkgs.get(pkg_name))
                 self.assertEqual(pkgs[pkg_name], pkg_attr)
 
+    @pytest.mark.slow_0_01
     def test_list_pkgs_with_attr_multiple_versions(self):
         """
         Test packages listing with the attr parameter reporting multiple version installed
@@ -1057,6 +1067,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 else:
                     self.assertItemsEqual(pkginfo, expected_pkg_list[pkgname])
 
+    @pytest.mark.slow_0_01
     def test_list_patches(self):
         """
         Test advisory patches listing.
@@ -1130,6 +1141,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
             self.assertEqual(len(list_downloaded), 1)
             self.assertDictEqual(list_downloaded, DOWNLOADED_RET)
 
+    @pytest.mark.slow_0_01
     def test_download(self):
         """
         Test package download
@@ -1237,6 +1249,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
             }
         ),
     )
+    @pytest.mark.slow_0_01
     def test_install_with_downloadonly_already_downloaded(self):
         """
         Test a package installation with downloadonly=True when package is already downloaded.
@@ -1311,6 +1324,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
         ),
     )
     @patch("salt.modules.zypperpkg.list_pkgs", MagicMock(return_value={"vim": "1.1"}))
+    @pytest.mark.slow_0_01
     def test_install_advisory_patch_failure(self):
         """
         Test failing advisory patch installation because patch does not exist.
@@ -1333,6 +1347,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 ):
                     zypper.install(advisory_ids=["SUSE-PATCH-XXX"])
 
+    @pytest.mark.slow_0_01
     def test_remove_purge(self):
         """
         Test package removal
@@ -1376,6 +1391,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                     self.assertTrue(diff[pkg_name]["old"])
                     self.assertFalse(diff[pkg_name]["new"])
 
+    @pytest.mark.slow_0_01
     def test_repo_value_info(self):
         """
         Tests if repo info is properly parsed.
@@ -1415,6 +1431,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
             )
             self.assertTrue(zypper.__zypper__.refreshable.xml.call.call_count == 0)
 
+    @pytest.mark.slow_0_01
     def test_repo_noadd_nomod_noref(self):
         """
         Test mod_repo detects the repo already exists,
@@ -1517,6 +1534,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
                 "mr", "--refresh", name
             )
 
+    @pytest.mark.slow_0_01
     def test_repo_add_nomod_ref(self):
         """
         Test mod_repo adds the new repo and refreshes the repo with
@@ -1671,6 +1689,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
             "16.2.6-27.9.1",
         ]
 
+    @pytest.mark.slow_0_01
     def test_wildcard_to_query_exact_match_at_end(self):
         """
         Test wildcard to query match exact pattern at the end
@@ -1751,6 +1770,7 @@ Repository 'DUMMY' not found by its alias, number, or URI.
         _zpr.nolock.xml.call = MagicMock(return_value=minidom.parseString(xmldoc))
         assert zypper.Wildcard(_zpr)("libzypp", None) is None
 
+    @pytest.mark.slow_0_01
     def test_wildcard_to_query_typecheck(self):
         """
         Test wildcard to query typecheck.

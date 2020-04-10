@@ -6,7 +6,8 @@
 # Import Python Libs
 from __future__ import absolute_import, unicode_literals
 
-import salt.states.zabbix_template as zabbix_template
+import pytest
+from salt.states import zabbix_template
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -128,6 +129,7 @@ class ZabbixTemplateTestCase(TestCase, LoaderModuleMockMixin):
         return {zabbix_template: {}}
 
     @patch("salt.states.zabbix_template.CHANGE_STACK", [])
+    @pytest.mark.slow_0_01
     def test_present_create(self):
         """
         Test to ensure that named template is created
@@ -175,6 +177,7 @@ class ZabbixTemplateTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertDictEqual(zabbix_template.present(name, {}), ret)
 
     @patch("salt.states.zabbix_template.CHANGE_STACK", [])
+    @pytest.mark.slow_0_01
     def test_present_exists(self):
         """
         Test to ensure that named template is present and not changed
@@ -216,6 +219,7 @@ class ZabbixTemplateTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertDictEqual(zabbix_template.present(name, {}), ret)
 
     @patch("salt.states.zabbix_template.CHANGE_STACK", [])
+    @pytest.mark.slow_0_01
     def test_present_update(self):
         """
         Test to ensure that named template is present but must be updated

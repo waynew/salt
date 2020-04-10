@@ -7,14 +7,15 @@ import logging
 import random
 import string
 
+import pytest
 import salt.loader
-import salt.states.boto_elasticsearch_domain as boto_elasticsearch_domain
 
 # Import Salt libs
 from salt.ext import six
 
 # Import 3rd-party libs
 from salt.ext.six.moves import range  # pylint: disable=import-error,redefined-builtin
+from salt.states import boto_elasticsearch_domain
 from salt.utils.versions import LooseVersion
 
 # Import Salt Testing libs
@@ -172,6 +173,8 @@ class BotoElasticsearchDomainTestCase(
     TestCase for salt.modules.boto_elasticsearch_domain state.module
     """
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_domain_does_not_exist(self):
         """
         Tests present on a domain that does not exist.
@@ -192,6 +195,8 @@ class BotoElasticsearchDomainTestCase(
             result["changes"]["new"]["domain"]["ElasticsearchClusterConfig"], None
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_when_domain_exists(self):
         self.conn.describe_elasticsearch_domain.return_value = {
             "DomainStatus": domain_ret
@@ -215,6 +220,8 @@ class BotoElasticsearchDomainTestCase(
             {"new": {"AccessPolicies": {}}, "old": {"AccessPolicies": {"a": "b"}}},
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_present_with_failure(self):
         self.conn.describe_elasticsearch_domain.side_effect = not_found_error
         self.conn.describe_elasticsearch_domain_config.return_value = {
@@ -229,6 +236,8 @@ class BotoElasticsearchDomainTestCase(
         self.assertFalse(result["result"])
         self.assertTrue("An error occurred" in result["comment"])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_domain_does_not_exist(self):
         """
         Tests absent on a domain that does not exist.
@@ -240,6 +249,8 @@ class BotoElasticsearchDomainTestCase(
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"], {})
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_when_domain_exists(self):
         self.conn.describe_elasticsearch_domain.return_value = {
             "DomainStatus": domain_ret
@@ -253,6 +264,8 @@ class BotoElasticsearchDomainTestCase(
         self.assertTrue(result["result"])
         self.assertEqual(result["changes"]["new"]["domain"], None)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_absent_with_failure(self):
         self.conn.describe_elasticsearch_domain.return_value = {
             "DomainStatus": domain_ret

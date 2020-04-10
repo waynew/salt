@@ -6,8 +6,10 @@ from __future__ import absolute_import
 import logging
 from collections import namedtuple
 
+import pytest
+
 # Salt libs
-import salt.beacons.network_info as network_info
+from salt.beacons import network_info
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, patch
 
@@ -98,6 +100,7 @@ class NetworkInfoBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = network_info.beacon(config)
             self.assertEqual(ret, _expected_return)
 
+    @pytest.mark.slow_0_01
     def test_network_info_greater_than(self):
         with patch(
             "salt.utils.psutil_compat.net_io_counters",

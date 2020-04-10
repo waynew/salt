@@ -6,6 +6,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import textwrap
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.platform
@@ -39,6 +41,12 @@ class WinPKGTest(ModuleCase):
             os.remove(self.curl_sls_path)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_adding_removing_pkg_sls(self):
         """
         Test add and removing a new pkg sls

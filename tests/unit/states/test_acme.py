@@ -6,8 +6,10 @@
 # Import future libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Module
-import salt.states.acme as acme
+from salt.states import acme
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +49,7 @@ class AcmeTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_cert_no_changes(self):
         """
         Test cert state with no needed changes. (test=False)

@@ -6,9 +6,11 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt libs
-import salt.modules.cron as cron
+import pytest
 from salt.ext.six.moves import StringIO, builtins, range
+
+# Import Salt libs
+from salt.modules import cron
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -70,6 +72,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {cron: {}}
 
+    @pytest.mark.slow_0_01
     def test__need_changes_new(self):
         """
         New behavior, identifier will get track of the managed lines!
@@ -148,6 +151,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 "1 2 3 4 5 foo",
             )
 
+    @pytest.mark.slow_0_01
     def test__unicode_match(self):
         with patch.object(builtins, "__salt_system_encoding__", "utf-8"):
             self.assertTrue(cron._cron_matched({"identifier": "1"}, "foo", 1))
@@ -156,6 +160,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
             self.assertTrue(cron._cron_matched({"identifier": "é"}, "foo", "é"))
             self.assertTrue(cron._cron_matched({"identifier": "é"}, "foo", "é"))
 
+    @pytest.mark.slow_0_01
     def test__need_changes_old(self):
         """
         old behavior; ID has no special action
@@ -267,6 +272,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 "* * * * * ls",
             )
 
+    @pytest.mark.slow_0_01
     def test__issue10959(self):
         """
         handle multi old style crontabs
@@ -757,6 +763,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
             }
             self.assertEqual(eret, ret)
 
+    @pytest.mark.slow_0_01
     def test_cron_at_sign(self):
         with patch.dict(cron.__grains__, {"os": None}), patch(
             "salt.modules.cron.raw_cron", MagicMock(return_value=STUB_AT_SIGN)
@@ -858,6 +865,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_write_cron_file_root_rh(self):
         """
         Assert that write_cron_file() is called with the correct cron command and user: RedHat
@@ -874,6 +882,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 "crontab /tmp", python_shell=False
             )
 
+    @pytest.mark.slow_0_01
     def test_write_cron_file_foo_rh(self):
         """
         Assert that write_cron_file() is called with the correct cron command and user: RedHat
@@ -941,6 +950,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 "crontab /tmp", runas="foo", python_shell=False
             )
 
+    @pytest.mark.slow_0_01
     def test_write_cr_file_v_root_rh(self):
         """
         Assert that write_cron_file_verbose() is called with the correct cron command and user: RedHat
@@ -1038,6 +1048,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 "crontab -l", ignore_retcode=True, rstrip=False, python_shell=False
             )
 
+    @pytest.mark.slow_0_01
     def test_raw_cron_foo_redhat(self):
         """
         Assert that raw_cron() is called with the correct cron command and user: RedHat
@@ -1057,6 +1068,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_raw_cron_root_solaris(self):
         """
         Assert that raw_cron() is called with the correct cron command and user: Solaris
@@ -1095,6 +1107,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_raw_cron_root_aix(self):
         """
         Assert that raw_cron() is called with the correct cron command and user: AIX
@@ -1114,6 +1127,7 @@ class CronTestCase(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_raw_cron_foo_aix(self):
         """
         Assert that raw_cron() is called with the correct cron command and user: AIX
@@ -1138,6 +1152,7 @@ class PsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {cron: {}}
 
+    @pytest.mark.slow_0_01
     def test__needs_change(self):
         self.assertTrue(cron._needs_change(True, False))
 
@@ -1228,6 +1243,7 @@ class PsTestCase(TestCase, LoaderModuleMockMixin):
         self.assertTrue(int(ret["dayweek"]) in range(0, 8))
         self.assertTrue(int(ret["month"]) in range(1, 13))
 
+    @pytest.mark.slow_0_01
     def test_set_job(self):
         with patch.dict(cron.__grains__, {"os": None}), patch(
             "salt.modules.cron._write_cron_lines",
@@ -1296,6 +1312,7 @@ class PsTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual("absent", ret)
 
+    @pytest.mark.slow_0_01
     def test_rm_job_is_absent(self):
         with patch.dict(cron.__grains__, {"os": None}), patch(
             "salt.modules.cron._write_cron_lines",

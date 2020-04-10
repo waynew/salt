@@ -3,11 +3,13 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 import salt.utils.stringutils
-import salt.utils.win_reg as win_reg
 from salt.exceptions import CommandExecutionError
 from salt.ext import six
+from salt.utils import win_reg
 
 # Import Salt Testing Libs
 from tests.support.helpers import destructiveTest, generate_random_name
@@ -41,6 +43,7 @@ class WinFunctionsTestCase(TestCase):
         with patch("win32gui.SendMessageTimeout", return_value=("", 0)):
             self.assertTrue(win_reg.broadcast_change())
 
+    @pytest.mark.slow_0_01
     def test_broadcast_change_fail(self):
         """
         Tests the broadcast_change function failure
@@ -48,6 +51,7 @@ class WinFunctionsTestCase(TestCase):
         with patch("win32gui.SendMessageTimeout", return_value=("", 1)):
             self.assertFalse(win_reg.broadcast_change())
 
+    @pytest.mark.slow_0_01
     def test_key_exists_existing(self):
         """
         Tests the key_exists function using a well known registry key
@@ -171,6 +175,7 @@ class WinFunctionsTestCase(TestCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
     def test_value_exists_no_vname(self):
         """
         Tests the value_exists function when the vname does not exist
@@ -211,6 +216,7 @@ class WinFunctionsTestCase(TestCase):
             key="SOFTWARE\\Microsoft",
         )
 
+    @pytest.mark.slow_0_01
     def test_list_keys_unknown_key_error(self):
         """
         Tests the list_keys function with an unknown key error
@@ -245,6 +251,7 @@ class WinFunctionsTestCase(TestCase):
         expected = (False, "Cannot find key: HKLM\\{0}".format(FAKE_KEY))
         self.assertEqual(win_reg.list_values(hive="HKLM", key=FAKE_KEY), expected)
 
+    @pytest.mark.slow_0_01
     def test_list_values_invalid_hive(self):
         """
         Test the list_values function when passing an invalid hive
@@ -292,6 +299,7 @@ class WinFunctionsTestCase(TestCase):
         )
         self.assertEqual(ret["vdata"], "(value not set)")
 
+    @pytest.mark.slow_0_01
     def test_read_value_non_existing(self):
         """
         Test the read_value function using a non existing value pair
@@ -375,6 +383,7 @@ class WinFunctionsTestCase(TestCase):
             )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_read_value_multi_sz_empty_list(self):
         """
         An empty REG_MULTI_SZ value should return an empty list, not None
@@ -405,6 +414,7 @@ class WinFunctionsTestCase(TestCase):
             win_reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value(self):
         """
         Test the set_value function
@@ -431,6 +441,7 @@ class WinFunctionsTestCase(TestCase):
             win_reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_default(self):
         """
         Test the set_value function on the default value
@@ -485,6 +496,7 @@ class WinFunctionsTestCase(TestCase):
             win_reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_unicode_value(self):
         """
         Test the set_value function on a unicode value
@@ -541,6 +553,7 @@ class WinFunctionsTestCase(TestCase):
             win_reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_set_value_reg_qword(self):
         """
         Test the set_value function on a REG_QWORD value
@@ -653,6 +666,7 @@ class WinFunctionsTestCase(TestCase):
         result = win_reg.cast_vdata(vdata=vdata, vtype="REG_BINARY")
         self.assertTrue(isinstance(result, six.binary_type))
 
+    @pytest.mark.slow_0_01
     def test_cast_vdata_reg_dword(self):
         """
         Test the cast_vdata function with REG_DWORD
@@ -793,6 +807,7 @@ class WinFunctionsTestCase(TestCase):
             )
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_value_unicode(self):
         """
         Test the delete_value function on a unicode value
@@ -879,6 +894,7 @@ class WinFunctionsTestCase(TestCase):
             self.assertFalse(win_reg.delete_key_recursive(hive="HKLM", key="FAKE_KEY"))
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_key_recursive(self):
         """
         Test the delete_key_recursive function
@@ -953,6 +969,7 @@ class WinFunctionsTestCase(TestCase):
             win_reg.delete_key_recursive(hive="HKLM", key=FAKE_KEY)
 
     @destructiveTest
+    @pytest.mark.slow_0_01
     def test_delete_key_recursive_unicode(self):
         """
         Test the delete_key_recursive function on value within a unicode key

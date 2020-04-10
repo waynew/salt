@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.drac as drac
+from salt.modules import drac
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -43,6 +45,7 @@ class DracTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(drac, "__parse_drac", mock):
                 self.assertEqual(drac.network_info(), "ABC")
 
+    @pytest.mark.slow_0_01
     def test_nameservers(self):
         """
         tests for configure the nameservers on the DRAC
@@ -72,6 +75,7 @@ class DracTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(drac, "__execute_cmd", mock):
             self.assertTrue(drac.syslog("server", False))
 
+    @pytest.mark.slow_0_01
     def test_email_alerts(self):
         """
         Test to Enable/Disable email alerts
@@ -114,6 +118,7 @@ class DracTestCase(TestCase, LoaderModuleMockMixin):
 
         self.assertFalse(drac.change_password("username", "password", False), False)
 
+    @pytest.mark.slow_0_01
     def test_create_user(self):
         """
         Tests to create user accounts
@@ -257,6 +262,7 @@ class DracTestCase(TestCase, LoaderModuleMockMixin):
         with patch.object(drac, "__execute_cmd", mock):
             self.assertTrue(drac.server_hardreset())
 
+    @pytest.mark.slow_0_01
     def test_server_pxe(self):
         """
         Tests to configure server to PXE perform a one off PXE boot

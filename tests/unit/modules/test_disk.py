@@ -6,10 +6,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt libs
-import salt.modules.disk as disk
+import pytest
 import salt.utils.path
 import salt.utils.platform
+
+# Import Salt libs
+from salt.modules import disk
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -150,6 +152,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(disk.__salt__, {"cmd.run": mock_cmd}):
                 self.assertDictEqual(STUB_DISK_USAGE, disk.usage(args=None))
 
+    @pytest.mark.slow_0_01
     def test_usage_none(self):
         with patch.dict(disk.__grains__, {"kernel": "Linux"}), patch(
             "salt.modules.disk.usage", MagicMock(return_value="")
@@ -166,6 +169,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(disk.__salt__, {"cmd.run": mock}):
                 self.assertDictEqual(STUB_DISK_INODEUSAGE, disk.inodeusage(args=None))
 
+    @pytest.mark.slow_0_01
     def test_percent(self):
         with patch.dict(disk.__grains__, {"kernel": "Linux"}), patch(
             "salt.modules.disk.percent", MagicMock(return_value=STUB_DISK_PERCENT)
@@ -174,6 +178,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(disk.__salt__, {"cmd.run": mock}):
                 self.assertDictEqual(STUB_DISK_PERCENT, disk.percent(args=None))
 
+    @pytest.mark.slow_0_01
     def test_percent_args(self):
         with patch.dict(disk.__grains__, {"kernel": "Linux"}), patch(
             "salt.modules.disk.percent", MagicMock(return_value="/")
@@ -188,6 +193,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
         ), patch("salt.modules.disk.blkid", MagicMock(return_value=STUB_DISK_BLKID)):
             self.assertDictEqual(STUB_DISK_BLKID, disk.blkid())
 
+    @pytest.mark.slow_0_01
     def test_dump(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
         with patch.dict(disk.__salt__, {"cmd.run_all": mock}):

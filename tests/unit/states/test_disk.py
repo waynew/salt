@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from os import path
 
+import pytest
+
 # Import Salt Libs
-import salt.states.disk as disk
+from salt.states import disk
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -203,6 +205,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
         ret = disk.status(mock_fs, maximum="4194304 KB", absolute=True)
         self.assertEqual(ret, mock_ret)
 
+    @pytest.mark.slow_0_01
     def test_status(self):
         """
         Test disk.status when filesystem meets thresholds
@@ -364,6 +367,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             mock_ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_mount_used_relative_acceptable(self):
         mock_fs = "/"
         mock_ret = {
@@ -392,6 +396,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             mock_ret,
         )
 
+    @pytest.mark.slow_0_01
     def test_mount_free_relative_acceptable(self):
         mock_fs = "/"
         mock_ret = {
@@ -407,6 +412,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
         )
 
     # below minimum
+    @pytest.mark.slow_0_01
     def test_path_used_absolute_below(self):
         mock_fs = "/foo"
         mock_ret = {
@@ -467,6 +473,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
                 disk.status(mock_fs, "100%", "43%", absolute=False, free=True), mock_ret
             )
 
+    @pytest.mark.slow_0_01
     def test_mount_used_absolute_below(self):
         mock_fs = "/"
         mock_ret = {
@@ -495,6 +502,7 @@ class DiskTestCase(TestCase, LoaderModuleMockMixin):
             disk.status(mock_fs, "8%", "7%", absolute=False, free=False), mock_ret
         )
 
+    @pytest.mark.slow_0_01
     def test_mount_free_absolute_below(self):
         mock_fs = "/"
         mock_ret = {

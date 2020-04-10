@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.adb as adb
+from salt.beacons import adb
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import Mock, patch
 
@@ -85,6 +87,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
                 ret, [{"device": "HTC", "state": "device", "tag": "device"}]
             )
 
+    @pytest.mark.slow_0_01
     def test_device_state_change(self):
         config = [{"states": ["offline"]}]
 
@@ -173,6 +176,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = adb.beacon(config)
             self.assertEqual(ret, [])
 
+    @pytest.mark.slow_0_01
     def test_no_devices(self):
         config = [{"states": ["offline", "device"], "no_devices_event": True}]
 
@@ -224,6 +228,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = adb.beacon(config)
             self.assertEqual(ret, [])
 
+    @pytest.mark.slow_0_01
     def test_with_startup(self):
         config = [{"states": ["device"]}]
 
@@ -276,6 +281,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
                 ],
             )
 
+    @pytest.mark.slow_0_01
     def test_device_no_repeat(self):
         config = [{"states": ["device"], "battery_low": 30}]
 
@@ -350,6 +356,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = adb.beacon(config)
             self.assertEqual(ret, [])
 
+    @pytest.mark.slow_0_01
     def test_device_battery_charged(self):
         config = [{"states": ["device"], "battery_low": 30}]
 
@@ -367,6 +374,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
                 ret, [{"device": "HTC", "state": "device", "tag": "device"}]
             )
 
+    @pytest.mark.slow_0_01
     def test_device_low_battery_equal(self):
         config = [{"states": ["device"], "battery_low": 25}]
 
@@ -456,6 +464,7 @@ class ADBBeaconTestCase(TestCase, LoaderModuleMockMixin):
                 ret, [{"device": "HTC", "state": "device", "tag": "device"}]
             )
 
+    @pytest.mark.slow_0_01
     def test_multiple_batteries(self):
         config = [{"states": ["device"], "battery_low": 30}]
 

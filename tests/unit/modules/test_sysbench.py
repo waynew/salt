@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.sysbench as sysbench
+from salt.modules import sysbench
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -22,6 +24,7 @@ class SysbenchTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {sysbench: {}}
 
+    @pytest.mark.slow_0_01
     def test_cpu(self):
         """
         Test to tests to the CPU performance of minions.
@@ -40,6 +43,7 @@ class SysbenchTestCase(TestCase, LoaderModuleMockMixin):
                     },
                 )
 
+    @pytest.mark.slow_0_01
     def test_threads(self):
         """
         Test to this tests the performance of the processor's scheduler

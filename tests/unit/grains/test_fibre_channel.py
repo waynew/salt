@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.grains.fibre_channel as fibre_channel
+from salt.grains import fibre_channel
 from tests.support.mock import MagicMock, mock_open, patch
 
 # Import Salt Testing Libs
@@ -30,6 +32,7 @@ class FibreChannelGrainsTestCase(TestCase):
             ret = fibre_channel._windows_wwns()
         assert ret == wwns, ret
 
+    @pytest.mark.slow_0_01
     def test_linux_fibre_channel_wwns_grains(self):
 
         contents = ["0x500143802426baf4", "0x500143802426baf5"]

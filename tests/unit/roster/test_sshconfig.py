@@ -5,8 +5,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import collections
 
+import pytest
+
 # Import Salt Libs
-import salt.roster.sshconfig as sshconfig
+from salt.roster import sshconfig
 from tests.support import mixins
 
 # Import Salt Testing Libs
@@ -82,6 +84,7 @@ class SSHConfigRosterTestCase(TestCase, mixins.LoaderModuleMockMixin):
                 targets = sshconfig.targets("*")
         self.assertEqual(targets, _ALL)
 
+    @pytest.mark.slow_0_01
     def test_abc_glob(self):
         with patch("salt.utils.files.fopen", self.mock_fp):
             with patch("salt.roster.sshconfig._get_ssh_config_file"):

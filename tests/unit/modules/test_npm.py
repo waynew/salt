@@ -8,11 +8,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import textwrap
 
-import salt.modules.npm as npm
+import pytest
 
 # Import Salt Libs
 import salt.utils.json
 from salt.exceptions import CommandExecutionError
+from salt.modules import npm
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -35,6 +36,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'install' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_install(self):
         """
         Test if it installs an NPM package.
@@ -113,6 +115,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'uninstall' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_uninstall(self):
         """
         Test if it uninstalls an NPM package.
@@ -167,6 +170,7 @@ class NpmTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'cache_list' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_cache_list(self):
         """
         Test if it lists the NPM cache.

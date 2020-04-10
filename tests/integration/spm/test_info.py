@@ -7,6 +7,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import shutil
 
+import pytest
+
 # Import Salt Testing libs
 from tests.support.case import SPMCase
 from tests.support.helpers import destructiveTest
@@ -22,6 +24,9 @@ class SPMInfoTest(SPMCase):
         self.config = self._spm_config()
         self._spm_build_files(self.config)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_spm_info(self):
         """
         test spm build

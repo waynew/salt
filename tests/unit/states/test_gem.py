@@ -3,8 +3,10 @@
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Late import so mock can do its job
-import salt.states.gem as gem
+from salt.states import gem
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -92,6 +94,7 @@ class TestGemState(TestCase, LoaderModuleMockMixin):
                     "bar", None, runas=None, gem_bin=None
                 )
 
+    @pytest.mark.slow_0_01
     def test_sources_add(self):
         gem_sources = ["http://foo", "http://bar"]
         gem_sources_list = MagicMock(return_value=gem_sources)

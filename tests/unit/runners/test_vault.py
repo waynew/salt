@@ -8,10 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-import salt.runners.vault as vault
+import pytest
 
 # Import salt libs
 from salt.ext import six
+from salt.runners import vault
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -80,6 +81,7 @@ class VaultTest(TestCase, LoaderModuleMockMixin):
                 log.debug("Difference:\n\t%s", diff)
             self.assertEqual(output, correct_output)
 
+    @pytest.mark.slow_0_01
     def test_get_policies_for_nonexisting_minions(self):
         minion_id = "salt_master"
         # For non-existing minions, or the master-minion, grains will be None
@@ -211,6 +213,7 @@ class VaultTokenAuthTest(TestCase, LoaderModuleMockMixin):
         "salt.runners.vault._get_token_create_url",
         MagicMock(return_value="http://fake_url"),
     )
+    @pytest.mark.slow_0_01
     def test_generate_token(self):
         """
         Basic tests for test_generate_token: all exits
@@ -275,6 +278,7 @@ class VaultAppRoleAuthTest(TestCase, LoaderModuleMockMixin):
         "salt.runners.vault._get_token_create_url",
         MagicMock(return_value="http://fake_url"),
     )
+    @pytest.mark.slow_0_01
     def test_generate_token(self):
         """
         Basic test for test_generate_token with approle (two vault calls)

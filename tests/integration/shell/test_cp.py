@@ -14,6 +14,7 @@ import logging
 import os
 import pipes
 
+import pytest
 import salt.utils.files
 
 # Import salt libs
@@ -35,6 +36,12 @@ class CopyTest(ShellCase, ShellCaseCommonTestsMixin):
 
     _call_binary_ = "salt-cp"
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_cp_testfile(self):
         """
         test salt-cp

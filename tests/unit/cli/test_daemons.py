@@ -9,8 +9,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import multiprocessing
 
+import pytest
+
 # Import Salt libs
-import salt.cli.daemons as daemons
+from salt.cli import daemons
 from tests.support.mixins import SaltClientTestCaseMixin
 from tests.support.mock import MagicMock, patch
 
@@ -252,6 +254,9 @@ class DaemonsStarterTestCase(TestCase, SaltClientTestCaseMixin):
         self.assertTrue(m_parent.recv())
         p_.join()
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_master_daemon_hash_type_verified(self):
         """
         Verify if Master is verifying hash_type config option.
@@ -260,6 +265,9 @@ class DaemonsStarterTestCase(TestCase, SaltClientTestCaseMixin):
         """
         self._multiproc_exec_test(_master_exec_test)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_minion_daemon_hash_type_verified(self):
         """
         Verify if Minion is verifying hash_type config option.
@@ -268,6 +276,9 @@ class DaemonsStarterTestCase(TestCase, SaltClientTestCaseMixin):
         """
         self._multiproc_exec_test(_minion_exec_test)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_proxy_minion_daemon_hash_type_verified(self):
         """
         Verify if ProxyMinion is verifying hash_type config option.
@@ -276,6 +287,9 @@ class DaemonsStarterTestCase(TestCase, SaltClientTestCaseMixin):
         """
         self._multiproc_exec_test(_proxy_exec_test)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_syndic_daemon_hash_type_verified(self):
         """
         Verify if Syndic is verifying hash_type config option.

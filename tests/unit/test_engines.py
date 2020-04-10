@@ -7,11 +7,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
+import pytest
 import salt.config
+import salt.utils.process
 
 # Import Salt Libs
-import salt.engines as engines
-import salt.utils.process
+from salt import engines
 
 # Import 3rd-party libs
 from salt.ext import six
@@ -32,6 +33,9 @@ class EngineTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {engines: {}}
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_engine_module(self):
         """
         Test

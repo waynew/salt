@@ -6,13 +6,15 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.composer as composer
+import pytest
 from salt.exceptions import (
     CommandExecutionError,
     CommandNotFoundError,
     SaltInvocationError,
 )
+
+# Import Salt Libs
+from salt.modules import composer
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -28,6 +30,7 @@ class ComposerTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {composer: {}}
 
+    @pytest.mark.slow_0_01
     def test_install(self):
         """
         Test for Install composer dependencies for a directory.
@@ -79,6 +82,7 @@ class ComposerTestCase(TestCase, LoaderModuleMockMixin):
             with patch.dict(composer.__salt__, {"cmd.run_all": mock}):
                 self.assertEqual(composer.install("dir"), rval)
 
+    @pytest.mark.slow_0_01
     def test_update(self):
         """
         Test for Update composer dependencies for a directory.

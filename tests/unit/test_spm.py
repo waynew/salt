@@ -7,6 +7,7 @@ import os
 import shutil
 import tempfile
 
+import pytest
 import salt.config
 import salt.spm
 import salt.utils.files
@@ -115,6 +116,8 @@ class SPMTest(TestCase, AdaptedConfigurationTestCaseMixin):
                 f.write(contents)
         return fdir
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_build_install(self):
         # Build package
         fdir = self._create_formula_files(_F1)
@@ -178,6 +181,8 @@ class SPMTest(TestCase, AdaptedConfigurationTestCaseMixin):
                     self.client.run(["local", "install", pkgpath])
             assert len(self.ui._error) == 0
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_failure_paths(self):
         fail_args = (
             ["bogus", "command"],

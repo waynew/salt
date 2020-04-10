@@ -7,8 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.service as service
+from salt.modules import service
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -32,6 +34,8 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(service, "run", MagicMock(return_value=True)):
                 self.assertTrue(service.start("name"))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_stop(self):
         """
         Test to stop the specified service
@@ -40,6 +44,7 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(service, "run", MagicMock(return_value=True)):
                 self.assertTrue(service.stop("name"))
 
+    @pytest.mark.slow_0_01
     def test_restart(self):
         """
         Test to restart the specified service
@@ -57,6 +62,7 @@ class ServiceTestCase(TestCase, LoaderModuleMockMixin):
         with patch.dict(service.__salt__, {"status.pid": MagicMock(return_value=True)}):
             self.assertTrue(service.status("name"))
 
+    @pytest.mark.slow_0_01
     def test_reload_(self):
         """
         Test to restart the specified service

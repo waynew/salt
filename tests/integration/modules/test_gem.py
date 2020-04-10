@@ -6,6 +6,8 @@ Integration tests for Ruby Gem module
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
 import salt.utils.path
 
@@ -62,6 +64,9 @@ class GemModuleTest(ModuleCase):
 
         self.addCleanup(uninstall_gem)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_install_uninstall(self):
         """
         gem.install
@@ -74,6 +79,9 @@ class GemModuleTest(ModuleCase):
         self.run_function("gem.uninstall", [self.GEM])
         self.assertFalse(self.run_function("gem.list", [self.GEM]))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_install_version(self):
         """
         gem.install rake version=11.1.2
@@ -86,6 +94,9 @@ class GemModuleTest(ModuleCase):
         self.run_function("gem.uninstall", [self.GEM])
         self.assertFalse(self.run_function("gem.list", [self.GEM]))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list(self):
         """
         gem.list
@@ -101,6 +112,9 @@ class GemModuleTest(ModuleCase):
 
         self.run_function("gem.uninstall", [" ".join(self.GEM_LIST)])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_list_upgrades(self):
         """
         gem.list_upgrades
@@ -113,6 +127,9 @@ class GemModuleTest(ModuleCase):
 
         self.run_function("gem.uninstall", [self.OLD_GEM])
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_sources_add_remove(self):
         """
         gem.sources_add
@@ -128,6 +145,9 @@ class GemModuleTest(ModuleCase):
         sources_list = self.run_function("gem.sources_list")
         self.assertNotIn(source, sources_list)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_update(self):
         """
         gem.update
@@ -143,6 +163,9 @@ class GemModuleTest(ModuleCase):
         self.run_function("gem.uninstall", [self.OLD_GEM])
         self.assertFalse(self.run_function("gem.list", [self.OLD_GEM]))
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
     def test_update_system(self):
         """
         gem.update_system

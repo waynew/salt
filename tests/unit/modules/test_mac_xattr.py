@@ -3,11 +3,12 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-import salt.modules.mac_xattr as xattr
+import pytest
 import salt.utils.mac_utils
 
 # Import Salt Libs
 from salt.exceptions import CommandExecutionError
+from salt.modules import mac_xattr as xattr
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -42,6 +43,7 @@ class XAttrTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertRaises(CommandExecutionError, xattr.list_, "/path/to/file")
 
+    @pytest.mark.slow_0_01
     def test_read(self):
         """
         Test reading a specific attribute from a file
@@ -83,6 +85,7 @@ class XAttrTestCase(TestCase, LoaderModuleMockMixin):
                 CommandExecutionError, xattr.read, "/path/to/file", "attribute"
             )
 
+    @pytest.mark.slow_0_01
     def test_write(self):
         """
         Test writing a specific attribute to a file
@@ -109,6 +112,7 @@ class XAttrTestCase(TestCase, LoaderModuleMockMixin):
                 "value",
             )
 
+    @pytest.mark.slow_0_01
     def test_delete(self):
         """
         Test deleting a specific attribute from a file

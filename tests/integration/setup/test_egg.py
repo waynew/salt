@@ -11,6 +11,8 @@ import os
 import re
 import shutil
 
+import pytest
+
 # Import salt libs
 import salt.utils.path
 import salt.utils.platform
@@ -49,6 +51,12 @@ class EggSetupTest(ModuleCase):
             if os.path.exists(_dir):
                 shutil.rmtree(_dir)
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
+    @pytest.mark.slow_30
+    @pytest.mark.slow_60
     def test_egg_install(self):
         """
         test installing an egg package

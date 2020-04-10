@@ -13,6 +13,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import shutil
 
+import pytest
+
 # Import Salt libs
 import salt.utils.files
 import salt.utils.path
@@ -34,6 +36,10 @@ class VirtualenvTest(ModuleCase, SaltReturnAssertsMixin):
     @skipIf(salt.utils.platform.is_darwin(), "Test is flaky on macosx")
     @destructiveTest
     @skip_if_not_root
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_issue_1959_virtualenv_runas(self):
         user = "issue-1959"
         self.assertSaltTrueReturn(self.run_state("user.present", name=user))
@@ -69,6 +75,10 @@ class VirtualenvTest(ModuleCase, SaltReturnAssertsMixin):
             )
 
     @skipIf(salt.utils.platform.is_darwin(), "Test is flaky on macosx")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
+    @pytest.mark.slow_1
+    @pytest.mark.slow_10
     def test_issue_2594_non_invalidated_cache(self):
         # Testing virtualenv directory
         venv_path = os.path.join(RUNTIME_VARS.TMP, "issue-2594-ve")

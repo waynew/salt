@@ -8,10 +8,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 
+import pytest
+
 # Import Salt Libs
 import salt.config
-import salt.states.winrepo as winrepo
 import salt.utils.path
+from salt.states import winrepo
 from salt.syspaths import BASE_FILE_ROOTS_DIR
 
 # Import Salt Testing Libs
@@ -87,6 +89,7 @@ class WinrepoTestCase(TestCase, LoaderModuleMockMixin):
                 expected.update({"changes": {"winrepo": []}})
                 self.assertDictEqual(winrepo.genrepo("salt", True), expected)
 
+    @pytest.mark.slow_0_01
     def test_genrepo_no_dir(self):
         """
         Test genrepo when the dir does not exist
@@ -105,6 +108,7 @@ class WinrepoTestCase(TestCase, LoaderModuleMockMixin):
             ret = winrepo.genrepo("salt")
             self.assertDictEqual(ret, expected)
 
+    @pytest.mark.slow_0_01
     def test_genrepo_no_dir_force(self):
         """
         Test genrepo when the dir does not exist and force=True

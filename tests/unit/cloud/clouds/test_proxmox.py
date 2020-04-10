@@ -6,6 +6,8 @@
 # Import Salt Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
 from salt.cloud.clouds import proxmox
 
@@ -69,6 +71,7 @@ class ProxmoxTest(TestCase, LoaderModuleMockMixin):
             "foo=bar,totally=invalid=assignment",
         )
 
+    @pytest.mark.slow_0_01
     def test__dictionary_to_stringlist(self):
         result = proxmox._dictionary_to_stringlist({})
         self.assertEqual(result, "")

@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import salt libs
-import salt.modules.gem as gem
+from salt.modules import gem
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -16,6 +18,7 @@ class TestGemModule(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {gem: {}}
 
+    @pytest.mark.slow_0_01
     def test_gem(self):
         mock = MagicMock(return_value={"retcode": 0, "stdout": ""})
         with patch.dict(
@@ -113,6 +116,7 @@ class TestGemModule(TestCase, LoaderModuleMockMixin):
                 python_shell=False,
             )
 
+    @pytest.mark.slow_0_01
     def test_list(self):
         output = """
 actionmailer (2.3.14)

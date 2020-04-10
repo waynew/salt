@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.djangomod as djangomod
+from salt.modules import djangomod
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +49,7 @@ class DjangomodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'migrate' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_migrate(self):
         """
         Test if it runs the Django-Admin migrate command
@@ -57,6 +60,7 @@ class DjangomodTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'createsuperuser' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_createsuperuser(self):
         """
         Test if it create a super user for the database.
@@ -183,6 +187,7 @@ class DjangomodCliCommandTestCase(TestCase, LoaderModuleMockMixin):
                 runas=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_django_admin_cli_migrate(self):
         mock = MagicMock()
         with patch.dict(djangomod.__salt__, {"cmd.run": mock}):
@@ -194,6 +199,7 @@ class DjangomodCliCommandTestCase(TestCase, LoaderModuleMockMixin):
                 runas=None,
             )
 
+    @pytest.mark.slow_0_01
     def test_django_admin_cli_createsuperuser(self):
         mock = MagicMock()
         with patch.dict(djangomod.__salt__, {"cmd.run": mock}):
@@ -222,6 +228,7 @@ class DjangomodCliCommandTestCase(TestCase, LoaderModuleMockMixin):
                 "django-admin.py loaddata --settings=settings.py app1 app2",
             )
 
+    @pytest.mark.slow_0_01
     def test_django_admin_cli_collectstatic(self):
         mock = MagicMock()
         with patch.dict(djangomod.__salt__, {"cmd.run": mock}):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.utils.pkg
 from salt.utils.pkg import rpm
 from tests.support.mock import MagicMock, patch
@@ -38,6 +38,7 @@ class PkgUtilsTestCase(TestCase):
         ("", "", ""),
     ]
 
+    @pytest.mark.slow_0_01
     def test_split_comparison(self):
         """
         Tests salt.utils.pkg.split_comparison
@@ -85,6 +86,7 @@ class PkgRPMTestCase(TestCase):
             )
         ),
     )
+    @pytest.mark.slow_0_01
     def test_get_osarch_by_platform(self):
         """
         Get os_arch if RPM package is not installed (inird image, for example).

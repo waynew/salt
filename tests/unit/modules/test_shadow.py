@@ -6,6 +6,8 @@
 # Import Pytohn libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Testing libs
 import salt.utils.platform
 
@@ -17,7 +19,7 @@ from tests.support.unit import TestCase, skipIf
 
 # Import salt libs
 try:
-    import salt.modules.shadow as shadow
+    from salt.modules import shadow
 
     HAS_SHADOW = True
 except ImportError:
@@ -46,6 +48,7 @@ class LinuxShadowTest(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {shadow: {}}
 
+    @pytest.mark.slow_0_01
     def test_gen_password(self):
         """
         Test shadow.gen_password

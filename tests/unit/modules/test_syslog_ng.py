@@ -9,10 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 from textwrap import dedent
 
-import salt.modules.syslog_ng as syslog_ng
+import pytest
 
 # Import Salt libs
 import salt.utils.platform
+from salt.modules import syslog_ng
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -86,6 +87,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
             b,
         )
 
+    @pytest.mark.slow_0_01
     def test_non_empty_statement(self):
         o1 = syslog_ng.Option("file")
         o2 = syslog_ng.Option("tcp")
@@ -105,6 +107,7 @@ class SyslogNGTestCase(TestCase, LoaderModuleMockMixin):
             b,
         )
 
+    @pytest.mark.slow_0_01
     def test_option_with_parameters(self):
         o1 = syslog_ng.Option("file")
         p1 = syslog_ng.SimpleParameter('"/var/log/messages"')

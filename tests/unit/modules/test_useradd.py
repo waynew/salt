@@ -6,9 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.useradd as useradd
+import pytest
 from salt.exceptions import CommandExecutionError
+
+# Import Salt Libs
+from salt.modules import useradd
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -72,6 +74,8 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
     # 'getent' function tests: 2
 
     @skipIf(HAS_PWD is False, "The pwd module is not available")
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_getent(self):
         """
         Test if user.getent already have a value
@@ -130,6 +134,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chgid' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chgid(self):
         """
         Test the default group of the user
@@ -176,6 +181,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chhome' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chhome(self):
         """
         Test if home directory given is same as previous home directory
@@ -219,6 +225,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chfullname' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chfullname(self):
         """
         Test if the user's Full Name is changed
@@ -249,6 +256,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chroomnumber' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chroomnumber(self):
         """
         Test if the user's Room Number is changed
@@ -279,6 +287,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chworkphone' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chworkphone(self):
         """
         Test if the user's Work Phone is changed
@@ -309,6 +318,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'chhomephone' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_chhomephone(self):
         """
         Test if the user's Home Phone is changed
@@ -370,6 +380,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
     # 'info' function tests: 1
 
     @skipIf(HAS_PWD is False, "The pwd module is not available")
+    @pytest.mark.slow_0_01
     def test_info(self):
         """
         Test the user information
@@ -406,6 +417,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
     # 'list_users' function tests: 1
 
     @skipIf(HAS_PWD is False, "The pwd module is not available")
+    @pytest.mark.slow_0_01
     def test_list_users(self):
         """
         Test if it returns a list of all users
@@ -414,6 +426,7 @@ class UserAddTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'list_users' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_rename(self):
         """
         Test if the username for a named user changed

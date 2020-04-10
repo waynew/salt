@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.macdefaults as macdefaults
+from salt.states import macdefaults
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -16,6 +18,7 @@ class MacDefaultsTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {macdefaults: {}}
 
+    @pytest.mark.slow_0_01
     def test_write(self):
         """
             Test writing a default setting
@@ -140,6 +143,7 @@ class MacDefaultsTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_write_integer_match(self):
         """
             Test writing a default setting with a integer that is already set to the same value
@@ -179,6 +183,7 @@ class MacDefaultsTestCase(TestCase, LoaderModuleMockMixin):
             mock.assert_called_once_with("com.apple.something", "Key", None)
             self.assertEqual(out, expected)
 
+    @pytest.mark.slow_0_01
     def test_absent_deleting_existing(self):
         """
             Test removing an existing value

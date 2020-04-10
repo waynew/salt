@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.pyenv as pyenv
+from salt.modules import pyenv
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -61,6 +63,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'install_python' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_install_python(self):
         """
         Test if it install a python implementation.
@@ -99,6 +102,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'uninstall_python' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_uninstall_python(self):
         """
         Test if it uninstall a python implementation.
@@ -120,6 +124,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'versions' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_versions(self):
         """
         Test if it list the installed versions of python.
@@ -141,6 +146,7 @@ class PyenvTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'default' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_default(self):
         """
         Test if it returns or sets the currently defined default python.

@@ -8,10 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import os
 import textwrap
 
-import salt.modules.dnsmasq as dnsmasq
+import pytest
 
 # Import Salt Libs
 from salt.exceptions import CommandExecutionError
+from salt.modules import dnsmasq
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -56,6 +57,7 @@ class DnsmasqTestCase(TestCase, LoaderModuleMockMixin):
             with patch.object(os, "listdir", mock):
                 self.assertDictEqual(dnsmasq.set_config(), {})
 
+    @pytest.mark.slow_0_01
     def test_set_config_filter_pub_kwargs(self):
         """
         Test that the kwargs returned from running the set_config function
@@ -94,6 +96,7 @@ class DnsmasqTestCase(TestCase, LoaderModuleMockMixin):
         """
         self.assertRaises(CommandExecutionError, dnsmasq._parse_dnamasq, "filename")
 
+    @pytest.mark.slow_0_01
     def test_parse_dnamasq(self):
         """
         test for generic function for parsing dnsmasq files including includes.

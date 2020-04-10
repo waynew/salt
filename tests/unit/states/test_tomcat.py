@@ -6,9 +6,11 @@
 # Import Python Libs
 from __future__ import absolute_import
 
-# Import Salt Libs
-import salt.states.tomcat as tomcat
+import pytest
 from salt.modules import tomcat as tomcatmod
+
+# Import Salt Libs
+from salt.states import tomcat
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -108,6 +110,7 @@ class TomcatTestCase(TestCase, LoaderModuleMockMixin):
                     tomcat.war_deployed("salt", "salt://jenkins" "-1.2.4.war"), ret
                 )
 
+    @pytest.mark.slow_0_01
     def test_war_deployed_no_version(self):
         """
         Tests that going from versions to no versions and back work, as well
@@ -214,6 +217,7 @@ class TomcatTestCase(TestCase, LoaderModuleMockMixin):
         ):
             self.assertDictEqual(tomcat.wait("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_mod_watch(self):
         """
         Test to the tomcat watcher function.
@@ -230,6 +234,7 @@ class TomcatTestCase(TestCase, LoaderModuleMockMixin):
             ret.update({"changes": {"salt": False}})
             self.assertDictEqual(tomcat.mod_watch("salt"), ret)
 
+    @pytest.mark.slow_0_01
     def test_undeployed(self):
         """
         Test to enforce that the WAR will be un-deployed from the server

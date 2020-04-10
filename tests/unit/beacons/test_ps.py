@@ -3,8 +3,10 @@
 # Python libs
 from __future__ import absolute_import
 
+import pytest
+
 # Salt libs
-import salt.beacons.ps as ps
+from salt.beacons import ps
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import patch
 
@@ -47,6 +49,7 @@ class PSBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret, (False, "Configuration for ps beacon requires processes.")
         )
 
+    @pytest.mark.slow_0_01
     def test_ps_running(self):
         with patch(
             "salt.utils.psutil_compat.process_iter", **PATCH_OPTS
@@ -64,6 +67,7 @@ class PSBeaconTestCase(TestCase, LoaderModuleMockMixin):
             ret = ps.beacon(config)
             self.assertEqual(ret, [{"salt-master": "Running"}])
 
+    @pytest.mark.slow_0_01
     def test_ps_not_running(self):
         with patch(
             "salt.utils.psutil_compat.process_iter", **PATCH_OPTS

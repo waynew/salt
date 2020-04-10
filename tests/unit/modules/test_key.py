@@ -8,10 +8,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os.path
 
-import salt.modules.key as key
+import pytest
 
 # Import Salt Libs
 import salt.utils.crypt
+from salt.modules import key
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -27,6 +28,7 @@ class KeyTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {key: {}}
 
+    @pytest.mark.slow_0_01
     def test_finger(self):
         """
         Test for finger

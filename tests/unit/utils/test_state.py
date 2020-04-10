@@ -9,6 +9,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import copy
 import textwrap
 
+import pytest
 import salt.utils.odict
 import salt.utils.state
 
@@ -24,6 +25,7 @@ class StateUtilTestCase(TestCase):
     Test case for state util.
     """
 
+    @pytest.mark.slow_0_01
     def test_check_result(self):
         self.assertFalse(
             salt.utils.state.check_result(None),
@@ -839,6 +841,7 @@ class UtilStateMergeSubreturnTestcase(TestCase):
             {"old": None, "new": "my_resource", "alarms": secondary_changes},
         )
 
+    @pytest.mark.slow_0_01
     def test_merge_comments(self):
         main_comment_1 = "First primary comment."
         main_comment_2 = "Second primary comment."
@@ -899,6 +902,7 @@ class UtilStateMergeSubreturnTestcase(TestCase):
         )
         self.assertMultiLineEqual("\n".join(res["comment"]), final_comment)
 
+    @pytest.mark.slow_0_01
     def test_merge_empty_comments(self):
         # Since the primarysalt.utils.state is in progress,
         # the main comment may be empty, either '' or [].

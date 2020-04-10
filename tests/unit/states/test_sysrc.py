@@ -6,8 +6,10 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.sysrc as sysrc
+from salt.states import sysrc
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -54,6 +56,7 @@ class SysrcTestCase(TestCase, LoaderModuleMockMixin):
                 )
                 self.assertDictEqual(sysrc.managed("salt", "stack"), ret)
 
+    @pytest.mark.slow_0_01
     def test_absent(self):
         """
             Test to ensure a sysrc variable is absent.

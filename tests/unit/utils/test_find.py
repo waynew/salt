@@ -9,6 +9,8 @@ import stat
 import sys
 import tempfile
 
+import pytest
+
 # Import salt libs
 import salt.utils.files
 import salt.utils.find
@@ -84,6 +86,7 @@ class TestFind(TestCase):
         self.assertEqual(resolution, 86400)
         self.assertEqual(modifier, "-")
 
+    @pytest.mark.slow_0_01
     def test_parse_size(self):
         self.assertRaises(ValueError, salt.utils.find._parse_size, "")
         self.assertRaises(ValueError, salt.utils.find._parse_size, "1s1s")
@@ -159,12 +162,14 @@ class TestFind(TestCase):
         self.assertIs(option.match("", "hello.txt", "").group(), "hello.txt")
         self.assertIs(option.match("", "HELLO.TXT", "").group(), "HELLO.TXT")
 
+    @pytest.mark.slow_0_01
     def test_type_option_requires(self):
         self.assertRaises(ValueError, salt.utils.find.TypeOption, "type", "w")
 
         option = salt.utils.find.TypeOption("type", "d")
         self.assertEqual(option.requires(), salt.utils.find._REQUIRES_STAT)
 
+    @pytest.mark.slow_0_01
     def test_type_option_match(self):
         option = salt.utils.find.TypeOption("type", "b")
         self.assertEqual(option.match("", "", [stat.S_IFREG]), False)
@@ -256,6 +261,7 @@ class TestFind(TestCase):
         option = salt.utils.find.SizeOption("size", "+1G")
         self.assertEqual(option.match("", "", [10000] * 7), False)
 
+    @pytest.mark.slow_0_01
     def test_mtime_option_requires(self):
         self.assertRaises(ValueError, salt.utils.find.MtimeOption, "mtime", "4g")
 
@@ -288,6 +294,7 @@ class TestGrepOption(TestCase):
             option.requires(), (find._REQUIRES_CONTENTS | find._REQUIRES_STAT)
         )
 
+    @pytest.mark.slow_0_01
     def test_grep_option_match_regular_file(self):
         hello_file = os.path.join(self.tmpdir, "hello.txt")
         with salt.utils.files.fopen(hello_file, "w") as fp_:
@@ -342,6 +349,7 @@ class TestPrintOption(TestCase):
         option = salt.utils.find.PrintOption("print", "path user")
         self.assertEqual(option.requires(), salt.utils.find._REQUIRES_STAT)
 
+    @pytest.mark.slow_0_01
     def test_print_option_execute(self):
         hello_file = os.path.join(self.tmpdir, "hello.txt")
         with salt.utils.files.fopen(hello_file, "w") as fp_:
@@ -419,6 +427,7 @@ class TestFinder(TestCase):
         super(TestFinder, self).tearDown()
 
     @skipIf(sys.platform.startswith("win"), "No /dev/null on Windows")
+    @pytest.mark.slow_0_01
     def test_init(self):
         finder = salt.utils.find.Finder({})
         self.assertEqual(

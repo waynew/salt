@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.extfs as extfs
+from salt.modules import extfs
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -47,6 +49,7 @@ class ExtfsTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'dump' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_dump(self):
         """
         Tests if specified group was added

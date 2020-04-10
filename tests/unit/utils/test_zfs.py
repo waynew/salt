@@ -13,8 +13,10 @@ Tests for the zfs utils library
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Execution module to test
-import salt.utils.zfs as zfs
+from salt.utils import zfs
 
 # Import Salt Utils
 from salt.utils.odict import OrderedDict
@@ -42,6 +44,7 @@ class ZfsUtilsTestCase(TestCase):
             self.addCleanup(delattr, self, name)
 
     # NOTE: test parameter parsing
+    @pytest.mark.slow_0_01
     def test_is_supported(self):
         """
         Test zfs.is_supported method
@@ -53,6 +56,7 @@ class ZfsUtilsTestCase(TestCase):
                 ):
                     self.assertEqual(value, zfs.is_supported())
 
+    @pytest.mark.slow_0_01
     def test_property_data_zpool(self):
         """
         Test parsing of zpool get output
@@ -64,6 +68,7 @@ class ZfsUtilsTestCase(TestCase):
                 ):
                     self.assertEqual(zfs.property_data_zpool(), self.pmap_zpool)
 
+    @pytest.mark.slow_0_01
     def test_property_data_zfs(self):
         """
         Test parsing of zfs get output
@@ -83,6 +88,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertTrue(zfs.from_bool("on"))
         self.assertTrue(zfs.from_bool(zfs.from_bool("on")))
 
+    @pytest.mark.slow_0_01
     def test_from_bool_off(self):
         """
         Test from_bool with 'off'
@@ -142,6 +148,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertEqual(zfs.to_bool(True), "on")
         self.assertEqual(zfs.to_bool(zfs.to_bool(True)), "on")
 
+    @pytest.mark.slow_0_01
     def test_to_bool_false(self):
         """
         Test to_bool with False
@@ -149,6 +156,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertEqual(zfs.to_bool(False), "off")
         self.assertEqual(zfs.to_bool(zfs.to_bool(False)), "off")
 
+    @pytest.mark.slow_0_01
     def test_to_bool_none(self):
         """
         Test to_bool with None
@@ -295,6 +303,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertEqual(zfs.to_size("4404019"), "4.20M")
         self.assertEqual(zfs.to_size(zfs.to_size("4404019")), "4.20M")
 
+    @pytest.mark.slow_0_01
     def test_to_size_int_absolute(self):
         """
         Test to_size with 5368709120
@@ -333,6 +342,7 @@ class ZfsUtilsTestCase(TestCase):
             zfs.from_str(zfs.from_str('"my pool/my dataset"')), "my pool/my dataset"
         )
 
+    @pytest.mark.slow_0_01
     def test_from_str_squote_space(self):
         """
         Test from_str with "my pool/jorge's dataset"
@@ -345,6 +355,7 @@ class ZfsUtilsTestCase(TestCase):
             "my pool/jorge's dataset",
         )
 
+    @pytest.mark.slow_0_01
     def test_from_str_dquote_space(self):
         """
         Test from_str with "my pool/the \"good\" stuff"
@@ -401,6 +412,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertEqual(zfs.to_str(None), "none")
         self.assertEqual(zfs.to_str(zfs.to_str(None)), "none")
 
+    @pytest.mark.slow_0_01
     def test_to_str_passthrough(self):
         """
         Test to_str with 'passthrough'
@@ -428,6 +440,7 @@ class ZfsUtilsTestCase(TestCase):
         self.assertFalse(zfs.is_snapshot("zpool_name/dataset"))
 
     # NOTE: testing is_bookmark
+    @pytest.mark.slow_0_01
     def test_is_bookmark_snapshot(self):
         """
         Test is_bookmark with a valid snapshot name
@@ -522,6 +535,7 @@ class ZfsUtilsTestCase(TestCase):
                             zfs.zfs_command("list", flags=my_flags), "/sbin/zfs list -r"
                         )
 
+    @pytest.mark.slow_0_01
     def test_zfs_command_opt(self):
         """
         Test if zfs_command builds the correct string
@@ -569,6 +583,7 @@ class ZfsUtilsTestCase(TestCase):
                             "/sbin/zfs list -r -t snap",
                         )
 
+    @pytest.mark.slow_0_01
     def test_zfs_command_target(self):
         """
         Test if zfs_command builds the correct string
@@ -698,6 +713,7 @@ class ZfsUtilsTestCase(TestCase):
                             "/sbin/zfs set quota=5368709120 readonly=off mypool",
                         )
 
+    @pytest.mark.slow_0_01
     def test_zfs_command_fs_props(self):
         """
         Test if zfs_command builds the correct string
@@ -861,6 +877,7 @@ class ZfsUtilsTestCase(TestCase):
                             "/sbin/zpool list -o name,size mypool",
                         )
 
+    @pytest.mark.slow_0_01
     def test_zpool_command_target_with_space(self):
         """
         Test if zpool_command builds the correct string
@@ -891,6 +908,7 @@ class ZfsUtilsTestCase(TestCase):
                             '/sbin/zpool create -O quota=107374182400 -o comment="jorge\'s comment has a space" "my pool"',
                         )
 
+    @pytest.mark.slow_0_01
     def test_zpool_command_property(self):
         """
         Test if zpool_command builds the correct string
@@ -1004,6 +1022,8 @@ class ZfsUtilsTestCase(TestCase):
                             OrderedDict([("tested", False)]),
                         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_parse_command_result_nolabel(self):
         """
         Test if parse_command_result returns the expected result on failure
@@ -1053,6 +1073,7 @@ class ZfsUtilsTestCase(TestCase):
                             ),
                         )
 
+    @pytest.mark.slow_0_01
     def test_parse_command_result_fail_message_nolabel(self):
         """
         Test if parse_command_result returns the expected result on failure with stderr

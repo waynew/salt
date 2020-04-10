@@ -6,9 +6,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 import datetime
 import re
 
-# Import salt libs
-import salt.modules.postgres as postgres
+import pytest
 from salt.exceptions import SaltInvocationError
+
+# Import salt libs
+from salt.modules import postgres
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -160,6 +162,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 runas="foo",
             )
 
+    @pytest.mark.slow_0_01
     def test_db_create(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -243,6 +246,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 user="testuser",
             )
 
+    @pytest.mark.slow_0_01
     def test_db_create_with_trivial_sql_injection(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -321,6 +325,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_db_remove(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -387,6 +392,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     postgres._run_psql.call_args[0][0][14].startswith("CREATE ROLE")
                 )
 
+    @pytest.mark.slow_0_01
     def test_group_remove(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -426,6 +432,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     port="testport",
                 )
 
+    @pytest.mark.slow_0_01
     def test_group_update(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -459,6 +466,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     )
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_create(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -595,6 +603,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                         },
                     )
 
+    @pytest.mark.slow_0_01
     def test_user_remove(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -715,6 +724,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     )
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_update3(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -753,6 +763,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     )
                 )
 
+    @pytest.mark.slow_0_01
     def test_user_update_encrypted_passwd(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -825,6 +836,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
             exts = postgres.installed_extensions()
             self.assertEqual(exts, {"foo": {"extversion": "1", "extname": "foo"}})
 
+    @pytest.mark.slow_0_01
     def test_available_extensions(self):
         with patch(
             "salt.modules.postgres.psql_query",
@@ -833,6 +845,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
             exts = postgres.available_extensions()
             self.assertEqual(exts, {"foo": {"default_version": "1", "name": "foo"}})
 
+    @pytest.mark.slow_0_01
     def test_drop_extension2(self):
         with patch(
             "salt.modules.postgres.installed_extensions", Mock(side_effect=[{}, {}])
@@ -879,6 +892,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 ):
                     self.assertEqual(postgres.drop_extension("foo"), False)
 
+    @pytest.mark.slow_0_01
     def test_create_mtdata(self):
         with patch(
             "salt.modules.postgres.installed_extensions",
@@ -915,6 +929,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 self.assertFalse(postgres._EXTENSION_TO_UPGRADE in ret)
                 self.assertFalse(postgres._EXTENSION_TO_MOVE in ret)
 
+    @pytest.mark.slow_0_01
     def test_create_extension_newerthan(self):
         """
         scenario of creating upgrading extensions with possible schema and
@@ -1064,6 +1079,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 ret = postgres.schema_exists("template1", "public")
                 self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_schema_get(self):
         with patch(
             "salt.modules.postgres._run_psql", Mock(return_value={"retcode": 0})
@@ -1141,6 +1157,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     runas="user",
                 )
 
+    @pytest.mark.slow_0_01
     def test_schema_create2(self):
         with patch("salt.modules.postgres.schema_exists", Mock(return_value=True)):
             ret = postgres.schema_create(
@@ -1193,6 +1210,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     runas="user",
                 )
 
+    @pytest.mark.slow_0_01
     def test_schema_remove2(self):
         with patch("salt.modules.postgres.schema_exists", Mock(return_value=False)):
             ret = postgres.schema_remove(
@@ -1250,6 +1268,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     ret = postgres.language_exists("sql", "testdb")
                     self.assertTrue(ret)
 
+    @pytest.mark.slow_0_01
     def test_language_create(self):
         """
         Test language creation - does not exist in db
@@ -1310,6 +1329,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
             )
             self.assertFalse(ret)
 
+    @pytest.mark.slow_0_01
     def test_language_remove(self):
         """
         Test language removal - exists in db
@@ -1512,6 +1532,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                 runas="user",
             )
 
+    @pytest.mark.slow_0_01
     def test_has_privileges_on_table(self):
         """
         Test privilege checks on table
@@ -1633,6 +1654,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
 
             self.assertFalse(ret)
 
+    @pytest.mark.slow_0_01
     def test_privileges_grant_table(self):
         """
         Test granting privileges on table
@@ -1872,6 +1894,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     runas="user",
                 )
 
+    @pytest.mark.slow_0_01
     def test_privileges_revoke_table(self):
         """
         Test revoking privileges on table
@@ -1920,6 +1943,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     runas="user",
                 )
 
+    @pytest.mark.slow_0_01
     def test_privileges_revoke_group(self):
         """
         Test revoking privileges on group
@@ -1967,6 +1991,7 @@ class PostgresTestCase(TestCase, LoaderModuleMockMixin):
                     runas="user",
                 )
 
+    @pytest.mark.slow_0_01
     def test_datadir_init(self):
         """
         Test Initializing a postgres data directory

@@ -6,6 +6,7 @@ unit tests for salt.cache
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.cache
 
 # Import Salt libs
@@ -60,6 +61,7 @@ class MemCacheTest(TestCase):
 
     @patch("salt.cache.Cache.fetch", return_value="fake_data")
     @patch("salt.loader.cache", return_value={})
+    @pytest.mark.slow_0_01
     def test_fetch(self, loader_mock, cache_fetch_mock):
         # Fetch value, it will be kept in cache.
         with patch("time.time", return_value=0):
@@ -151,6 +153,7 @@ class MemCacheTest(TestCase):
 
     @patch("salt.cache.Cache.store")
     @patch("salt.loader.cache", return_value={})
+    @pytest.mark.slow_0_01
     def test_max_items(self, loader_mock, cache_store_mock):
         # Put MAX=3 values
         with patch("time.time", return_value=0):
@@ -181,6 +184,7 @@ class MemCacheTest(TestCase):
 
     @patch("salt.cache.Cache.store")
     @patch("salt.loader.cache", return_value={})
+    @pytest.mark.slow_0_01
     def test_full_cleanup(self, loader_mock, cache_store_mock):
         # Enable full cleanup
         self.cache.cleanup = True
@@ -212,6 +216,7 @@ class MemCacheTest(TestCase):
 
     @patch("salt.cache.Cache.fetch", return_value="fake_data")
     @patch("salt.loader.cache", return_value={})
+    @pytest.mark.slow_0_01
     def test_fetch_debug(self, loader_mock, cache_fetch_mock):
         # Recreate cache with debug enabled
         self.opts["memcache_debug"] = True

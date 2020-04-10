@@ -6,9 +6,11 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
-# Import Salt Libs
-import salt.modules.deb_apache as deb_apache
+import pytest
 from salt.ext import six
+
+# Import Salt Libs
+from salt.modules import deb_apache
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -40,6 +42,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
         with patch("os.path.islink", MagicMock(side_effect=[False, True])):
             self.assertTrue(deb_apache.check_site_enabled("default"))
 
+    @pytest.mark.slow_0_01
     def test_check_site_enabled_false(self):
         """
         Test if the specific Site symlink is enabled.
@@ -49,6 +52,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'a2ensite' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_a2ensite_notfound(self):
         """
         Test if it runs a2ensite for the given site.
@@ -90,6 +94,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
                 {"Name": "Apache2 Enable Site", "Site": "saltstack.com", "Status": 2},
             )
 
+    @pytest.mark.slow_0_01
     def test_a2ensite_exception(self):
         """
         Test if it runs a2ensite for the given site.
@@ -117,6 +122,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
                 },
             )
 
+    @pytest.mark.slow_0_01
     def test_a2dissite_disabled(self):
         """
         Test if it runs a2dissite for the given site.
@@ -143,6 +149,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
                 {"Name": "Apache2 Disable Site", "Site": "saltstack.com", "Status": 2},
             )
 
+    @pytest.mark.slow_0_01
     def test_a2dissite_exception(self):
         """
         Test if it runs a2dissite for the given site.
@@ -289,6 +296,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'a2enconf' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_a2enconf_notfound(self):
         """
         Test if it runs a2enconf for the given conf.
@@ -346,6 +354,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'a2disconf' function tests: 4
 
+    @pytest.mark.slow_0_01
     def test_a2disconf_notfound(self):
         """
         Test if it runs a2disconf for the given conf.
@@ -390,6 +399,7 @@ class DebApacheTestCase(TestCase, LoaderModuleMockMixin):
                     {"Name": "Apache2 Disable Conf", "Conf": "security", "Status": 2},
                 )
 
+    @pytest.mark.slow_0_01
     def test_a2disconf_exception(self):
         """
         Test if it runs a2disconf for the given conf.

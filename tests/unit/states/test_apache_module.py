@@ -5,8 +5,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.apache_module as apache_module
+from salt.states import apache_module
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -60,6 +62,7 @@ class ApacheModuleTestCase(TestCase, LoaderModuleMockMixin):
 
     # 'disabled' function tests: 1
 
+    @pytest.mark.slow_0_01
     def test_disabled(self):
         """
         Test to ensure an Apache module is disabled.

@@ -3,8 +3,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.mac_keychain as keychain
+from salt.modules import mac_keychain as keychain
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -104,6 +106,7 @@ class KeychainTestCase(TestCase, LoaderModuleMockMixin):
                 "security default-keychain -d system", runas="frank"
             )
 
+    @pytest.mark.slow_0_01
     def test_set_default_keychain(self):
         """
             Test setting the default keychain

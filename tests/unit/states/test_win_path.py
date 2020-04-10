@@ -8,8 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 
+import pytest
+
 # Import Salt Libs
-import salt.states.win_path as win_path
+from salt.states import win_path
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -101,6 +103,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_add_no_index_success(self):
         """
         Tests win_path.exists when the directory isn't already in the PATH and
@@ -167,6 +170,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_add_no_index_failure_exception(self):
         """
         Tests win_path.exists when the directory isn't already in the PATH and
@@ -201,6 +205,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_change_index_success(self):
         """
         Tests win_path.exists when the directory is already in the PATH and
@@ -234,6 +239,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_change_negative_index_success(self):
         """
         Tests win_path.exists when the directory is already in the PATH and
@@ -407,6 +413,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_change_index_test_mode(self):
         """
         Tests win_path.exists when the directory is already in the PATH and
@@ -438,6 +445,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_exists_change_negative_index_test_mode(self):
         """
         Tests win_path.exists when the directory is already in the PATH and
@@ -516,6 +524,7 @@ class WinPathTestCase(TestCase, LoaderModuleMockMixin):
     def test_exists_add_no_index_already_present_test_mode(self):
         self._test_exists_add_already_present(None, True)
 
+    @pytest.mark.slow_0_01
     def test_exists_add_index_already_present(self):
         self._test_exists_add_already_present(1, False)
         self._test_exists_add_already_present(2, False)

@@ -6,8 +6,10 @@ Test case for the vault SDB module
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt libs
-import salt.sdb.vault as vault
+from salt.sdb import vault
 from tests.support.mixins import LoaderModuleMockMixin
 from tests.support.mock import MagicMock, call, patch
 
@@ -32,6 +34,7 @@ class TestVaultSDB(LoaderModuleMockMixin, TestCase):
             }
         }
 
+    @pytest.mark.slow_0_01
     def test_set(self):
         """
         Test salt.sdb.vault.set function

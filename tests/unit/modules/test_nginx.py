@@ -3,8 +3,10 @@
 # Import Pytohn libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Module
-import salt.modules.nginx as nginx
+from salt.modules import nginx
 
 # Import Salt Testing libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -34,6 +36,7 @@ class NginxTestCase(TestCase, LoaderModuleMockMixin):
         self.addCleanup(patcher.stop)
         return {nginx: {"_urlopen": Mock(return_value=MockUrllibStatus())}}
 
+    @pytest.mark.slow_0_01
     def test_nginx_status(self):
         result = nginx.status()
         nginx._urlopen.assert_called_once_with("http://127.0.0.1/status")
@@ -50,6 +53,7 @@ class NginxTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_nginx_status_with_arg(self):
         other_path = "http://localhost/path"
         result = nginx.status(other_path)

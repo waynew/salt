@@ -2,8 +2,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.states.boto_kinesis as boto_kinesis
+from salt.states import boto_kinesis
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -23,6 +25,7 @@ class BotoKinesisTestCase(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {boto_kinesis: {}}
 
+    @pytest.mark.slow_0_01
     def test_stream_present(self):
         """
         Test to ensure the kinesis stream exists.

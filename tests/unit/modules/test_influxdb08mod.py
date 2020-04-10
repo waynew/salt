@@ -6,8 +6,10 @@
 # Import Python libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 # Import Salt Libs
-import salt.modules.influxdb08mod as influx08
+from salt.modules import influxdb08mod as influx08
 from tests.support.mock import MagicMock, patch
 
 # Import Salt Testing Libs
@@ -57,6 +59,7 @@ class InfluxTestCase(TestCase):
     TestCase for the salt.modules.at module
     """
 
+    @pytest.mark.slow_0_01
     def test_db_list(self):
         """
         Test to list all InfluxDB databases
@@ -87,6 +90,7 @@ class InfluxTestCase(TestCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
     def test_db_create(self):
         """
         Test to create a database
@@ -174,6 +178,7 @@ class InfluxTestCase(TestCase):
                 )
             )
 
+    @pytest.mark.slow_0_01
     def test_user_chpass(self):
         """
         Tests to change password for a cluster admin or a database user.
@@ -313,6 +318,7 @@ class InfluxTestCase(TestCase):
                 "name", "30d", 1, "db", False
             )
 
+    @pytest.mark.slow_0_01
     def test_retention_policy_modify(self):
         client = MockInfluxDBClient()
         with patch.object(influx08, "_client", MagicMock(return_value=client)):

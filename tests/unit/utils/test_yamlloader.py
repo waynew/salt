@@ -9,6 +9,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import collections
 import textwrap
 
+import pytest
 import salt.utils.files
 
 # Import 3rd-party libs
@@ -86,6 +87,7 @@ class YamlLoaderTestCase(TestCase):
             {"p1": ["alpha", "beta"]},
         )
 
+    @pytest.mark.slow_0_01
     def test_yaml_merge(self):
         """
         Test YAML anchors
@@ -136,6 +138,8 @@ class YamlLoaderTestCase(TestCase):
             {"p2": {"v2": ["t1", "t2"]}, "p1": {"v1": ["t1", "t2"]}},
         )
 
+    @pytest.mark.slow_0_01
+    @pytest.mark.slow_0_1
     def test_yaml_duplicates(self):
         """
         Test that duplicates still throw an error

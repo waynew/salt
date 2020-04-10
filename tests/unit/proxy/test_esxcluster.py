@@ -8,11 +8,12 @@
 # Import Python Libs
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
 import salt.exceptions
+from salt.config.schemas.esxcluster import EsxclusterProxySchema
 
 # Import Salt Libs
-import salt.proxy.esxcluster as esxcluster
-from salt.config.schemas.esxcluster import EsxclusterProxySchema
+from salt.proxy import esxcluster
 
 # Import Salt Testing Libs
 from tests.support.mixins import LoaderModuleMockMixin
@@ -108,6 +109,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
                 esxcluster.init(self.opts_userpass)
         self.assertEqual(excinfo.exception.strerror, "Validation Error")
 
+    @pytest.mark.slow_0_01
     def test_no_username(self):
         opts = self.opts_userpass.copy()
         del opts["proxy"]["username"]
@@ -136,6 +138,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
             "'passwords' key found in proxy config.",
         )
 
+    @pytest.mark.slow_0_01
     def test_no_domain(self):
         opts = self.opts_sspi.copy()
         del opts["proxy"]["domain"]
@@ -163,6 +166,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
             "'principal' key found in proxy config.",
         )
 
+    @pytest.mark.slow_0_01
     def test_find_credentials(self):
         mock_find_credentials = MagicMock(
             return_value=("fake_username", "fake_password")
@@ -200,6 +204,7 @@ class InitTestCase(TestCase, LoaderModuleMockMixin):
             },
         )
 
+    @pytest.mark.slow_0_01
     def test_details_sspi(self):
         esxcluster.init(self.opts_sspi)
         self.assertDictEqual(

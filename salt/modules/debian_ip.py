@@ -29,7 +29,8 @@ import salt.utils.odict
 import salt.utils.stringutils
 import salt.utils.templates
 import salt.utils.validate.net
-
+from salt.ext import six
+from salt.ext.six.moves import StringIO
 
 # Set up logging
 log = logging.getLogger(__name__)
@@ -447,11 +448,10 @@ IPV4_ATTR_MAP = {
     #
     'vlan-raw-device': __anything,
     #
-    'network': __anything,  # i don't know what this is
-
-    'test': __anything,  # TODO
-    'enable_ipv4': __anything,  # TODO
-    'enable_ipv6': __anything,  # TODO
+    "network": __anything,  # i don't know what this is
+    "test": __anything,  # TODO
+    "enable_ipv4": __anything,  # TODO
+    "enable_ipv6": __anything,  # TODO
 }
 
 
@@ -490,11 +490,10 @@ IPV6_ATTR_MAP = {
     'dns-nameservers': __space_delimited_list,
     'dns-search': __space_delimited_list,
     #
-    'vlan-raw-device': __anything,
-
-    'test': __anything,  # TODO
-    'enable_ipv4': __anything,  # TODO
-    'enable_ipv6': __anything,  # TODO
+    "vlan-raw-device": __anything,
+    "test": __anything,  # TODO
+    "enable_ipv4": __anything,  # TODO
+    "enable_ipv6": __anything,  # TODO
 }
 
 
@@ -681,12 +680,14 @@ def _parse_interfaces(interface_files=None):
             log.error(msg)
             adapters.pop(iface_name)
             continue
-        for opt in ['ethtool', 'bonding', 'bridging']:
-            for inet in ['inet', 'inet6']:
-                if inet in adapters[iface_name]['data']:
-                    if opt in adapters[iface_name]['data'][inet]:
-                        opt_keys = sorted(adapters[iface_name]['data'][inet][opt].keys())
-                        adapters[iface_name]['data'][inet][opt + '_keys'] = opt_keys
+        for opt in ["ethtool", "bonding", "bridging"]:
+            for inet in ["inet", "inet6"]:
+                if inet in adapters[iface_name]["data"]:
+                    if opt in adapters[iface_name]["data"][inet]:
+                        opt_keys = sorted(
+                            adapters[iface_name]["data"][inet][opt].keys()
+                        )
+                        adapters[iface_name]["data"][inet][opt + "_keys"] = opt_keys
 
     return adapters
 
@@ -1233,81 +1234,91 @@ def _parse_settings_eth(opts, iface_type, enabled, iface):
     iface_data['inet6'] = salt.utils.odict.OrderedDict()
 
     if enabled:
-        adapters[iface]['enabled'] = True
+        adapters[iface]["enabled"] = True
 
-    if opts.get('hotplug', False):
-        adapters[iface]['hotplug'] = True
+    if opts.get("hotplug", False):
+        adapters[iface]["hotplug"] = True
 
-    if opts.get('enable_ipv6', None) and opts.get('iface_type', '') == 'vlan':
-        iface_data['inet6']['vlan_raw_device'] = (
-            re.sub(r'\.\d*', '', iface))
+    if opts.get("enable_ipv6", None) and opts.get("iface_type", "") == "vlan":
+        iface_data["inet6"]["vlan_raw_device"] = re.sub(r"\.\d*", "", iface)
 
-    for addrfam in ['inet', 'inet6']:
-        if iface_type not in ['bridge']:
+    for addrfam in ["inet", "inet6"]:
+        if iface_type not in ["bridge"]:
             tmp_ethtool = _parse_ethtool_opts(opts, iface)
             if tmp_ethtool:
                 ethtool = {}
                 for item in tmp_ethtool:
                     ethtool[_ETHTOOL_CONFIG_OPTS[item]] = tmp_ethtool[item]
 
-                iface_data[addrfam]['ethtool'] = ethtool
+                iface_data[addrfam]["ethtool"] = ethtool
                 # return a list of sorted keys to ensure consistent order
-                iface_data[addrfam]['ethtool_keys'] = sorted(ethtool)
+                iface_data[addrfam]["ethtool_keys"] = sorted(ethtool)
 
-        if iface_type == 'bridge':
+        if iface_type == "bridge":
             bridging = _parse_bridge_opts(opts, iface)
             if bridging:
-                iface_data[addrfam]['bridging'] = bridging
-                iface_data[addrfam]['bridging_keys'] = sorted(bridging)
-                iface_data[addrfam]['addrfam'] = addrfam
+                iface_data[addrfam]["bridging"] = bridging
+                iface_data[addrfam]["bridging_keys"] = sorted(bridging)
+                iface_data[addrfam]["addrfam"] = addrfam
 
-        elif iface_type == 'bond':
+        elif iface_type == "bond":
             bonding = _parse_settings_bond(opts, iface)
             if bonding:
-                iface_data[addrfam]['bonding'] = bonding
-                iface_data[addrfam]['bonding']['slaves'] = opts['slaves']
-                iface_data[addrfam]['bonding_keys'] = sorted(bonding)
-                iface_data[addrfam]['addrfam'] = addrfam
+                iface_data[addrfam]["bonding"] = bonding
+                iface_data[addrfam]["bonding"]["slaves"] = opts["slaves"]
+                iface_data[addrfam]["bonding_keys"] = sorted(bonding)
+                iface_data[addrfam]["addrfam"] = addrfam
 
-        elif iface_type == 'slave':
-            adapters[iface]['master'] = opts['master']
+        elif iface_type == "slave":
+            adapters[iface]["master"] = opts["master"]
 
-            opts['proto'] = 'manual'
-            iface_data[addrfam]['master'] = adapters[iface]['master']
-            iface_data[addrfam]['addrfam'] = addrfam
+            opts["proto"] = "manual"
+            iface_data[addrfam]["master"] = adapters[iface]["master"]
+            iface_data[addrfam]["addrfam"] = addrfam
 
-        elif iface_type == 'vlan':
-            iface_data[addrfam]['vlan_raw_device'] = re.sub(r'\.\d*', '', iface)
-            iface_data[addrfam]['addrfam'] = addrfam
+        elif iface_type == "vlan":
+            iface_data[addrfam]["vlan_raw_device"] = re.sub(r"\.\d*", "", iface)
+            iface_data[addrfam]["addrfam"] = addrfam
 
-        elif iface_type == 'pppoe':
+        elif iface_type == "pppoe":
             tmp_ethtool = _parse_ethtool_pppoe_opts(opts, iface)
             if tmp_ethtool:
                 for item in tmp_ethtool:
-                    adapters[iface]['data'][addrfam][_DEB_CONFIG_PPPOE_OPTS[item]] = tmp_ethtool[item]
-            iface_data[addrfam]['addrfam'] = addrfam
+                    adapters[iface]["data"][addrfam][
+                        _DEB_CONFIG_PPPOE_OPTS[item]
+                    ] = tmp_ethtool[item]
+            iface_data[addrfam]["addrfam"] = addrfam
 
-    opts.pop('mode', None)
+    opts.pop("mode", None)
 
     for opt, val in opts.items():
         inet = None
-        if opt.startswith('ipv4'):
+        if opt.startswith("ipv4"):
             opt = opt[4:]
-            inet = 'inet'
-            iface_data['inet']['addrfam'] = 'inet'
-        elif opt.startswith('ipv6'):
-            iface_data['inet6']['addrfam'] = 'inet6'
+            inet = "inet"
+            iface_data["inet"]["addrfam"] = "inet"
+        elif opt.startswith("ipv6"):
+            iface_data["inet6"]["addrfam"] = "inet6"
             opt = opt[4:]
-            inet = 'inet6'
-        elif opt in ['ipaddr', 'address', 'ipaddresses', 'addresses', 'gateway', 'proto']:
-            iface_data['inet']['addrfam'] = 'inet'
-            inet = 'inet'
+            inet = "inet6"
+        elif opt in [
+            "ipaddr",
+            "address",
+            "ipaddresses",
+            "addresses",
+            "gateway",
+            "proto",
+        ]:
+            iface_data["inet"]["addrfam"] = "inet"
+            inet = "inet"
 
         _opt = SALT_ATTR_TO_DEBIAN_ATTR_MAP.get(opt, opt)
-        _debopt = _opt.replace('-', '_')
+        _debopt = _opt.replace("-", "_")
 
-        for addrfam in ['inet', 'inet6']:
-            (valid, value, errmsg) = _validate_interface_option(_opt, val, addrfam=addrfam)
+        for addrfam in ["inet", "inet6"]:
+            (valid, value, errmsg) = _validate_interface_option(
+                _opt, val, addrfam=addrfam
+            )
             if not valid:
                 continue
             if inet is None and _debopt not in iface_data[addrfam]:
@@ -1315,17 +1326,23 @@ def _parse_settings_eth(opts, iface_type, enabled, iface):
             elif inet == addrfam:
                 iface_data[addrfam][_debopt] = value
 
-    for opt in ['up_cmds', 'pre_up_cmds', 'post_up_cmds',
-                'down_cmds', 'pre_down_cmds', 'post_down_cmds']:
+    for opt in [
+        "up_cmds",
+        "pre_up_cmds",
+        "post_up_cmds",
+        "down_cmds",
+        "pre_down_cmds",
+        "post_down_cmds",
+    ]:
         if opt in opts:
-            iface_data['inet'][opt] = opts[opt]
-            iface_data['inet6'][opt] = opts[opt]
+            iface_data["inet"][opt] = opts[opt]
+            iface_data["inet6"][opt] = opts[opt]
 
     # Remove incomplete/disabled inet blocks
-    for (addrfam, opt) in [('inet', 'enable_ipv4'), ('inet6', 'enable_ipv6')]:
+    for (addrfam, opt) in [("inet", "enable_ipv4"), ("inet6", "enable_ipv6")]:
         if opts.get(opt, None) is False:
             iface_data.pop(addrfam)
-        elif iface_data[addrfam].get('addrfam', '') != addrfam:
+        elif iface_data[addrfam].get("addrfam", "") != addrfam:
             iface_data.pop(addrfam)
 
     return adapters
@@ -1639,10 +1656,10 @@ def build_interface(iface, iface_type, enabled, **settings):
     if iface_type not in _IFACE_TYPES:
         _raise_error_iface(iface, iface_type, _IFACE_TYPES)
 
-    if iface_type == 'slave':
-        settings['slave'] = 'yes'
-        if 'master' not in settings:
-            msg = 'master is a required setting for slave interfaces'
+    if iface_type == "slave":
+        settings["slave"] = "yes"
+        if "master" not in settings:
+            msg = "master is a required setting for slave interfaces"
             log.error(msg)
             raise AttributeError(msg)
 
@@ -1745,8 +1762,8 @@ def down(iface, iface_type):
     '''
     # Slave devices are controlled by the master.
     # Source 'interfaces' aren't brought down.
-    if iface_type not in ['slave', 'source']:
-        return __salt__['cmd.run'](['ifdown', iface])
+    if iface_type not in ["slave", "source"]:
+        return __salt__["cmd.run"](["ifdown", iface])
     return None
 
 
@@ -1806,8 +1823,8 @@ def up(iface, iface_type):  # pylint: disable=C0103
     '''
     # Slave devices are controlled by the master.
     # Source 'interfaces' aren't brought up.
-    if iface_type not in ('slave', 'source'):
-        return __salt__['cmd.run'](['ifup', iface])
+    if iface_type not in ("slave", "source"):
+        return __salt__["cmd.run"](["ifup", iface])
     return None
 
 
@@ -1838,8 +1855,8 @@ def get_network_settings():
         hostname = _parse_hostname()
         domainname = _parse_domainname()
 
-        settings['hostname'] = hostname
-        settings['domainname'] = domainname
+        settings["hostname"] = hostname
+        settings["domainname"] = domainname
 
     else:
         settings = _parse_current_network_settings()

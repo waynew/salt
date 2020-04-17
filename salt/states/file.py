@@ -291,8 +291,7 @@ import shutil
 import sys
 import time
 import traceback
-from collections import Iterable, Mapping, defaultdict
-from datetime import datetime, date   # python3 problem in the making?
+from datetime import date, datetime  # python3 problem in the making?
 
 # Import salt libs
 import salt.loader
@@ -312,15 +311,21 @@ from salt.exceptions import CommandExecutionError
 from salt.serializers import DeserializationError
 from salt.state import get_accumulator_dir as _get_accumulator_dir
 
+try:
+    # pylint: disable=no-name-in-module
+    from collections import Iterable, Mapping, defaultdict
+
+    # pylint: enable=no-name-in-module
+except ImportError:
+    from collections.abc import Iterable, Mapping
+    from collections import defaultdict
+
+
 if salt.utils.platform.is_windows():
     import salt.utils.win_dacl
     import salt.utils.win_functions
     import salt.utils.winapi
 
-# Import 3rd-party libs
-from salt.ext import six
-from salt.ext.six.moves import zip_longest
-from salt.ext.six.moves.urllib.parse import urlparse as _urlparse  # pylint: disable=no-name-in-module
 if salt.utils.platform.is_windows():
     import pywintypes
     import win32com.client

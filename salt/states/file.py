@@ -337,9 +337,7 @@ log = logging.getLogger(__name__)
 COMMENT_REGEX = r"^([[:space:]]*){0}[[:space:]]?"
 __NOT_FOUND = object()
 
-__func_alias__ = {
-    "copy_": "copy",
-}
+__func_alias__ = {"copy_": "copy"}
 
 
 def _get_accumulator_filepath():
@@ -1001,11 +999,7 @@ def _check_touch(name, atime, mtime):
     """
     Check to see if a file needs to be updated or created
     """
-    ret = {
-        "result": None,
-        "comment": "",
-        "changes": {"new": name},
-    }
+    ret = {"result": None, "comment": "", "changes": {"new": name}}
     if not os.path.exists(name):
         ret["comment"] = "File {0} is set to be created".format(name)
     else:
@@ -6477,10 +6471,7 @@ def touch(name, atime=None, mtime=None, makedirs=False):
     """
     name = os.path.expanduser(name)
 
-    ret = {
-        "name": name,
-        "changes": {},
-    }
+    ret = {"name": name, "changes": {}}
     if not name:
         return _error(ret, "Must provide name to file.touch")
     if not os.path.isabs(name):
@@ -7112,10 +7103,7 @@ def serialize(
         "yaml.serialize": {"default_flow_style": False},
         "json.serialize": {"indent": 2, "separators": (",", ": "), "sort_keys": True},
     }
-    deserializer_options = {
-        "yaml.deserialize": {},
-        "json.deserialize": {},
-    }
+    deserializer_options = {"yaml.deserialize": {}, "json.deserialize": {}}
     if encoding:
         serializer_options["yaml.serialize"].update({"allow_unicode": True})
         serializer_options["json.serialize"].update({"ensure_ascii": False})
@@ -7573,10 +7561,7 @@ def decode(
         outsum = __salt__["hashutil.digest_file"](name, checksum)
 
         if insum != outsum:
-            ret["changes"] = {
-                "old": outsum,
-                "new": insum,
-            }
+            ret["changes"] = {"old": outsum, "new": insum}
 
         if not ret["changes"]:
             ret["comment"] = "File is in the correct state."

@@ -460,12 +460,7 @@ def present(
         # wise the Salt will be generated randomly, causing the
         # hash to change each time and thereby making the
         # user.present state non-idempotent.
-        algorithms = {
-            "1": "md5",
-            "2a": "blowfish",
-            "5": "sha256",
-            "6": "sha512",
-        }
+        algorithms = {"1": "md5", "2a": "blowfish", "5": "sha256", "6": "sha512"}
         try:
             _, algo, shadow_salt, shadow_hash = __salt__["shadow.info"](name)[
                 "passwd"

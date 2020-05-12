@@ -165,7 +165,7 @@ def is_remote_added(remote):
     """
     out = __salt__["cmd.run_all"](FLATPAK_BINARY_NAME + " remotes")
 
-    lines = out.splitlines()
+    lines = out["stdout"].splitlines()
     for item in lines:
         i = re.split(r"\t+", item.rstrip("\t"))
         if i[0] == remote:

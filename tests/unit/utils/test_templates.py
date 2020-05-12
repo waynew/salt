@@ -10,9 +10,7 @@ import os
 import sys
 
 import salt.utils.files
-
 import salt.utils.templates
-
 from tests.support.helpers import with_tempdir
 from tests.support.mock import patch
 from tests.support.unit import TestCase, skipIf
@@ -61,8 +59,8 @@ class RenderTestCase(TestCase):
         self.assertEqual(res, "OK")
 
     def test_render_jinja_tojson_sorted(self):
-        templ = '''thing: {{ var|tojson(sort_keys=False) }}'''
-        expected = '''thing: {"z": "zzz", "y": "yyy", "x": "xxx"}'''
+        templ = """thing: {{ var|tojson(sort_keys=False) }}"""
+        expected = """thing: {"z": "zzz", "y": "yyy", "x": "xxx"}"""
 
         with patch.dict(self.context, {"var": {"z": "zzz", "y": "yyy", "x": "xxx"}}):
             res = salt.utils.templates.render_jinja_tmpl(templ, self.context)
@@ -70,8 +68,8 @@ class RenderTestCase(TestCase):
         assert res == expected
 
     def test_render_jinja_tojson_unsorted(self):
-        templ = '''thing: {{ var|tojson(sort_keys=False) }}'''
-        expected = '''thing: {"z": "zzz", "y": "yyy", "x": "xxx"}'''
+        templ = """thing: {{ var|tojson(sort_keys=False) }}"""
+        expected = """thing: {"z": "zzz", "y": "yyy", "x": "xxx"}"""
 
         with patch.dict(self.context, {"var": {"z": "zzz", "y": "yyy", "x": "xxx"}}):
             res = salt.utils.templates.render_jinja_tmpl(templ, self.context)

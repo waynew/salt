@@ -281,7 +281,7 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         )
         patch_runall = patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall})
         with patch_flatpak_binary, patch_runall:
-            flatpak.is_remote_added(remote="fnord")
+            flatpak.is_remote_added(name="fnord")
             command = mock_runall.call_args.args[0]
             self.assertEqual(command, expected_command)
 
@@ -289,7 +289,7 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         no_remotes_output = {"retcode": 0, "stdout": "", "stderr": ""}
         mock_runall = MagicMock(return_value=no_remotes_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            result = flatpak.is_remote_added(remote="fnord")
+            result = flatpak.is_remote_added(name="fnord")
 
             self.assertFalse(result)
 
@@ -311,7 +311,7 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         }
         mock_runall = MagicMock(return_value=remotes_excluding_target_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            result = flatpak.is_remote_added(remote=target)
+            result = flatpak.is_remote_added(name=target)
 
             self.assertFalse(result)
 
@@ -335,7 +335,7 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         }
         mock_runall = MagicMock(return_value=remotes_excluding_target_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            result = flatpak.is_remote_added(remote=target)
+            result = flatpak.is_remote_added(name=target)
 
             self.assertFalse(result)
 
@@ -356,6 +356,6 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         }
         mock_runall = MagicMock(return_value=remotes_including_target_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            result = flatpak.is_remote_added(remote=target)
+            result = flatpak.is_remote_added(name=target)
 
             self.assertTrue(result)

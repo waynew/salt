@@ -47,6 +47,7 @@ def install(location, name):
     """
     ret = {"result": None, "output": ""}
 
+    # Install uses location name, add_remote uses name location
     out = __salt__["cmd.run_all"](
         FLATPAK_BINARY_NAME + " install " + location + " " + name
     )
@@ -85,12 +86,12 @@ def is_installed(name):
         return True
 
 
-def uninstall(pkg):
+def uninstall(name):
     """
     Uninstall the specified package.
 
     Args:
-        pkg (str): The package name.
+        name (str): The name of the package or the runtime.
 
     Returns:
         dict: The ``result`` and ``output``.
@@ -103,7 +104,7 @@ def uninstall(pkg):
     """
     ret = {"result": None, "output": ""}
 
-    out = __salt__["cmd.run_all"](FLATPAK_BINARY_NAME + " uninstall " + pkg)
+    out = __salt__["cmd.run_all"](FLATPAK_BINARY_NAME + " uninstall " + name)
 
     if out["retcode"] and out["stderr"]:
         ret["stderr"] = out["stderr"].strip()
@@ -133,6 +134,7 @@ def add_remote(name, location):
         salt '*' flatpak.add_remote flathub https://flathub.org/repo/flathub.flatpakrepo
     """
     ret = {"result": None, "output": ""}
+    # Install uses location name, add_remote uses name location
     out = __salt__["cmd.run_all"](
         FLATPAK_BINARY_NAME + " remote-add " + name + " " + location
     )
@@ -147,12 +149,12 @@ def add_remote(name, location):
     return ret
 
 
-def is_remote_added(remote):
+def is_remote_added(name):
     """
     Determines if a remote exists.
 
     Args:
-        remote (str): The remote's name.
+        name (str): The remote's name.
 
     Returns:
         bool: True if the remote has already been added.
@@ -168,6 +170,6 @@ def is_remote_added(remote):
     lines = out["stdout"].splitlines()
     for item in lines:
         i = re.split(r"\t+", item.rstrip("\t"))
-        if i[0] == remote:
+        if i[0] == name:
             return True
     return False

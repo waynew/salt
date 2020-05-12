@@ -97,7 +97,17 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(result["stdout"], "")
 
     def test_is_installed_should_use_the_correct_flatpak_command(self):
-        ...
+        expected_command = "NOT_REALLY_FLATPAK_INFO info fnord"
+
+        mock_runall = MagicMock()
+        patch_flatpak_binary = patch(
+            "salt.modules.flatpak.FLATPAK_BINARY_NAME", "NOT_REALLY_FLATPAK_INFO"
+        )
+        patch_runall = patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall})
+        with patch_flatpak_binary, patch_runall:
+            flatpak.is_installed(name="fnord")
+            command = mock_runall.call_args.args[0]
+            self.assertEqual(command, expected_command)
 
     def test_is_installed_should_be_False_when_flatpak_returns_nonzero_and_stderr(self):
         ...
@@ -109,18 +119,15 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         ...
 
     def test_uninstall_uses_correct_flatpak_command(self):
-        import pytest
-
-        pytest.skip()
-        expected_command = "NOT_REALLY_FLATPAK uninstall fnord_location fnord_name"
+        expected_command = "NOT_REALLY_FLATPAK_UNINSTALL uninstall fnord_name"
 
         mock_runall = MagicMock()
         patch_flatpak_binary = patch(
-            "salt.modules.flatpak.FLATPAK_BINARY_NAME", "NOT_REALLY_FLATPAK"
+            "salt.modules.flatpak.FLATPAK_BINARY_NAME", "NOT_REALLY_FLATPAK_UNINSTALL"
         )
         patch_runall = patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall})
         with patch_flatpak_binary, patch_runall:
-            # flatpak.uninstall(location="fnord_location", name="fnord_name")
+            flatpak.uninstall(name="fnord_name")
             command = mock_runall.call_args.args[0]
             self.assertEqual(command, expected_command)
 
@@ -193,14 +200,13 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             ...
 
     def test_add_remote_uses_correct_flatpak_command(self):
-        import pytest
-
-        pytest.skip()
-        expected_command = "NOT_REALLY_FLATPAK add_remote fnord_location fnord_name"
+        expected_command = (
+            "NOT_REALLY_FLATPAK_ADD_REMOTE remote-add fnord_name fnord_location"
+        )
 
         mock_runall = MagicMock()
         patch_flatpak_binary = patch(
-            "salt.modules.flatpak.FLATPAK_BINARY_NAME", "NOT_REALLY_FLATPAK"
+            "salt.modules.flatpak.FLATPAK_BINARY_NAME", "NOT_REALLY_FLATPAK_ADD_REMOTE"
         )
         patch_runall = patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall})
         with patch_flatpak_binary, patch_runall:

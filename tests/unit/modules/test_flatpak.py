@@ -110,13 +110,32 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(command, expected_command)
 
     def test_is_installed_should_be_False_when_flatpak_returns_nonzero_and_stderr(self):
-        ...
+        # Based on flapak code as of 2020-04-30 when there's an error
+        # running flatpak it will return both nonzero and dump to stderr.
+        # If this changes in the future, this test will need to be modified.
+        # arrange
+        error_output = {"retcode": 42, "stderr": "some text but mostly fnord"}
+        mock_runall = MagicMock(return_value=error_output)
+        with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
+            result = flatpak.is_installed(name="fnord")
+
+            self.assertFalse(result)
 
     def test_is_installed_should_be_True_when_flatpak_returns_zero_and_stderr(self):
-        ...
+        error_output = {"retcode": 0, "stderr": "some text but mostly fnord"}
+        mock_runall = MagicMock(return_value=error_output)
+        with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
+            result = flatpak.is_installed(name="fnord")
+
+            self.assertTrue(result)
 
     def test_is_installed_should_be_True_when_flatpak_returns_zero(self):
-        ...
+        error_output = {"retcode": 0, "stderr": ""}
+        mock_runall = MagicMock(return_value=error_output)
+        with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
+            result = flatpak.is_installed(name="fnord")
+
+            self.assertTrue(result)
 
     def test_uninstall_uses_correct_flatpak_command(self):
         expected_command = "NOT_REALLY_FLATPAK_UNINSTALL uninstall fnord_name"
@@ -132,30 +151,20 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(command, expected_command)
 
     def test_uninstall_should_fail_when_flatpak_returns_nonzero_and_stderr(self):
-        import pytest
-
-        pytest.skip()
         # Based on flapak code as of 2020-04-30 when there's an error
         # running flatpak it will return both nonzero and dump to stderr.
         # If this changes in the future, this test will need to be modified.
-        # arrange
         expected_stderr = "fnord"
         error_result = {"retcode": 1, "stderr": expected_stderr}
         mock_runall = MagicMock(return_value=error_result)
 
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            # act
-            # result = flatpak.uninstall(location='fnord_location', name='fnord_name')
+            result = flatpak.uninstall(name="fnord_name")
 
-            # assert
-            # self.assertFalse(result["result"])
-            # self.assertEqual(result["stderr"], expected_stderr)
-            ...
+            self.assertFalse(result["result"])
+            self.assertEqual(result["stderr"], expected_stderr)
 
     def test_uninstall_should_not_fail_when_flatpak_returns_zero_and_stderr(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = "some fnordy stdout"
         success_with_stderr = {
             "retcode": 0,
@@ -164,40 +173,35 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
         }
         mock_runall = MagicMock(return_value=success_with_stderr)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            # result = flatpak.uninstall(location='fnord_location', name='fnord_name')
+            result = flatpak.uninstall(name="fnord_name")
 
-            # self.assertTrue(result["result"])
-            # self.assertEqual(result["stdout"], expected_stdout)
-            ...
+            self.assertTrue(result["result"])
+            self.assertEqual(result["stdout"], expected_stdout)
 
     def test_uninstall_should_succed_when_flatpak_returns_zero_with_output(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = "This is a fnordy stdout. There is something here."
         success_with_empty_output = {"retcode": 0, "stdout": expected_stdout}
         mock_runall = MagicMock(return_value=success_with_empty_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            # result = flatpak.uninstall(location='fnord_location', name='fnord_name')
+            result = flatpak.uninstall(name="fnord_name")
 
-            # self.assertTrue(result["result"])
-            # self.assertEqual(result["stdout"], expected_stdout)
-            ...
+            self.assertTrue(result["result"])
+            self.assertEqual(result["stdout"], expected_stdout)
 
     def test_uninstall_should_succed_with_only_whitespace_output(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = ""
         all_the_whitespaces = "\n\t\t\n\f     "
-        success_with_empty_output = {"retcode": 0, "stdout": all_the_whitespaces}
+        success_with_empty_output = {
+            "retcode": 0,
+            "stdout": all_the_whitespaces,
+            "stderr": "this should not affect the result",
+        }
         mock_runall = MagicMock(return_value=success_with_empty_output)
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            # result = flatpak.uninstall(location='fnord_location', name='fnord_name')
+            result = flatpak.uninstall(name="fnord_name")
 
-            # self.assertTrue(result["result"])
-            # self.assertEqual(result["stdout"], "")
-            ...
+            self.assertTrue(result["result"])
+            self.assertEqual(result["stdout"], "")
 
     def test_add_remote_uses_correct_flatpak_command(self):
         expected_command = (
@@ -215,29 +219,20 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(command, expected_command)
 
     def test_add_remote_should_fail_when_flatpak_returns_nonzero_and_stderr(self):
-        import pytest
-
-        pytest.skip()
         # Based on flapak code as of 2020-04-30 when there's an error
         # running flatpak it will return both nonzero and dump to stderr.
         # If this changes in the future, this test will need to be modified.
-        # arrange
         expected_stderr = "fnord"
         error_result = {"retcode": 1, "stderr": expected_stderr}
         mock_runall = MagicMock(return_value=error_result)
 
         with patch.dict(flatpak.__salt__, {"cmd.run_all": mock_runall}):
-            # act
             result = flatpak.add_remote(location="fnord_location", name="fnord_name")
 
-            # assert
             self.assertFalse(result["result"])
             self.assertEqual(result["stderr"], expected_stderr)
 
     def test_add_remote_should_not_fail_when_flatpak_returns_zero_and_stderr(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = "some fnordy stdout"
         success_with_stderr = {
             "retcode": 0,
@@ -252,9 +247,6 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(result["stdout"], expected_stdout)
 
     def test_add_remote_should_succed_when_flatpak_returns_zero_with_output(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = "This is a fnordy stdout. There is something here."
         success_with_empty_output = {"retcode": 0, "stdout": expected_stdout}
         mock_runall = MagicMock(return_value=success_with_empty_output)
@@ -265,9 +257,6 @@ class TestFlatPack(TestCase, LoaderModuleMockMixin):
             self.assertEqual(result["stdout"], expected_stdout)
 
     def test_add_remote_should_succed_with_only_whitespace_output(self):
-        import pytest
-
-        pytest.skip()
         expected_stdout = ""
         all_the_whitespaces = "\n\t\t\n\f     "
         success_with_empty_output = {"retcode": 0, "stdout": all_the_whitespaces}

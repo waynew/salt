@@ -6,11 +6,13 @@ The key Thorium State is used to apply changes to the accepted/rejected/pending 
 """
 # Import python libs
 from __future__ import absolute_import, print_function, unicode_literals
-
 import time
 
 # Import salt libs
 import salt.key
+
+import logging
+log = logging.getLogger(__name__)
 
 
 def _get_key_api():
@@ -22,7 +24,7 @@ def _get_key_api():
     return __context__["keyapi"]
 
 
-def timeout(name, delete=0, reject=0):
+def timeout(name, delete=0, reject=0, name_match=None):
     """
     If any minion's status is older than the timeout value then apply the
     given action to the timed out key. This example will remove keys to
@@ -40,6 +42,7 @@ def timeout(name, delete=0, reject=0):
             - require:
               - status: statreg
             - delete: 300
+            - name_match: test-salt-minion-1-*
     """
     ret = {"name": name, "changes": {}, "comment": "", "result": True}
     now = time.time()
@@ -49,9 +52,14 @@ def timeout(name, delete=0, reject=0):
     remove = set()
     reject_set = set()
     keyapi = _get_key_api()
-    current = keyapi.list_status("acc")
-    for id_ in current.get("minions", []):
-        if id_ in __reg__["status"]["val"]:
+
+    if name_match:
+        current = keyapi.name_match(name_match)
+    else:
+        current = keyapi.list_status('acc')
+
+    for id_ in current.get('minions', []):
+        if id_ in __reg__['status']['val']:
             # minion is reporting, check timeout and mark for removal
             if delete and (now - __reg__["status"]["val"][id_]["recv_time"]) > delete:
                 remove.add(id_)
@@ -68,10 +76,12 @@ def timeout(name, delete=0, reject=0):
                 if reject and (now - __context__[ktr][id_]) > reject:
                     reject_set.add(id_)
     for id_ in remove:
+        log.info("key.timeout delete %s", str(id_))
         keyapi.delete_key(id_)
         __reg__["status"]["val"].pop(id_, None)
         __context__[ktr].pop(id_, None)
     for id_ in reject_set:
+        log.info("key.timeout reject %s", str(id_))
         keyapi.reject(id_)
         __reg__["status"]["val"].pop(id_, None)
         __context__[ktr].pop(id_, None)

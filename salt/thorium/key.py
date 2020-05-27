@@ -12,6 +12,7 @@ import time
 import salt.key
 
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -56,10 +57,10 @@ def timeout(name, delete=0, reject=0, name_match=None):
     if name_match:
         current = keyapi.name_match(name_match)
     else:
-        current = keyapi.list_status('acc')
+        current = keyapi.list_status("acc")
 
-    for id_ in current.get('minions', []):
-        if id_ in __reg__['status']['val']:
+    for id_ in current.get("minions", []):
+        if id_ in __reg__["status"]["val"]:
             # minion is reporting, check timeout and mark for removal
             if delete and (now - __reg__["status"]["val"][id_]["recv_time"]) > delete:
                 remove.add(id_)

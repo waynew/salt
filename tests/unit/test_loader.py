@@ -23,7 +23,6 @@ import salt.config
 import salt.loader
 import salt.utils.files
 import salt.utils.stringutils
-
 from salt.ext import six
 from salt.ext.six.moves import range
 from tests.support.case import ModuleCase
@@ -33,7 +32,6 @@ from tests.support.helpers import slowTest
 from tests.support.mock import MagicMock, patch
 from tests.support.runtests import RUNTIME_VARS
 from tests.support.unit import TestCase
-
 
 log = logging.getLogger(__name__)
 

@@ -86,7 +86,6 @@ def create_alert(name=None, api_key=None, reason=None, action_type="Create"):
 
         # Return ``None`` when running with ``test=true``.
         ret["result"] = None
-
         return ret
 
     response_status_code, response_text = __salt__["opsgenie.post_data"](

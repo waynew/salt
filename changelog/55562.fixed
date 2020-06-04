@@ -1,0 +1,1 @@
+Fixed issue in opsgenie.create_alert state with changes not being a dictionary.

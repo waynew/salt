@@ -527,6 +527,7 @@ def _get_term_object(
     return term
 
 
+# TODO: rename to _get_policy_text -W. Werner, 2020-06-11
 def _get_policy_object(
     platform,
     filters=None,
@@ -574,9 +575,12 @@ def _get_policy_object(
     log.debug("Policy config:")
     log.debug(six.text_type(policy))
     platform_generator = _import_platform_generator(platform)
+    # TODO: This should be `policy_text = six.text_type(platform_...) -W. Werner, 2020-06-11
     policy_config = platform_generator(policy, 2)
     log.debug("Generating policy config for %s:", platform)
+    # TODO: This should just be a debug log of policy_text-W. Werner, 2020-06-11
     log.debug(six.text_type(policy_config))
+    # TODO: and finally return policy_text -W. Werner, 2020-06-11
     return policy_config
 
 
@@ -1221,6 +1225,17 @@ def get_policy_config(
         # but it will merge with the pillar data
         # if this behaviour is not wanted, the user can set `merge_pillar` as `False`
         filters = _merge_list_of_dict(filters, policy_pillar_cfg, prepend=prepend)
+    # TODO: Remove this log line -W. Werner, 2020-06-11
+    log.warning(
+        "%r, %r, %r, %r, %r, %r",
+        platform,
+        filters,
+        pillar_key,
+        pillarenv,
+        saltenv,
+        merge_pillar,
+    )
+    # TODO: policy_text = _get_policy_text -W. Werner, 2020-06-11
     policy_object = _get_policy_object(
         platform,
         filters=filters,
@@ -1229,6 +1244,7 @@ def get_policy_config(
         saltenv=saltenv,
         merge_pillar=merge_pillar,
     )
+    # TODO: remove this line -W. Werner, 2020-06-11
     policy_text = six.text_type(policy_object)
     return _revision_tag(
         policy_text,

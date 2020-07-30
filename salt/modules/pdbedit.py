@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Manage accounts in Samba's passdb using pdbedit
 
@@ -8,7 +7,6 @@ Manage accounts in Samba's passdb using pdbedit
 
 .. versionadded:: 2017.7.0
 """
-from __future__ import absolute_import, print_function, unicode_literals
 
 import binascii
 import hashlib
@@ -19,9 +17,6 @@ import re
 
 import salt.modules.cmdmod
 import salt.utils.path
-
-# Import Salt libs
-from salt.ext import six
 
 try:
     from shlex import quote as _quote_args  # pylint: disable=e0611
@@ -106,19 +101,22 @@ def list_users(verbose=True, hashes=False):
             log.error(res["stderr"] if "stderr" in res else res["stdout"])
             return users
 
-        user_data = {}
-        for user in res["stdout"].splitlines():
-            if user.startswith("-"):
-                if "unix username" in user_data:
-                    users[user_data["unix username"]] = user_data
-                user_data = {}
-            elif ":" in user:
-                label = user[: user.index(":")].strip().lower()
-                data = user[(user.index(":") + 1) :].strip()
-                user_data[label] = data
-
-        if user_data:
-            users[user_data["unix username"]] = user_data
+        for batch in re.split("\n-+|-+\n", res["stdout"]):
+            user_data = {}
+            last_label = None
+            for line in batch.splitlines():
+                if not line.strip():
+                    continue
+                label, sep, data = line.partition(":")
+                label = label.strip().lower()
+                data = data.strip()
+                if not sep:
+                    user_data[last_label] += line.strip()
+                else:
+                    last_label = label
+                    user_data[label] = data
+            if user_data:
+                users[user_data["unix username"]] = user_data
     else:
         # list users
         res = __salt__["cmd.run_all"]("pdbedit --list")
@@ -361,9 +359,9 @@ def modify(
             if (
                 val is not None
                 and key in current
-                and not current[key].endswith(six.text_type(val))
+                and not current[key].endswith(str(val))
             ):
-                changes[key] = six.text_type(val)
+                changes[key] = str(val)
         elif key in ["account flags"]:
             if val is not None:
                 if val.startswith("["):

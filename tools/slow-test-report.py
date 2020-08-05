@@ -71,14 +71,32 @@ group.add_argument(
     action="store_true",
     default=False,
 )
+group.add_argument(
+    "--mac-win-breakdown",
+    action="store_true",
+    default=False,
+    help="Show a breakdown of slow tests, split by Mac, Windows, and Linux",
+)
 parser.add_argument(
     "--logfile",
     default=os.path.join(tempfile.gettempdir(), "test-report.log"),
     type=argparse.FileType("w"),
 )
+parser.add_argument(
+    "--keep-skipped",
+    action="store_true",
+    default=False,
+    help="Keep tests that have been skipped",
+)
+parser.add_argument(
+    "--threshold",
+    type=float,
+    default=1.0,
+    help="The minimum threshold for slow tests.",
+)
 
 
-async def collect_test_times():
+async def collect_test_times(keep_skipped):
     async with aiohttp.ClientSession() as session:
         urls = await jenkins_utils.get_suite_urls(
             session=session, branch="Master Branch Jobs", jenkins_env="jenkinsci"
@@ -92,16 +110,22 @@ async def collect_test_times():
             for url in urls
         )
         test_class_results = {}
+        test_results = {}
         for comparison in asyncio.as_completed(tasks):
             test_name, results = await comparison
             test_class_results[test_name] = collections.Counter()
+            test_results[test_name] = {}
             if results is None:
                 log.warning("No results for %r", test_name)
             else:
                 for result in results:
                     class_name = result["className"]
-                    test_class_results[test_name][class_name] += result["duration"]
-        return test_class_results
+                    skipped = result['skipped']
+                    test_case_name = result["name"]
+                    if not skipped or (skipped and keep_skipped):
+                        test_class_results[test_name][class_name] += result["duration"]
+                        test_results[test_name][f"{class_name}.{test_case_name}"] = result["duration"]
+        return test_class_results, test_results
 
 
 def show_tsv_results(results, count):
@@ -120,6 +144,17 @@ def show_tsv_results(results, count):
             )
     output.seek(0)
     print(output.read())
+
+
+def show_mac_win_breakdown(results, test_threshold):
+    writer = csv.writer(sys.stdout)
+    writer.writerow(('Pipeline', 'Test Name', 'Duration'))
+    for pipeline in results:
+        result = results[pipeline]
+        for test_name in result:
+            duration = float(result[test_name])
+            if duration > test_threshold:
+                writer.writerow((pipeline, test_name, duration))
 
 
 def show_plain_results(results, count):
@@ -143,8 +178,10 @@ if __name__ == "__main__":
     log.setLevel(logging.DEBUG)
     print("Logging to", args.logfile.name, file=sys.stderr)
     loop = asyncio.get_event_loop()
-    test_times = loop.run_until_complete(collect_test_times())
-    if args.plain or not any((args.plain, args.tsv)):
+    test_times, individual_test_times = loop.run_until_complete(collect_test_times(keep_skipped=args.keep_skipped))
+    if args.plain or not any((args.plain, args.tsv, args.mac_win_breakdown)):
         show_plain_results(test_times, count=args.count)
     elif args.tsv:
         show_tsv_results(test_times, count=args.count)
+    elif args.mac_win_breakdown:
+        show_mac_win_breakdown(individual_test_times, test_threshold=args.threshold)

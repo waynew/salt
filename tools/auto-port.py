@@ -81,6 +81,8 @@ def do_it():  # Shia LeBeouf
             pr_numbers.append(pr_number)
 
     for num in sorted(pr_numbers):
+        print(f'https://github.com/saltstack/salt/pull/{num}')
+        continue
         print("Fetching hashes for", num)
         os.chdir("/Users/wwerner/util/tools")
         output = subprocess.run(

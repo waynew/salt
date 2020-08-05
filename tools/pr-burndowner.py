@@ -199,7 +199,7 @@ def burndown(*, open_prs, merged_prs, closed_prs):
 
 
 def do_it():  # Shia LeBeouf
-    prs = get_all_pull_requests_ever(force_reload=False)
+    prs = get_all_pull_requests_ever(force_reload=True)
     prs = [simplify(pr) for pr in prs]
     merged_prs = [pr for pr in prs if pr.state == 'MERGED']
     closed_prs = [pr for pr in prs if pr.state == 'CLOSED']

@@ -18,12 +18,12 @@ def get_schema(*, auth, url):
     schema_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         log.debug("Loading schema from file...")
-        schema = quiz.Schema.from_path(schema_path)
+        schema = quiz.Schema.from_path(schema_path, module=__name__)
         log.debug("Done!")
     except FileNotFoundError:
         log.debug(f"Failed - fallback to load from {url}")
         log.debug("Loading...")
-        schema = quiz.Schema.from_url(url, auth=auth)
+        schema = quiz.Schema.from_url(url, auth=auth, module=__name__)
         schema.to_path(schema_path)
         log.debug("Done!")
     return schema

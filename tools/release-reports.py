@@ -75,6 +75,47 @@ class Tag:
             if self.plus_one_week <= issue.created_at.date() < self.plus_two_weeks
         ]
 
+    @property
+    def close_times(self):
+        return {
+            "two weeks before": sum(
+                (
+                    issue.closed_at - issue.created_at
+                    for issue in self.created_two_weeks_prior
+                    if issue.closed
+                ),
+                datetime.timedelta(hours=0),
+            )
+            / len(self.created_two_weeks_prior),
+            "week before release": sum(
+                (
+                    issue.closed_at - issue.created_at
+                    for issue in self.created_prior_week
+                    if issue.closed
+                ),
+                datetime.timedelta(hours=0),
+            )
+            / len(self.created_prior_week),
+            "week of release": sum(
+                (
+                    issue.closed_at - issue.created_at
+                    for issue in self.created_release_week
+                    if issue.closed
+                ),
+                datetime.timedelta(hours=0),
+            )
+            / len(self.created_release_week),
+            "week after release": sum(
+                (
+                    issue.closed_at - issue.created_at
+                    for issue in self.created_week_after_release
+                    if issue.closed
+                ),
+                datetime.timedelta(hours=0),
+            )
+            / len(self.created_week_after_release),
+        }
+
 
 def get_last_tags(*, num_of_tags=5):
     cmd = [
@@ -194,6 +235,10 @@ def issues_created_around(*, start_date, end_date, force_reload=False):
                 issue.created_at = datetime.datetime.strptime(
                     issue.created_at, "%Y-%m-%dT%H:%M:%SZ"
                 ).replace(tzinfo=datetime.timezone.utc)
+                if issue.closed:
+                    issue.closed_at = datetime.datetime.strptime(
+                        issue.closed_at, "%Y-%m-%dT%H:%M:%SZ"
+                    ).replace(tzinfo=datetime.timezone.utc)
                 if start_date <= issue.created_at.date() <= end_date:
                     data.append(issue)
                     yield issue
@@ -217,16 +262,16 @@ def do_it():
         for tag in tags:
             print(f"{tag.number} - {tag.creation_date}")
             print(
-                f"\tCreated 2 weeks before: {len(tag.created_two_weeks_prior)} - {sum(1 for i in tag.created_two_weeks_prior if not i.closed)} still open"
+                f"\tCreated 2 weeks before: {len(tag.created_two_weeks_prior)} - {sum(1 for i in tag.created_two_weeks_prior if not i.closed)} still open - {tag.close_times['two weeks before']}"
             )
             print(
-                f"\tCreated 1 week before: {len(tag.created_prior_week)} - {sum(1 for i in tag.created_prior_week if not i.closed)} still open"
+                f"\tCreated 1 week before: {len(tag.created_prior_week)} - {sum(1 for i in tag.created_prior_week if not i.closed)} still open - {tag.close_times['week before release']}"
             )
             print(
-                f"\tCreated week of release: {len(tag.created_release_week)} - {sum(1 for i in tag.created_release_week if not i.closed)} still open"
+                f"\tCreated week of release: {len(tag.created_release_week)} - {sum(1 for i in tag.created_release_week if not i.closed)} still open - {tag.close_times['week of release']}"
             )
             print(
-                f"\tCreated week after release: {len(tag.created_week_after_release)} - {sum(1 for i in tag.created_week_after_release if not i.closed)} still open"
+                f"\tCreated week after release: {len(tag.created_week_after_release)} - {sum(1 for i in tag.created_week_after_release if not i.closed)} still open - {tag.close_times['week after release']}"
             )
     else:
         writer = csv.writer(sys.stdout)

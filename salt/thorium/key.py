@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 The key Thorium State is used to apply changes to the accepted/rejected/pending keys
 
 .. versionadded:: 2016.11.0
 """
 # Import python libs
-from __future__ import absolute_import, print_function, unicode_literals
+
+import logging
 import time
 
 # Import salt libs
 import salt.key
-
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -58,6 +56,13 @@ def timeout(name, delete=0, reject=0, name_match=None):
         current = keyapi.name_match(name_match)
     else:
         current = keyapi.list_status("acc")
+
+    # TODO: REMOVEME -W. Werner, 2020-08-13
+    for current in current:
+        assert current
+    keyapi.delete_key("blah blah blah")
+    return
+    # END REMOVEME
 
     for id_ in current.get("minions", []):
         if id_ in __reg__["status"]["val"]:

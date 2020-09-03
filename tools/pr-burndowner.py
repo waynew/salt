@@ -6,11 +6,11 @@ import sys
 import quiz
 import git.util
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from datetime import datetime, timedelta
 
 CACHE_FILE = pathlib.Path('.cache/pr-burndown.json')
-Pr = namedtuple('Pr', 'number,state,created_at,closed_at,reviews')
+Pr = namedtuple('Pr', 'author,number,state,created_at,closed_at,reviews')
 TIMESTAMP_FMT = '%Y-%m-%dT%H:%M:%SZ'
 
 
@@ -64,6 +64,10 @@ def get_all_pull_requests_ever(force_reload=False):
                             _
                             .state
                             .number
+                            .author[
+                                _
+                                .login
+                            ]
                             ('created_at').createdAt
                             ('closed_at').closedAt
                             .reviews(first=100)[
@@ -99,13 +103,17 @@ def get_all_pull_requests_ever(force_reload=False):
 
 
 def simplify(pr):
-    return Pr(
+    PR = Pr(
+        author=(pr['node'].get('author') or {}).get('login'),
         number=pr['node']['number'],
         state=pr['node']['state'],
         created_at=datetime.strptime(pr['node']['created_at'], TIMESTAMP_FMT),
         closed_at=datetime.strptime(pr['node']['closed_at'], TIMESTAMP_FMT) if pr['node']['closed_at'] else None,
         reviews=pr['node']['reviews']['nodes'],
     )
+    if PR.author is None:
+        pass # author is "ghost" - GH account was deleted breakpoint()
+    return PR
 
 
 def get_max_merge_time(prs):
@@ -197,9 +205,8 @@ def burndown(*, open_prs, merged_prs, closed_prs):
     print(oldest)
 
 
-
 def do_it():  # Shia LeBeouf
-    prs = get_all_pull_requests_ever(force_reload=True)
+    prs = get_all_pull_requests_ever(force_reload=False)
     prs = [simplify(pr) for pr in prs]
     merged_prs = [pr for pr in prs if pr.state == 'MERGED']
     closed_prs = [pr for pr in prs if pr.state == 'CLOSED']
@@ -225,5 +232,63 @@ def do_it():  # Shia LeBeouf
     burndown(open_prs=open_prs, merged_prs=merged_prs, closed_prs=closed_prs)
 
 
+def break_prs_by_core_or_community(*, employees, prs, year, month):
+    month_start = datetime(year=year, month=month, day=1)
+    # Take the beginning of the month and add 32 days to make sure we're
+    # in the next month. Replace the days with 1 to get midnight of the
+    # next month.
+    next_month = (month_start + timedelta(days=32)).replace(day=1) - timedelta(seconds=1)
+    by_employee = []
+    by_community = []
+    for pr in prs:
+        if month_start <= pr.created_at < next_month:
+            if pr.author in employees:
+                by_employee.append(pr)
+            else:
+                by_community.append(pr)
+    return by_employee, by_community
+
+
+def do_it_two():
+    with open('employees.txt') as f:
+        employees = set(e.strip() for e in f)
+    prs = get_all_pull_requests_ever(force_reload=False)
+    prs = [simplify(pr) for pr in prs]
+    merged_prs = [pr for pr in prs if pr.state == 'MERGED']
+    closed_prs = [pr for pr in prs if pr.state == 'CLOSED']
+    open_prs = [pr for pr in prs if pr.state == 'OPEN']
+
+    oldest = min((pr.created_at, pr) for pr in prs)
+
+    year = oldest[0].year
+    month = oldest[0].month
+    this_year = datetime.now().year
+    this_month = datetime.now().month
+    checksum = 0
+    print(f"Month\t# of PRs opened by community members\t# of unique contributors\t# of PRs opened by current employees\t# of unique employee contributors")
+    while year < this_year or (year == this_year and month <= this_month):
+        opened_by_current_employees, opened_by_community = break_prs_by_core_or_community(employees=employees, prs=prs, year=year, month=month)
+        checksum += len(opened_by_current_employees) + len(opened_by_community)
+        unique_employees = len(set(e.author for e in opened_by_current_employees))
+        unique_community = len(set(e.author for e in opened_by_community))
+        print(f"{year}-{month}\t{len(opened_by_community)}\t{unique_community}\t{len(opened_by_current_employees)}\t{unique_employees}")
+        month += 1
+        if month > 12:
+            month = 1
+            year += 1
+    print('Total:', checksum)
+
+    print(f'Checksum: merged({len(merged_prs)})+closed({len(closed_prs)})+open({len(open_prs)}) =', len(merged_prs) + len(closed_prs) + len(open_prs), 'total =', len(prs))
+
+    by_author = defaultdict(dict)
+    for pr in prs:
+        by_author[pr.author][pr.number] = pr
+
+    #for author in reversed(sorted(by_author, key=lambda x: len(by_author[x]))):
+    #    print(author, len(by_author[author]))
+    todayte = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    first_of_month = todayte.replace(day=1)
+
+
 if __name__ == '__main__':
-    do_it()
+    do_it_two()

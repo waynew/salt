@@ -11,8 +11,9 @@ from tests.support.mixins import SaltReturnAssertsMixin
 # Import Salt Testing Libs
 from tests.support.unit import skipIf
 
-#@destructiveTest
-@skipIf(not salt.utils.path.which("dockerd"), "Docker not installed")
+@destructiveTest
+@slowTest
+@skipIf(not any(salt.utils.path.which(exe) for exe in ("dockerd", "docker"), "Docker not installed")
 class SwarmCallTestCase(ModuleCase, SaltReturnAssertsMixin):
     """
     Test docker swarm states

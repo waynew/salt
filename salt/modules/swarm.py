@@ -104,15 +104,19 @@ def swarm_init(advertise_addr=str, listen_addr=int, force_new_cluster=bool):
     """
     try:
         salt_return = {}
+        print('Calling this client')
         __context__["client"].swarm.init(advertise_addr, listen_addr, force_new_cluster)
+        print('Client was called')
         output = (
             "Docker swarm has been initialized on {} "
             "and the worker/manager Join token is below".format(
                 __context__["server_name"]
             )
         )
+        # TODO: Should be comment and tokens probably -W. Werner, 2020-09-22
         salt_return.update({"Comment": output, "Tokens": swarm_tokens()})
     except docker.errors.APIError as err:
+        print('This is  my error - ', err)
         salt_return = {}
         if "This node is already part of a swarm." in err.explanation:
 #            salt_return.update({"Comment": err.explanation, "changes": ""})

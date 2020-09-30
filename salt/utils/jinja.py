@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Jinja loading utils to enable a more powerful backend for jinja templates
 """
 
-# Import python libs
-from __future__ import absolute_import, unicode_literals
 
 import atexit
 import logging
@@ -19,7 +16,6 @@ from functools import wraps
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
 
-# Import third party libs
 import jinja2
 import salt.fileclient
 import salt.utils.data
@@ -32,10 +28,7 @@ from jinja2 import BaseLoader, Markup, TemplateNotFound, nodes
 from jinja2.environment import TemplateModule
 from jinja2.exceptions import TemplateRuntimeError
 from jinja2.ext import Extension
-
-# Import salt libs
 from salt.exceptions import TemplateError
-from salt.ext import six
 from salt.utils.decorators.jinja import jinja_filter, jinja_global, jinja_test
 from salt.utils.odict import OrderedDict
 from salt.utils.versions import LooseVersion
@@ -195,7 +188,7 @@ class SaltCacheLoader(BaseLoader):
                             return False
 
                     return contents, filepath, uptodate
-            except IOError:
+            except OSError:
                 # there is no file under current path
                 continue
         # pylint: enable=cell-var-from-loop
@@ -224,24 +217,24 @@ class PrintableDict(OrderedDict):
 
     def __str__(self):
         output = []
-        for key, value in six.iteritems(self):
-            if isinstance(value, six.string_types):
+        for key, value in self.items():
+            if isinstance(value, str):
                 # keeps quotes around strings
                 # pylint: disable=repr-flag-used-in-string
-                output.append("{0!r}: {1!r}".format(key, value))
+                output.append("{!r}: {!r}".format(key, value))
                 # pylint: enable=repr-flag-used-in-string
             else:
                 # let default output
-                output.append("{0!r}: {1!s}".format(key, value))
+                output.append("{!r}: {!s}".format(key, value))
         return "{" + ", ".join(output) + "}"
 
     def __repr__(self):  # pylint: disable=W0221
         output = []
-        for key, value in six.iteritems(self):
+        for key, value in self.items():
             # Raw string formatter required here because this is a repr
             # function.
             # pylint: disable=repr-flag-used-in-string
-            output.append("{0!r}: {1!r}".format(key, value))
+            output.append("{!r}: {!r}".format(key, value))
             # pylint: enable=repr-flag-used-in-string
         return "{" + ", ".join(output) + "}"
 
@@ -341,9 +334,9 @@ def to_bool(val):
         return False
     if isinstance(val, bool):
         return val
-    if isinstance(val, (six.text_type, six.string_types)):
+    if isinstance(val, (str, (str,))):
         return val.lower() in ("yes", "1", "true")
-    if isinstance(val, six.integer_types):
+    if isinstance(val, int):
         return val > 0
     if not isinstance(val, Hashable):
         return len(val) > 0
@@ -529,7 +522,7 @@ def uuid_(val):
 
         f4efeff8-c219-578a-bad7-3dc280612ec8
     """
-    return six.text_type(uuid.uuid5(GLOBAL_UUID, salt.utils.stringutils.to_str(val)))
+    return str(uuid.uuid5(GLOBAL_UUID, salt.utils.stringutils.to_str(val)))
 
 
 ### List-related filters
@@ -719,7 +712,7 @@ def show_full_context(ctx):
     )
 
 
-class SerializerExtension(Extension, object):
+class SerializerExtension(Extension):
     '''
     Yaml and Json manipulation.
 
@@ -896,7 +889,7 @@ class SerializerExtension(Extension, object):
     }
 
     def __init__(self, environment):
-        super(SerializerExtension, self).__init__(environment)
+        super().__init__(environment)
         self.environment.filters.update(
             {
                 "yaml": self.format_yaml,
@@ -928,7 +921,7 @@ class SerializerExtension(Extension, object):
         def explore(data):
             if isinstance(data, (dict, OrderedDict)):
                 return PrintableDict(
-                    [(key, explore(value)) for key, value in six.iteritems(data)]
+                    [(key, explore(value)) for key, value in data.items()]
                 )
             elif isinstance(data, (list, tuple, set)):
                 return data.__class__([explore(value) for value in data])
@@ -949,7 +942,7 @@ class SerializerExtension(Extension, object):
         yaml_txt = salt.utils.yaml.safe_dump(
             value, default_flow_style=flow_style
         ).strip()
-        if yaml_txt.endswith(str("\n...")):  # future lint: disable=blacklisted-function
+        if yaml_txt.endswith("\n..."):  # future lint: disable=blacklisted-function
             yaml_txt = yaml_txt[: len(yaml_txt) - 4]
         try:
             return Markup(yaml_txt)
@@ -990,11 +983,11 @@ class SerializerExtension(Extension, object):
                 else:
                     sub = Element(tag)
                 if isinstance(attrs, (str, int, bool, float)):
-                    sub.text = six.text_type(attrs)
+                    sub.text = str(attrs)
                     continue
                 if isinstance(attrs, dict):
                     sub.attrib = {
-                        attr: six.text_type(val)
+                        attr: str(val)
                         for attr, val in attrs.items()
                         if not isinstance(val, (dict, list))
                     }
@@ -1017,7 +1010,7 @@ class SerializerExtension(Extension, object):
 
     def load_yaml(self, value):
         if isinstance(value, TemplateModule):
-            value = six.text_type(value)
+            value = str(value)
         try:
             return salt.utils.data.decode(salt.utils.yaml.safe_load(value))
         except salt.utils.yaml.YAMLError as exc:
@@ -1030,27 +1023,27 @@ class SerializerExtension(Extension, object):
             except AttributeError:
                 # No context information available in the exception, fall back
                 # to the stringified version of the exception.
-                msg += six.text_type(exc)
+                msg += str(exc)
             else:
-                msg += "{0}\n".format(problem)
+                msg += "{}\n".format(problem)
                 msg += salt.utils.stringutils.get_context(
                     buf, line, marker="    <======================"
                 )
             raise TemplateRuntimeError(msg)
         except AttributeError:
-            raise TemplateRuntimeError("Unable to load yaml from {0}".format(value))
+            raise TemplateRuntimeError("Unable to load yaml from {}".format(value))
 
     def load_json(self, value):
         if isinstance(value, TemplateModule):
-            value = six.text_type(value)
+            value = str(value)
         try:
             return salt.utils.json.loads(value)
         except (ValueError, TypeError, AttributeError):
-            raise TemplateRuntimeError("Unable to load json from {0}".format(value))
+            raise TemplateRuntimeError("Unable to load json from {}".format(value))
 
     def load_text(self, value):
         if isinstance(value, TemplateModule):
-            value = six.text_type(value)
+            value = str(value)
 
         return value
 
@@ -1076,7 +1069,7 @@ class SerializerExtension(Extension, object):
         filter_name = parser.stream.current.value
         lineno = next(parser.stream).lineno
         if filter_name not in self.environment.filters:
-            parser.fail("Unable to parse {0}".format(filter_name), lineno)
+            parser.fail("Unable to parse {}".format(filter_name), lineno)
 
         parser.stream.expect("name:as")
         target = parser.parse_assign_target()

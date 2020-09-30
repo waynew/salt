@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Unit tests for salt.utils.templates.py
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 import os
@@ -223,7 +221,7 @@ class RenderTestCase(TestCase):
         self.assertEqual(res.strip(), "OK")
 
 
-class MockRender(object):
+class MockRender:
     def __call__(self, tplstr, context, tmplpath=None):
         self.tplstr = tplstr
         self.context = context

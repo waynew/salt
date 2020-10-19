@@ -31,5 +31,10 @@ def get_schema(*, auth, url):
 
 def load_auth():
     token_path = pathlib.Path("~/.gittoken").expanduser()
-    user, token = token_path.read_text().strip().split()
+    try:
+        user, token = token_path.read_text().strip().split()
+    except FileNotFoundError:
+        sys.exit('No ~/.gittoken file found. Please create one containing "<username> <api token>"')
+    except ValueError:
+        sys.exit('~/.gittoken file found, but wrong format. Should be "<username> <api token>"')
     return (user, token)

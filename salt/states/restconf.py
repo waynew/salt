@@ -37,6 +37,13 @@ def __virtual__():
     return (False, "restconf module could not be loaded")
 
 
+def removeme():
+    '''
+    REMOVEME OKAY????!!!
+    '''
+    return __salt__["restconf.get_data"]("REMOVEME")
+
+
 def config_manage(name, uri, method, config, init_uri=None, init_method="PATCH"):
     """
     Ensure a specific value exists at a given path

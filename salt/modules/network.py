@@ -1454,6 +1454,7 @@ def mod_hostname(hostname):
             ]
 
         with __utils__["files.fopen"]("/etc/sysconfig/network", "w") as fh_:
+            assert False
             for net in network_c:
                 if net.startswith("HOSTNAME"):
                     old_hostname = net.split("=", 1)[1].rstrip()
